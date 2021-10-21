@@ -1,0 +1,223 @@
+#hap-jupyter-window {
+    margin: .5rem 2.5rem;
+}
+
+#hap-jupyter-project-list-window, 
+#hap-jupyter-customer-list-window{
+    box-shadow: 0 0 1px rgb(0 0 0 / 13%), 0 1px 3px rgb(0 0 0 / 20%);
+    padding: .75rem 1.25rem;
+    background-color: #fff;
+    display: flex;
+    margin-bottom: 1.75rem;
+}
+
+.customer-jupyter-active-list {
+    display: flex;
+}
+
+.hap-jupyter-btn {
+    cursor: pointer;
+    text-decoration:none;
+    margin-right: .5rem;
+    display: flex;
+    font-weight: 400;
+    color: #212529;
+    text-align: center;
+    vertical-align: middle;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    background-color: transparent;
+    border: 1px solid transparent;
+    padding: .375rem .75rem;
+    font-size: 1rem;
+    line-height: 1.5;
+    border-radius: .25rem;
+    transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+}
+
+#hap-jupyter-window .hap-jupyter-btn i {
+    line-height: 1.5;
+    margin: 0 .3rem;
+    
+}
+
+#hap-jupyter-window .btn-active {
+    color: #fff;
+    background-color: #007bff;
+    border-color: #007bff;
+    box-shadow: none;
+}
+
+#hap-jupyter-window .btn-active:hover {
+    color: #fff;
+    background-color: #0069d9;
+    border-color: #0062cc;
+    box-shadow: none;
+}
+
+#hap-jupyter-window .btn-info {
+    color: #fff;
+    background-color: #48a2b9;
+    border-color: #48a2b9;
+    box-shadow: none;
+}
+
+#hap-jupyter-window .btn-info:hover {
+    color: #fff;
+    background-color: #138496;
+    border-color: #117a8b;
+}
+
+#hap-jupyter-window .btn-close {
+    color: #fff;
+    background-color: #dc3545;
+    border-color: #dc3545;
+    box-shadow: none;
+}
+
+#hap-jupyter-window .btn-close:hover {
+    color: #fff;
+    background-color: #e87b86;
+    border-color: #e87b86;
+    box-shadow: none;
+}
+
+#hap-jupyter-window .btn-open {
+    color: #fff;
+    background-color: #28a745;
+    border-color: #28a745;
+    box-shadow: none;
+}
+
+#hap-jupyter-window .btn-open:hover {
+    color: #fff;
+    background-color: #73c686;
+    border-color: #73c686;
+    box-shadow: none;
+}
+
+.juypter-infomation{
+    display: none;
+    color: #000;
+    box-shadow: 0 0 1px rgb(0 0 0 / 13%), 0 1px 3px rgb(0 0 0 / 20%);
+    padding: .75rem 1.25rem;
+    background-color: #fff;
+    z-index: 10;
+    width: 20vw;
+    text-align: left;
+    top: 120%;
+    left: -10vw;
+}
+
+.juypter-active-info-btn:hover .juypter-infomation{
+    display: unset;
+}
+
+
+.top-window-alert-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1050;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background-color: rgba(0, 0, 0, .6);
+    display: flex;
+    justify-content: center;
+}
+
+.top-window-alert-window-lock{
+    top: 0;
+    left: 0;
+    z-index: 9999;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background-color: rgba(0, 0, 0, .6);
+    display: flex;
+    justify-content: center;
+    position: fixed;
+    line-height: 100vh;
+    color: #fff;
+    font-size: 2rem;
+}
+
+.top-window-alert-window {
+    margin: 3rem 0;
+    box-shadow: 0 0.5rem 1rem rgb(0 0 0 / 50%);
+    display: grid;
+    pointer-events: auto;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid rgba(0,0,0,.2);
+    border-radius: .3rem;
+    box-shadow: 0 0.25rem 0.5rem rgb(0 0 0 / 50%);
+    width: 50vw;
+    position: relative;
+}
+
+.top-window-alert-footer {
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-flex-wrap: wrap;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+    -webkit-align-items: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-justify-content: space-between!important;
+    -ms-flex-pack: justify!important;
+    justify-content: space-between!important;
+    padding: .75rem;
+    border-top: 1px solid #e9ecef;
+    border-bottom-right-radius: calc(.3rem - 1px);
+    border-bottom-left-radius: calc(.3rem - 1px);
+}
+
+.top-window-alert-header {
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-align-items: flex-start;
+    -ms-flex-align: start;
+    align-items: flex-start;
+    -webkit-justify-content: space-between;
+    -ms-flex-pack: justify;
+    justify-content: space-between;
+    padding: 1rem;
+    border-bottom: 1px solid #e9ecef;
+    border-top-left-radius: calc(.3rem - 1px);
+    border-top-right-radius: calc(.3rem - 1px);
+}
+
+.top-window-alert-header p {
+    font-size: 1.5rem;
+    margin: 0;
+}
+
+.top-window-alert-body {
+    padding: .75rem;
+    font-weight: 500;
+    overflow: auto;
+    max-height: 60vh;
+}
+
+.anima-updown-in-2-sec {
+    animation-name:AnimaUpdownin2sec;
+    animation-duration:1s;
+	animation-timing-function: linear;
+	animation-iteration-count:infinite;
+	pointer-events: none;
+    position: relative;
+}
+
+@keyframes AnimaUpdownin2sec{
+    from { top: 0px ; }
+    25%  { top: -5px; } 
+    75%  { top: 5px; } 
+    to   { top: 0px; }
+}

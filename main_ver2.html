@@ -1,0 +1,833 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>TREESTUDIO</title>
+	<!-- 導入Vue -->
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+
+    <script type="text/javascript" src="/static/dist/Ver2TreeStudioPage/Misc/DateFormat.js"></script>
+
+    <link rel="stylesheet" href="/static/dist/Ver2TreeStudioPage/MainToolBox/style.css">
+    <link rel="stylesheet" href="/static/dist/Ver2TreeStudioPage/HomePage/style.css">
+    <link rel="stylesheet" href="/static/dist/Ver2TreeStudioPage/HiveSearcher/style.css">
+    <link rel="stylesheet" href="/static/dist/Ver2TreeStudioPage/HAP_JupyterWindow/style.css">
+    <link rel="stylesheet" href="/static/dist/Ver2TreeStudioPage/JupyterCtrlWindow/style.css">
+    <link rel="stylesheet" href="/static/dist/Ver2TreeStudioPage/TopMenu/style.css">
+    <link rel="stylesheet" href="/static/dist/Ver2TreeStudioPage/LoadingWindow/style.css">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/2.0.2/anime.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.debug.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.js"></script>
+
+    <link rel="stylesheet" href="/static/plugins/fontawesome-free/css/all.min.css">
+
+	<link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
+    />
+
+</head>
+
+<body>
+    <div id='vue-load-success-window'>
+        <transition name="delay-display-out">
+            <div id='vue-load-success' v-if="openLoadSuccessWindow">
+                <div style="height: fit-content;position: relative;top: 25vh;">
+                    <div class="vue-load-success-content"></div>
+                    <div class="vue-load-success-content-2"></div>
+                </div>
+            </div>
+        </transition>
+        <div id='vue-loading-window' v-if="closeLoadingWindow">
+            Loading...
+        </div>
+    </div>
+
+    <div id='main-window-grid'>
+        <div id='main-toolbox' :class="smallToolBox?'small-toolbox':''">
+            <div id='main-toolbox-backbtn' @click="smallToolBox = false"></div>
+            <div id='main-toolbox-header' class='mouse-pointer' @click="changePage('Home')"> 
+                <!-- <img src="https://cxl9h003.de.r.appspot.com/static/dist/img/logo3.png"></img> -->
+                
+                <img src="/static/dist/img/TS_blue.png"></img>
+                <div class='home-icon-string'>TREE STUDIO</div>
+            </div>
+            <ul style="list-style: none;padding: 0 .5rem;font-size:1rem;margin-top: 0.5rem;">
+                <li 
+                v-for="(labelItem, labelName, index) of D_labelList" 
+                class='main-toolbox-label-btn'
+                >
+                    <div
+                    :class='chosedPage==labelName?"main-toolbox-label-btn-active":""'
+                    v-if="labelItem.Type == 'Home'"
+                    class='main-toolbox-label-flex'
+                    @click="changePage(labelItem,labelName)"
+                    >
+                        <i class='lable-icon' v-if='labelItem.icon != undefined' :class="labelItem.icon"></i>
+                        <div class='lable-string'>{{labelItem.Name}}</div>
+                    </div>
+        
+                    <!-- 純超連結 -->
+                    <a
+                    v-else-if="labelItem.Type == 'URL'"
+                    class='main-toolbox-label-flex'
+                    :class='chosedPage==labelName?"main-toolbox-label-btn-active":""'
+                    :href="labelItem.URL"
+                    target='_blank'
+                    @click="changePage(labelItem,labelName)"
+                    >
+                        <i class='lable-icon' v-if='labelItem.icon' :class="labelItem.icon"></i>
+                        <div class='lable-string' style='dispaly: flex;'>
+                            <div>{{labelItem.Name}}</div>
+                            <!-- <i class="fas fa-external-link-alt"></i> -->
+                        </div>
+                    </a>
+        
+                    <!-- 頁面切換(Page) -->
+                    <div
+                    :class='chosedPage==labelName?"main-toolbox-label-btn-active":""'
+                    class='main-toolbox-label-flex'
+                    v-else-if="labelItem.Type == 'Page'"
+                    @click="changePage(labelItem,labelName)"
+                    >
+                        <i class='lable-icon' v-if='labelItem.icon' :class="labelItem.icon"></i>
+                        <div class='lable-string'>{{labelItem.Name}}</div>
+                    </div>
+        
+                    <!-- List -->
+                    <div
+                    v-else-if="labelItem.Type == 'List'"
+                    >
+                        <div @click="labelItem.opened = !labelItem.opened"
+                        class='main-toolbox-label-flex'
+                        >
+                            <i class='lable-icon' v-if='labelItem.icon' :class="labelItem.icon"></i>
+                            <img v-else-if='labelItem.svg' :src="labelItem.svg" type="image/svg+xml"></img>
+
+                            <div class='lable-string'>{{labelItem.Name}}</div>
+                            <i class="fas fa-angle-left list-open-switch"
+                            :style="labelItem.opened == true?'transform: rotate(-90deg);':''"
+                            ></i>
+                        </div>
+                        <div class='main-toolbox-label-child-div' v-show='labelItem.opened == true'>
+                            <ul style="list-style: none;padding: 0 .5rem;">
+                                <li 
+                                    v-for="(listItem, index) of labelItem.List" 
+                                    class='main-toolbox-label-btn child-toolbox-label-btn'
+                                >
+                                    <a
+                                    v-if="listItem.Type == 'URL'"
+                                    :class='chosedPage==listItem.Name?"main-toolbox-label-btn-active":""'
+                                    class='main-toolbox-label-flex'
+                                    :href="listItem.URL"
+                                    target='_blank'
+                                    @click="changePage(listItem, listItem.Name)"
+                                    >
+                                        <i class='lable-icon' v-if='listItem.icon != undefined' :class="listItem.icon"></i>
+                                        <div class='lable-string' style='dispaly: flex;'>
+                                            <div>{{listItem.Name}}</div>
+                                            <!-- <i class="fas fa-external-link-alt"></i> -->
+                                        </div>
+                                    </a>
+
+                                    <!-- 頁面切換(Page) -->
+                                    <div
+                                    :class='chosedPage==listItem.Name?"main-toolbox-label-btn-active":""'
+                                    class='main-toolbox-label-flex'
+                                    v-else-if="listItem.Type == 'Page'"
+                                    @click="changePage(listItem, listItem.Name)"
+                                    >
+                                        <i class='lable-icon' v-if='listItem.icon' :class="listItem.icon"></i>
+                                        <div class='lable-string'>{{listItem.Name}}</div>
+                                    </div>
+
+                                </li>
+                            </ul>
+                        </div>
+
+
+                    </div>
+                </li>
+            </ul>
+        </div>
+
+        <div id='main-info-window'>
+            <div id='top-menu'>
+                <i class="fas fa-bars top-menu-btn" @click="switchSmallToolBox()"></i>
+                <div>
+                    <i class="fas top-menu-btn" :class="isFullScreen==false?'fa-expand-arrows-alt':'fa-compress-arrows-alt'" @click="switchFullScreen()"></i>
+                    <i class="fas fa-file-download top-menu-btn" @click="saveAsPDF()"></i>
+                </div>
+            </div>
+            <div id='wrapper_page'>
+                <div id="home-grid" v-show="Vue_mainToolBox.chosedPage == 'Home'">
+                    <div class="box-small-card" id ="test-view">
+                        <div class="box-small-card-content">
+                            <i class="fas fa-dice-d6"></i>
+                            <div class="box-small-card-word">
+                                1171 Tables
+                            </div>
+                        </div>
+                        <div class='box-small-card-title'>
+                            Teradata 分析型資料庫
+                        </div>
+                    </div>
+    
+                    <div class="box-small-card" id ="test-view">
+                        <div class="box-small-card-content">
+                            <i class="fas fa-book"></i>
+                            <div class="box-small-card-word">
+                                102 Tables
+                            </div>
+                        </div>
+                        <div class='box-small-card-title'>
+                            Feature Store 特徵庫
+                        </div>
+                    </div>
+    
+                    <div class="box-small-card" id ="airjob-view">
+                        <div class="box-small-card-content">
+                            <airjob-icon class='box-small-card-icon' style='height: 2rem;'></airjob-icon>
+                            <div class="box-small-card-word">
+                                {{dagJobNum}} Jobs
+                            </div>
+                        </div>
+                        <div class='box-small-card-title'>
+                            AIRJOB 自主排程
+                        </div>
+                    </div>
+    
+                    <div class="box-small-card" id ="airflow-view" @mouseover="isHovering = true" @mouseout="isHovering = false">
+                        <div class="box-small-card-content">
+                            <airflow-icon class='box-small-card-icon' :class="isHovering?'animate__animated animate__bounce':''" style='height: 2rem;'></airflow-icon>
+                            <div class="box-small-card-word">
+                                {{dagJobNum}} Jobs
+                            </div>
+                        </div>
+                        <div class='box-small-card-title'>
+                            Airflow 系統排程
+                        </div>
+                    </div>
+    
+                    <!-- 更新Table視窗 -->
+                    <div id='table-update-window' class="box-card">
+                        <div class='box-card-header'>
+                            <div class='box-card-title'>
+                                已更新Table
+                            </div>
+                        </div>
+                        <div class='box-card-body'>
+                            <div style="height: 100%;display: grid;grid-auto-rows: min-content auto;">
+                                <p style='font-weight: 600;margin-top: 0px;'>近兩周導入數量:{{tableInfoList.length}}</p>
+                                <div class='small-scrollbar' style="overflow: auto;">
+                                    <table class="dealut-table" style='width: 100%;'>
+                                        <colgroup>
+                                            <col style="">
+                                            <col style="width: 1px;">
+                                            <col style="width: 1px;">
+                                        </colgroup>
+                                        <thead>
+                                            <tr>
+                                                <th class='nowrap'>Table Name</th>
+                                                <th class='nowrap' style="max-width: 10rem;min-width: 10rem;">更新時間</th>
+                                                <th class='nowrap' style="max-width: 5rem;min-width: 5rem;">更新頻率</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr v-for="(tableInfo, index) in tableInfoList" v-if="index < 15">
+                                                <td><div>{{tableInfo.Name}}</div></td>
+                                                <td style='position: relative;'><div class='nowrap text-overflow-hidden'>{{tableInfo.UpdateDateTime}}</div></td>
+                                                <td style='position: relative;'><div class='nowrap text-overflow-hidden'>{{tableInfo.UpdateFrequency}}</div></td>
+                                            </tr>
+                                            <tr v-else>
+                                                <td><div>123</div></td>
+                                                <td style='position: relative;'><div class='nowrap text-overflow-hidden'>123</div></td>
+                                                <td style='position: relative;'><div class='nowrap text-overflow-hidden'>123</div></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div class='box-card-footer'>
+                            <div></div>
+                            <a>More..</a>
+                        </div>
+                    </div>
+    
+                    <!-- AIRJOB異常通知 -->
+                    <div id='yesterday-fail-list-window' class="box-card">
+                        <div class='box-card-header'>
+                            <div class='box-card-title'>
+                                AIRJOB異常通知
+                            </div>
+                        </div>
+                        <div class='box-card-body'>
+                            <div style="display: grid;position: relative;height: 100%;grid-auto-rows: min-content min-content auto;">
+                                <div>
+                                    <template v-for="(projectName, index) in projectList">
+                                        <!-- <input :id="'fail-window-'+projectName" type="radio" :value="projectName" v-model="projectChosed"> -->
+                                        <label class="btn-base" :for="'fail-window-'+projectName"
+                                            :class="projectChosed==projectName?'btn-style-primary':'btn-style-close'"
+                                            style='margin-right: .75rem;'
+                                        >{{projectName}}
+                                            <input style='display: none;' :id="'fail-window-'+projectName" type="radio" :value="projectName" v-model="projectChosed">
+                                        </label>
+                                    </template>
+                                </div>
+                                <hr style="width:100%;">
+                                <div 
+                                    v-for="(projectName, index) in projectList" 
+                                    v-show="projectName == projectChosed"
+                                    style="display: grid;position: relative;height: 100%;overflow: auto;"
+                                >
+                                    <template v-if="failList[projectName] == 'Loading'">
+                                        <div class='loading-window text-v-center text-h-center'>
+                                            <i class="fas fa-spinner anima-360-in-2-sec"></i>
+                                            <label>Loading</label>
+                                        </div>
+                                    </template>
+                                    <template v-else>
+                                        <template v-if="Object.keys(failList[projectName]).length == 0">
+                                            沒有任何錯誤，太棒惹!
+                                        </template>
+                                        <template v-else>
+                                            <p style='font-weight: 600;'>昨日異常數:{{Object.keys(failList[projectName]).length}}</p>
+                                            <div class='small-scrollbar' style="overflow: auto;">
+                                                <table class="dealut-table" style='width: 100%;'>
+                                                    <colgroup>
+                                                        <col span="2" style="width: 1px;">
+                                                        <col style="">
+                                                        <col style="">
+                                                    </colgroup>
+                                                    <thead>
+                                                        <tr>
+                                                            <th class='nowrap' style="max-width: 5rem;min-width: 5rem;">排程ID</th>
+                                                            <th class='nowrap' style="max-width: 5rem;min-width: 5rem;">Owner</th>
+                                                            <th class='nowrap'>排程時間</th>
+                                                            <th class='nowrap' style="max-width: 5rem;min-width: 5rem;">執行時間</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <!-- <template v-for="inn in [...Array(300).keys()]"> -->
+                                                        <tr v-for="(failInfo, dag_id, index) in failList[projectName]">
+                                                            <td><a
+                                                                    :href="AIRJOB_url+'/AirFlowUploadWeb/testHTML/'+projectName+'/?Page=dagInfoView&dag_id='+dag_id"
+                                                                    target="_blank"
+                                                                >{{dag_id}}</a></td>
+                                                            <td style='position: relative;'><div class='nowrap text-overflow-hidden'>{{failInfo.owner}}</div></td>
+                                                            <td style='position: relative;'><div class='nowrap text-overflow-hidden'>{{failInfo.scheduleString}}</div></td>
+                                                            <td style='position: relative;'><div class='nowrap text-overflow-hidden'>{{new Date(failInfo.failList[0].execution_date).format('(w) yyyy-MM-dd hh:mm:ss')}}</div></td>
+                                                            
+                                                        </tr>
+                                                        <!-- </template> -->
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </template>
+                                    </template>
+            
+                                </div>
+                            </div>
+                        </div>
+                        <div class='box-card-footer'>
+                            <div></div>
+                            <a>More..</a>
+                        </div>
+                    </div>
+                </div>
+    
+                <div id='hive-searcher'>
+                    <h1>Hive 資料表查詢</h1>
+                    <h3>顯示目前 HAP Hive 所有資料表的最新更新資訊，如要檢視Table的歷史紀錄，可以參考Feature Store裡的td2hive_table_update。</h3>
+                    <div style='display: flex;justify-content: center;'>
+                        <div class='search-bar'>
+                            <input v-model.lazy="filterStr_" @keyup.enter="runFilter(filterStr_)">
+                            <i class="fas fa-search " @click="runFilter(filterStr_)"></i>
+                        </div>
+                    </div>
+                    <hr>
+                    <div id='hive-table'>
+                        <div id='hive-table-header'>
+                            <label style="font-size: 2rem;font-weight: 600;">Page: {{parseInt(pageChose) + 1}}</label>
+                            <div class='page-choser'>
+                                <div v-if="pageListChose==0" class='page-chose-btn page-chose-btn-noactive'>
+                                    <i class="fas fa-angle-double-left"></i>
+                                </div>
+                                <div v-else class='page-chose-btn' @click="pageListChose = pageListChose -1">
+                                    <i class="fas fa-angle-double-left"></i>
+                                </div>
+                                <div class='page-chose-btn' v-for="pageIndex of pageList[pageListChose]"
+                                    :class="pageIndex == pageChose?'page-chose-btn-chosed':''"
+                                    @click="pageChose = pageIndex"
+                                >
+                                    {{parseInt(pageIndex) + 1}}
+                                </div>
+                                <div v-if="pageListChose==pageList.length-1" class='page-chose-btn page-chose-btn-noactive'>
+                                    <i class="fas fa-angle-double-right"></i>
+                                </div>
+                                <div v-else class='page-chose-btn' @click="pageListChose = pageListChose +1">
+                                    <i class="fas fa-angle-double-right"></i>
+                                </div>
+                                
+                            </div>
+                        </div>
+                        <div id='hive-table-body'>
+                            <table id='hive-table-view'>
+                                <thead>
+                                    <tr>
+                                        <th>
+                                            <div @click="sortByBtmChose('tableName')">
+                                                <template v-if="sortBy=='tableName'">
+                                                    <i v-if='sortValue==1' class="fas fa-sort-down"></i>
+                                                    <i v-else class="fas fa-sort-up"></i>
+                                                </template>
+                                                Table Name
+                                            </div></th>
+                                        <th>
+                                            <div @click="sortByBtmChose('tableName_Chinese')">
+                                                <template v-if="sortBy=='tableName_Chinese'">
+                                                    <i v-if='sortValue==1' class="fas fa-sort-down"></i>
+                                                    <i v-else class="fas fa-sort-up"></i>
+                                                </template>
+                                                中文名稱
+                                            </div>
+                                        </th>
+                                        <th>
+                                            <div @click="sortByBtmChose('DBNanme')">
+                                                <template v-if="sortBy=='DBNanme'">
+                                                    <i v-if='sortValue==1' class="fas fa-sort-down"></i>
+                                                    <i v-else class="fas fa-sort-up"></i>
+                                                </template>
+                                                資料庫
+                                            </div>
+                                        </th>
+                                        <th>
+                                            <div @click="sortByBtmChose('lastUpdate')">
+                                                <template v-if="sortBy=='lastUpdate'">
+                                                    <i v-if='sortValue==1' class="fas fa-sort-down"></i>
+                                                    <i v-else class="fas fa-sort-up"></i>
+                                                </template>
+                                                最後更新時間
+                                            </div>
+                                        </th>
+                                        <th>
+                                            <div @click="sortByBtmChose('status')">
+                                                <template v-if="sortBy=='status'">
+                                                    <i v-if='sortValue==1' class="fas fa-sort-down"></i>
+                                                    <i v-else class="fas fa-sort-up"></i>
+                                                </template>
+                                                更新狀況
+                                            </div>
+                                        </th>
+                                        <th>
+                                            <div @click="sortByBtmChose('updateFrequency')">
+                                                <template v-if="sortBy=='updateFrequency'">
+                                                    <i v-if='sortValue==1' class="fas fa-sort-down"></i>
+                                                    <i v-else class="fas fa-sort-up"></i>
+                                                </template>
+                                                更新頻率
+                                            </div>
+                                        </th>
+                                        <th>
+                                            <div @click="sortByBtmChose('buildDate')">
+                                                <template v-if="sortBy=='buildDate'">
+                                                    <i v-if='sortValue==1' class="fas fa-sort-down"></i>
+                                                    <i v-else class="fas fa-sort-up"></i>
+                                                </template>
+                                                上架時間
+                                            </div>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr v-for="(data, index) in tableData[pageChose]" 
+                                        :style="data.status=='異常'?'background-color: antiquewhite;':''"
+                                    >
+                                        <td>{{data.tableName}}</td>
+                                        <td>{{data.tableName_Chinese}}</td>
+                                        <td>{{data.DBNanme}}</td>
+                                        <td>{{data.lastUpdate}}</td>
+                                        <td>
+                                            <div v-if="data.status=='異常'" >
+                                                {{data.status}}
+                                            </div>
+                                            <div v-else>
+                                                {{data.status}}
+                                            </div>
+                                        
+                                        </td>
+                                        <td>{{data.updateFrequency}}</td>
+                                        <td>{{data.buildDate}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+    
+                <div id='hap-jupyter-window'>
+                    <h1>HAP Jupyter</h1>
+                    <h3>提供HAP環境探索，IDE為Jupyter Notebook，有GPU可以使用，預設一個單位一個共用環境，若有需要客製化環境，請聯繫數據工程組。</h3>
+                    <hr>
+                    <div id='hap-jupyter-project-list-window'>
+                        <a 
+                        class='hap-jupyter-btn btn-active' 
+                        v-for="(projectItem, index) in projectList"
+                        :href="projectItem.url"  target='_blank'
+                        >
+                            <i class='fas fa-code'></i>
+                            <div>{{projectItem.Name}}</div>
+                        </a>
+                    </div>
+    
+                    <div id='hap-jupyter-customer-list-window' style='display:grid;' :class="statusChangeWindowOpen?'animate__fadeIn':'animate__fadeOut'">
+                        <div class='top-window-alert-window-lock' v-if="statusChangeStatus != ''" @click.stop="">
+                            <div>
+                                <i class="fas fa-cloud-upload-alt anima-updown-in-2-sec" style="margin-right: .5rem;"></i>{{statusChangeStatus}}
+                            </div>
+                        </div>
+                        
+                        
+                        <div class='top-window-alert-background' v-if="statusChangeWindowOpen==true" @click='statusChangeWindowOpen=false'>
+                            <div>
+                                <div class='top-window-alert-window animate__animated' @click.stop="" :class="statusChangeWindowOpen?'animate__fadeInDown':'animate__fadeOutUp'">
+                                    
+                                    <div class='top-window-alert-header'>
+                                        <p>確認要{{statusChangeWindowInfo.status=='enable'?'關閉':'打開'}}此項目?</p>
+                                        <i class='fas fa-times' @click='statusChangeWindowOpen=false'></i>
+                                    </div>
+                                    <div class='top-window-alert-body'>
+                                        專案名稱: {{statusChangeWindowInfo.project_name}}
+                                    </div>
+                                    <div class='top-window-alert-footer'>
+                                        <button class="hap-jupyter-btn btn-active" @click='statusChangeWindowOpen=false'>取消動作</button>
+                                        <button class="hap-jupyter-btn btn-active" @click='switchCustomerJupyterStatus(statusChangeWindowInfo)'>沒錯 我想要{{statusChangeWindowInfo.status=='enable'?'關閉':'打開'}}此項目</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div>客製化環境</div>
+                        <hr style='width: 100%;'>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>專案名稱</th>
+                                    <th>申請者</th>
+                                    <th>申請單位</th>
+                                    <th>申請時間</th>
+                                    <th>建置者</th>
+                                    <th>操作</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr v-for="(customerJupyterInfo, index) of customerJupyterInfos">
+                                    <td>{{customerJupyterInfo.project_name}}</td>
+                                    <td>{{customerJupyterInfo.user_name}}</td>
+                                    <td>{{customerJupyterInfo.user_depart}}</td>
+                                    <td>{{customerJupyterInfo.create_time}}</td>
+                                    <td>{{customerJupyterInfo.spark_name}}</td>
+                                    <td>
+                                        <div class='customer-jupyter-active-list'>
+                                            <a class='hap-jupyter-btn btn-active' :href="'http://34.135.113.78:'+customerJupyterInfo.port+'/login?token='+customerJupyterInfo.user_token" target="_blank">
+                                                <i class='fas fa-code'></i>
+                                            </a>
+                                            <div class='hap-jupyter-btn btn-info juypter-active-info-btn' style='position:relative;'>
+                                                <i class='far fa-eye'></i>
+                                                <div class='juypter-infomation' style='position:absolute;'>
+                                                    <p>Juypter Infomation</p>
+                                                    Spark Name: {{customerJupyterInfo.spark_name}}<br>
+                                                    Driver Memory: {{customerJupyterInfo.driver_memory}}G<br>
+                                                    Executor Memory: {{customerJupyterInfo.executor_memory}}G<br>
+                                                    Driver Cores: {{customerJupyterInfo.driver_cores}}<br>
+                                                    Executor Cores: {{customerJupyterInfo.executor_cores}}<br>
+                                                    Max Executors: {{customerJupyterInfo.max_executors}}
+                                                </div>
+                                            </div>
+                                            <div class='hap-jupyter-btn' :class="customerJupyterInfo.status=='enable'?'btn-open':'btn-close'"
+                                                @click="clickSwitchCustomerJupyterButton(customerJupyterInfo)"
+                                            >
+                                                <i class='fas fa-power-off'></i>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+    
+    
+    
+                </div>
+    
+                <div id='hap-jupyter-ctrl-window'>
+                    <h1>HAP Jupyter 管理系統</h1>
+                    <h3>非工程組人員請勿操作此頁面。</h3>
+                    <hr>
+    
+                    <div id='hap-jupyter-customer-ctrl-list-window' style='display:grid;' :class="statusChangeWindowOpen?'animate__fadeIn':'animate__fadeOut'">
+                        <div class='top-window-alert-window-lock' v-if="statusChangeStatus != ''" @click.stop="">
+                            <div>
+                                <i class="fas fa-cloud-upload-alt anima-updown-in-2-sec" style="margin-right: .5rem;"></i>{{statusChangeStatus}}
+                            </div>
+                        </div>
+                        
+                        <div class='top-window-alert-window-lock' v-if="statusCreateStatus != ''" @click.stop="">
+                            <div>
+                                <i class="fas fa-cloud-upload-alt anima-updown-in-2-sec" style="margin-right: .5rem;"></i>{{statusCreateStatus}}
+                            </div>
+                        </div>
+                        <div class='top-window-alert-window-lock' v-if="statusDeleteStatus != ''" @click.stop="">
+                            <div>
+                                <i class="fas fa-trash-alt anima-updown-in-2-sec" style="margin-right: .5rem;"></i>{{statusDeleteStatus}}
+                            </div>
+                        </div>
+                        
+                        <div class='top-window-alert-background' v-if="statusChangeWindowOpen==true" @click='statusChangeWindowOpen=false'>
+                            <div>
+                                <div class='top-window-alert-window animate__animated' @click.stop="" :class="statusChangeWindowOpen?'animate__fadeInDown':'animate__fadeOutUp'">
+                                    
+                                    <div class='top-window-alert-header'>
+                                        <p>確認要{{statusChangeWindowInfo.status=='enable'?'關閉':'打開'}}此項目?</p>
+                                        <i class='fas fa-times' @click='statusChangeWindowOpen=false'></i>
+                                    </div>
+                                    <div class='top-window-alert-body'>
+                                        專案名稱: {{statusChangeWindowInfo.project_name}}
+                                    </div>
+                                    <div class='top-window-alert-footer'>
+                                        <button class="hap-jupyter-btn btn-active" @click='statusChangeWindowOpen=false'>取消動作</button>
+                                        <button class="hap-jupyter-btn btn-active" @click='switchCustomerJupyterStatus(statusChangeWindowInfo)'>沒錯 我想要{{statusChangeWindowInfo.status=='enable'?'關閉':'打開'}}此項目</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+    
+                        <div class='top-window-alert-background' v-if="checkCreateNewCustomerJupyterWindowOpen==true" @click='checkCreateNewCustomerJupyterWindowOpen=false'>
+                            <div>
+                                <div class='top-window-alert-window animate__animated' @click.stop="" :class="checkCreateNewCustomerJupyterWindowOpen?'animate__fadeInDown':'animate__fadeOutUp'">
+                                    
+                                    <div class='top-window-alert-header'>
+                                        <p>確認要建立新的 Jupyter?</p>
+                                        <i class='fas fa-times' @click='checkCreateNewCustomerJupyterWindowOpen=false'></i>
+                                    </div>
+                                    <div class='top-window-alert-body'>
+                                        專案名稱: {{projectName}} <br>
+                                        申請人: {{user_id}} <br>
+                                        部門: {{user_depart}} <br>
+                                        Core數: {{driver_cores}} <br>
+                                        Ram大小: {{driver_memory}} GB
+                                    </div>
+                                    <div class='top-window-alert-footer'>
+                                        <button class="hap-jupyter-btn btn-active" @click='checkCreateNewCustomerJupyterWindowOpen=false'>取消動作</button>
+                                        <button class="hap-jupyter-btn btn-active" @click="createNewCustomerJupyter()">SUBMIT</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class='top-window-alert-background' v-if="deleteJupyterWindowOpen==true" @click='deleteJupyterWindowOpen=false'>
+                            <div>
+                                <div class='top-window-alert-window animate__animated' @click.stop="" :class="deleteJupyterWindowOpen?'animate__fadeInDown':'animate__fadeOutUp'">
+                                    
+                                    <div class='top-window-alert-header'>
+                                        <p>確認要刪除此 Jupyter 環境?</p>
+                                        <i class='fas fa-times' @click='deleteJupyterWindowOpen=false'></i>
+                                    </div>
+                                    <div class='top-window-alert-body'>
+                                        專案名稱: {{deleteJupyterWindowInfo.project_name}} <br>
+                                        Port: {{deleteJupyterWindowInfo.port}} <br>
+                                        申請人: {{deleteJupyterWindowInfo.user_id}} <br>
+                                        部門: {{deleteJupyterWindowInfo.user_depart}} <br>
+                                        Core數: {{deleteJupyterWindowInfo.driver_cores}} <br>
+                                        Ram大小: {{deleteJupyterWindowInfo.driver_memory}} GB
+                                    </div>
+                                    <div class='top-window-alert-footer'>
+                                        <button class="hap-jupyter-btn btn-active" @click='deleteJupyterWindowOpen=false'>取消動作</button>
+                                        <button class="hap-jupyter-btn btn-active" @click="deleteJupyter()">確認刪除</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class='box-card'>
+                            <div class='box-card-header'>Create Jupyter</div>
+                            <div class='box-card-body'>
+                                <div class='hap-jupyter-customer-ctrl-inputlabel-list'>
+                                    <div class='hap-jupyter-customer-ctrl-inputlabel'>
+                                        <div>Port (8900~8950)</div>
+                                        <input class='hap-jupyter-customer-ctrl-input' type="number" v-model="portNum" min=8900 max=8950>
+                                    </div>
+                                    <div class='hap-jupyter-customer-ctrl-inputlabel'>
+                                        <div>Token</div>
+                                        <input class='hap-jupyter-customer-ctrl-input' type="text" v-model.trim="tokenStr" v-on:input="RemoveOtherWord('tokenStr')" placeholder="請輸入Token">
+                                    </div>
+                                    <div class='hap-jupyter-customer-ctrl-inputlabel'>
+                                        <div>專案名稱</div>
+                                        <input class='hap-jupyter-customer-ctrl-input' type="text" v-model.trim="projectName" v-on:input="RemoveOtherWord('projectName')" placeholder="請輸入專案名稱">
+                                    </div>
+                                    <div class='hap-jupyter-customer-ctrl-inputlabel'>
+                                        <div>申請人</div>
+                                        <input class='hap-jupyter-customer-ctrl-input' type="text" v-model.trim="user_id" v-on:input="RemoveOtherWord('user_id')" placeholder="請輸入專案名稱">
+                                    </div>
+                                    <div class='hap-jupyter-customer-ctrl-inputlabel'>
+                                        <div>部門</div>
+                                        <select style='height: calc( 2rem + 4px);' v-model="user_depart">
+                                            <option selected>客戶智能科</option>
+                                            <option>商業智能科</option>
+                                            <option>數據經營部</option>
+                                            <option>數據工程組</option>
+                                            <option>其他</option>
+                                        </select>
+                                    </div>
+                                    <div class='hap-jupyter-customer-ctrl-inputlabel'>
+                                        <div>Spark Name</div>
+                                        <input class='hap-jupyter-customer-ctrl-input' type="text" v-model.trim="spark_name" v-on:input="RemoveOtherWord('spark_name')" placeholder="請輸入Spark Name">
+                                    </div>
+                                    <div class='hap-jupyter-customer-ctrl-inputlabel'>
+                                        <div>Driver Memory</div>
+                                        <input class='hap-jupyter-customer-ctrl-input' type="number" v-model="driver_memory" min=1 max=128>
+                                    </div>
+                                    <div class='hap-jupyter-customer-ctrl-inputlabel'>
+                                        <div>Executor Memory</div>
+                                        <input class='hap-jupyter-customer-ctrl-input' type="number" v-model="executor_memory" min=1 max=128>
+                                    </div>
+
+
+                                    <div class='hap-jupyter-customer-ctrl-inputlabel'>
+                                        <div>Driver Cores</div>
+                                        <input class='hap-jupyter-customer-ctrl-input' type="number" v-model="driver_cores" min=1 max=32>
+                                    </div>
+
+                                    <div class='hap-jupyter-customer-ctrl-inputlabel'>
+                                        <div>Executor Cores</div>
+                                        <input class='hap-jupyter-customer-ctrl-input' type="number" v-model="executor_cores" min=1 max=32>
+                                    </div>
+                                    <div class='hap-jupyter-customer-ctrl-inputlabel'>
+                                        <div>Max Executors</div>
+                                        <input class='hap-jupyter-customer-ctrl-input' type="number" v-model="max_executors" min=1 max=32>
+                                    </div>
+                                    
+                                    <div class='hap-jupyter-customer-ctrl-inputlabel-big'>
+                                        <div>其他註記</div>
+                                        <textarea style="width: calc( 100% - 6px);" v-model="context"></textarea>
+                                    </div>
+                                    <div class='hap-jupyter-customer-ctrl-inputlabel-big'>
+                                        <button 
+                                        v-if="checkCreateNewCustomerJupyterSetting.length==0"
+                                        id='hap-jupyter-customer-ctrl-submit-btn'
+                                        class='hap-jupyter-btn btn-active'
+                                        @click="checkCreateNewCustomerJupyterWindowOpen = true"
+                                        >SUBMIT</button>
+
+                                        <div v-else>
+                                            <button
+                                            id='hap-jupyter-customer-ctrl-submit-btn'
+                                            style="position:relative;z-index: 2;"
+                                            class='hap-jupyter-btn btn-notwork'
+                                            >
+                                                SUBMIT
+                                            </button>
+                                            <div id="hap-jupyter-customer-ctrl-submit-btn-warning-window">
+                                                <ul>
+                                                    <li v-for="waringString of checkCreateNewCustomerJupyterSetting">
+                                                        {{waringString}}
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+    
+    
+                        <div class='box-card'>
+                            <div class='box-card-header'>客製化環境列表</div>
+                            <div class='box-card-body'>
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>專案名稱</th>
+                                            <th>PORT</th>
+                                            <th>申請者</th>
+                                            <th>申請單位</th>
+                                            <th>申請時間</th>
+                                            <th>建置者</th>
+                                            <th>操作</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr v-for="(customerJupyterInfo, index) of customerJupyterInfos">
+                                            <td>{{customerJupyterInfo.project_name}}</td>
+                                            <td>{{customerJupyterInfo.port}}</td>
+                                            <td>{{customerJupyterInfo.user_name}}</td>
+                                            <td>{{customerJupyterInfo.user_depart}}</td>
+                                            <td>{{customerJupyterInfo.create_time}}</td>
+                                            <td>{{customerJupyterInfo.spark_name}}</td>
+                                            <td>
+                                                <div class='customer-jupyter-active-list'>
+                                                    <a class='hap-jupyter-btn btn-active' :href="'http://34.135.113.78:'+customerJupyterInfo.port+'/login?token='+customerJupyterInfo.user_token" target="_blank">
+                                                        <i class='fas fa-code'></i>
+                                                    </a>
+                                                    <div class='hap-jupyter-btn btn-info juypter-active-info-btn' style='position:relative;'>
+                                                        <i class='far fa-eye'></i>
+                                                        <div class='juypter-infomation' style='position:absolute;'>
+                                                            <p>Juypter Infomation</p>
+                                                            Spark Name: {{customerJupyterInfo.spark_name}}<br>
+                                                            Driver Memory: {{customerJupyterInfo.driver_memory}}G<br>
+                                                            Executor Memory: {{customerJupyterInfo.executor_memory}}G<br>
+                                                            Driver Cores: {{customerJupyterInfo.driver_cores}}<br>
+                                                            Executor Cores: {{customerJupyterInfo.executor_cores}}<br>
+                                                            Max Executors: {{customerJupyterInfo.max_executors}}
+                                                        </div>
+                                                    </div>
+                                                    <div class='hap-jupyter-btn' :class="customerJupyterInfo.status=='enable'?'btn-open':'btn-close'"
+                                                        @click="clickSwitchCustomerJupyterButton(customerJupyterInfo)"
+                                                    >
+                                                        <i class='fas fa-power-off'></i>
+                                                    </div>
+                                                    <div class='hap-jupyter-btn btn-close' @click="clickDeleteJupyterBtn(customerJupyterInfo)">
+                                                        <i class="fas fa-trash-alt"></i>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>     
+                            </div>
+                       
+                        </div>
+    
+                    </div>
+    
+    
+    
+                </div>
+
+                <div id='url-description-window'>
+                    <div style='padding: 15px 22.5px;'>
+                        <h1 style='font-size: 1.8rem;margin: 0;'>{{title}}</h1>
+                        <h3 style='color: gray;margin: 0;'>{{content}}</h3>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</body>
+<script type="text/javascript" src="/static/dist/Ver2TreeStudioPage/MainToolBox/VueSetting.js"></script>
+<script type="text/javascript" src="/static/dist/Ver2TreeStudioPage/HomePage/VueSetting.js"></script>
+<script type="text/javascript" src="/static/dist/Ver2TreeStudioPage/HiveSearcher/VueSetting.js"></script>
+<script type="text/javascript" src="/static/dist/Ver2TreeStudioPage/HAP_JupyterWindow/VueSetting.js"></script>
+<script type="text/javascript" src="/static/dist/Ver2TreeStudioPage/JupyterCtrlWindow/VueSetting.js"></script>
+<script type="text/javascript" src="/static/dist/Ver2TreeStudioPage/TopMenu/VueSetting.js"></script>
+<script type="text/javascript" src="/static/dist/Ver2TreeStudioPage/URLdescriptionWindow/VueSetting.js"></script>
+<script type="text/javascript" src="/static/dist/Ver2TreeStudioPage/LoadingWindow/VueSetting.js"></script>
+
+</html>
