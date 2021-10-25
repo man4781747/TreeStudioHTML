@@ -380,64 +380,78 @@
                                 <thead>
                                     <tr>
                                         <th>
-                                            <div @click="sortByBtmChose('tableName')">
-                                                <template v-if="sortBy=='tableName'">
-                                                    <i v-if='sortValue==1' class="fas fa-sort-down"></i>
-                                                    <i v-else class="fas fa-sort-up"></i>
-                                                </template>
+                                            <div class='hive-table-header-item mouse-pointer' @click="sortByBtmChose('tableName')">
+                                                <i class="fas fa-sort-down" :style='"color:"+(
+                                                    (sortBy=="tableName"&sortValue==1)?"#000":"#999"
+                                                    )+";"'></i>
+                                                <i class="fas fa-sort-up" :style='"color:"+(
+                                                    (sortBy=="tableName"&sortValue==-1)?"#000":"#999"
+                                                    )+";"'></i>
                                                 Table Name
                                             </div></th>
                                         <th>
-                                            <div @click="sortByBtmChose('tableName_Chinese')">
-                                                <template v-if="sortBy=='tableName_Chinese'">
-                                                    <i v-if='sortValue==1' class="fas fa-sort-down"></i>
-                                                    <i v-else class="fas fa-sort-up"></i>
-                                                </template>
+                                            <div class='hive-table-header-item mouse-pointer' @click="sortByBtmChose('tableName_Chinese')">
+                                                <i class="fas fa-sort-down" :style='"color:"+(
+                                                    (sortBy=="tableName_Chinese"&sortValue==1)?"#000":"#999"
+                                                    )+";"'></i>
+                                                <i class="fas fa-sort-up" :style='"color:"+(
+                                                    (sortBy=="tableName_Chinese"&sortValue==-1)?"#000":"#999"
+                                                    )+";"'></i>
                                                 中文名稱
                                             </div>
                                         </th>
                                         <th>
-                                            <div @click="sortByBtmChose('DBNanme')">
-                                                <template v-if="sortBy=='DBNanme'">
-                                                    <i v-if='sortValue==1' class="fas fa-sort-down"></i>
-                                                    <i v-else class="fas fa-sort-up"></i>
-                                                </template>
+                                            <div class='hive-table-header-item mouse-pointer' @click="sortByBtmChose('DBNanme')">
+                                                <i class="fas fa-sort-down" :style='"color:"+(
+                                                    (sortBy=="DBNanme"&sortValue==1)?"#000":"#999"
+                                                    )+";"'></i>
+                                                <i class="fas fa-sort-up" :style='"color:"+(
+                                                    (sortBy=="DBNanme"&sortValue==-1)?"#000":"#999"
+                                                    )+";"'></i>
                                                 資料庫
                                             </div>
                                         </th>
                                         <th>
-                                            <div @click="sortByBtmChose('lastUpdate')">
-                                                <template v-if="sortBy=='lastUpdate'">
-                                                    <i v-if='sortValue==1' class="fas fa-sort-down"></i>
-                                                    <i v-else class="fas fa-sort-up"></i>
-                                                </template>
+                                            <div class='hive-table-header-item mouse-pointer' @click="sortByBtmChose('lastUpdate')">
+                                                <i class="fas fa-sort-down" :style='"color:"+(
+                                                    (sortBy=="lastUpdate"&sortValue==1)?"#000":"#999"
+                                                    )+";"'></i>
+                                                <i class="fas fa-sort-up" :style='"color:"+(
+                                                    (sortBy=="lastUpdate"&sortValue==-1)?"#000":"#999"
+                                                    )+";"'></i>
                                                 最後更新時間
                                             </div>
                                         </th>
                                         <th>
-                                            <div @click="sortByBtmChose('status')">
-                                                <template v-if="sortBy=='status'">
-                                                    <i v-if='sortValue==1' class="fas fa-sort-down"></i>
-                                                    <i v-else class="fas fa-sort-up"></i>
-                                                </template>
+                                            <div class='hive-table-header-item mouse-pointer' @click="sortByBtmChose('status')">
+                                                <i class="fas fa-sort-down" :style='"color:"+(
+                                                    (sortBy=="status"&sortValue==1)?"#000":"#999"
+                                                    )+";"'></i>
+                                                <i class="fas fa-sort-up" :style='"color:"+(
+                                                    (sortBy=="status"&sortValue==-1)?"#000":"#999"
+                                                    )+";"'></i>
                                                 更新狀況
                                             </div>
                                         </th>
                                         <th>
-                                            <div @click="sortByBtmChose('updateFrequency')">
-                                                <template v-if="sortBy=='updateFrequency'">
-                                                    <i v-if='sortValue==1' class="fas fa-sort-down"></i>
-                                                    <i v-else class="fas fa-sort-up"></i>
-                                                </template>
+                                            <div class='hive-table-header-item mouse-pointer' @click="sortByBtmChose('updateFrequency')">
+                                                <i class="fas fa-sort-down" :style='"color:"+(
+                                                    (sortBy=="updateFrequency"&sortValue==1)?"#000":"#999"
+                                                    )+";"'></i>
+                                                <i class="fas fa-sort-up" :style='"color:"+(
+                                                    (sortBy=="updateFrequency"&sortValue==-1)?"#000":"#999"
+                                                    )+";"'></i>
                                                 更新頻率
                                             </div>
                                         </th>
                                         <th>
-                                            <div @click="sortByBtmChose('buildDate')">
-                                                <template v-if="sortBy=='buildDate'">
-                                                    <i v-if='sortValue==1' class="fas fa-sort-down"></i>
-                                                    <i v-else class="fas fa-sort-up"></i>
-                                                </template>
+                                            <div class='hive-table-header-item mouse-pointer' @click="sortByBtmChose('buildDate')">
+                                                <i class="fas fa-sort-down" :style='"color:"+(
+                                                    (sortBy=="buildDate"&sortValue==1)?"#000":"#999"
+                                                    )+";"'></i>
+                                                <i class="fas fa-sort-up" :style='"color:"+(
+                                                    (sortBy=="buildDate"&sortValue==-1)?"#000":"#999"
+                                                    )+";"'></i>
                                                 上架時間
                                             </div>
                                         </th>

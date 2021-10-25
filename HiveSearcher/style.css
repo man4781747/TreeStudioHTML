@@ -118,4 +118,17 @@
     border-color: #dee2e6 !important;
 }
 
-#hive-searcher 
+#hive-searcher .hive-table-header-item {
+    position: relative;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    white-space: nowrap;
+    height: 1.2rem;
+    line-height: 1.2rem;
+}
+
+#hive-searcher .hive-table-header-item i{
+    position: absolute;
+    left: 0px;
+    line-height: 1.2rem;
+}
