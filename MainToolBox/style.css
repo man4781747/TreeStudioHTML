@@ -209,6 +209,7 @@ body{
 }
 
 .main-toolbox-label-child-div {
+    transition: height .3s;
 }
 
 .main-toolbox-label-flex {

@@ -5,6 +5,7 @@
 
 .customer-jupyter-active-list {
     display: flex;
+    justify-content: center;
 }
 
 .hap-jupyter-btn {

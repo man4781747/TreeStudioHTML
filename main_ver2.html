@@ -112,15 +112,17 @@
                             :style="labelItem.opened == true?'transform: rotate(-90deg);':''"
                             ></i>
                         </div>
-                        <div class='main-toolbox-label-child-div' v-show='labelItem.opened == true'>
-                            <ul style="list-style: none;padding: 0 .5rem;">
+                        <div class='main-toolbox-label-child-div'
+                            :style="labelItem.opened == true?'height:'+labelItem.height+'px;':'height:0px;'"
+                        >
+                            <ul style="list-style: none;padding: 0 .5rem;" :id="labelItem.id">
                                 <li 
                                     v-for="(listItem, index) of labelItem.List" 
                                     class='main-toolbox-label-btn child-toolbox-label-btn'
                                 >
                                     <a
                                     v-if="listItem.Type == 'URL'"
-                                    :class='chosedPage==listItem.Name?"main-toolbox-label-btn-active":""'
+                                    :class='chosedPage==labelName+"."+listItem.Name?"main-toolbox-label-btn-active":""'
                                     class='main-toolbox-label-flex'
                                     :href="listItem.URL"
                                     target='_blank'
@@ -135,7 +137,7 @@
 
                                     <!-- 頁面切換(Page) -->
                                     <div
-                                    :class='chosedPage==listItem.Name?"main-toolbox-label-btn-active":""'
+                                    :class='chosedPage==labelName+"."+listItem.Name?"main-toolbox-label-btn-active":""'
                                     class='main-toolbox-label-flex'
                                     v-else-if="listItem.Type == 'Page'"
                                     @click="changePage(listItem, labelName+'.'+listItem.Name)"
@@ -557,25 +559,25 @@
                             ></i>
                         </div>
                         <hr style='width: 100%;'>
-                        <table>
+                        <table style='border-spacing: unset;'>
                             <thead>
                                 <tr>
-                                    <th>專案名稱</th>
-                                    <th>申請者</th>
-                                    <th>申請單位</th>
-                                    <th>申請時間</th>
-                                    <th>建置者</th>
-                                    <th>操作</th>
+                                    <th style='padding: .5rem;font-size: 1.25rem;'>專案名稱</th>
+                                    <th style='padding: .5rem;font-size: 1.25rem;'>申請者</th>
+                                    <th style='padding: .5rem;font-size: 1.25rem;'>申請單位</th>
+                                    <th style='padding: .5rem;font-size: 1.25rem;'>申請時間</th>
+                                    <th style='padding: .5rem;font-size: 1.25rem;'>建置者</th>
+                                    <th style='padding: .5rem;font-size: 1.25rem;'>操作</th>
                                 </tr>
                             </thead>
-                            <tbody>
+                            <tbody style='text-align: center;'>
                                 <tr v-for="(customerJupyterInfo, index) of customerJupyterInfos">
-                                    <td>{{customerJupyterInfo.project_name}}</td>
-                                    <td>{{customerJupyterInfo.user_name}}</td>
-                                    <td>{{customerJupyterInfo.user_depart}}</td>
-                                    <td>{{customerJupyterInfo.create_time}}</td>
-                                    <td>{{customerJupyterInfo.spark_name}}</td>
-                                    <td>
+                                    <td style="padding: .25rem;border-top: 1px #aaa solid;">{{customerJupyterInfo.project_name}}</td>
+                                    <td style="padding: .25rem;border-top: 1px #aaa solid;">{{customerJupyterInfo.user_name}}</td>
+                                    <td style="padding: .25rem;border-top: 1px #aaa solid;">{{customerJupyterInfo.user_depart}}</td>
+                                    <td style="padding: .25rem;border-top: 1px #aaa solid;">{{customerJupyterInfo.create_time}}</td>
+                                    <td style="padding: .25rem;border-top: 1px #aaa solid;">{{customerJupyterInfo.spark_name}}</td>
+                                    <td style="padding: .25rem;border-top: 1px #aaa solid;">
                                         <div class='customer-jupyter-active-list'>
                                             <a class='hap-jupyter-btn btn-active' :href="'http://34.135.113.78:'+customerJupyterInfo.port+'/login?token='+customerJupyterInfo.user_token" target="_blank">
                                                 <i class='fas fa-code'></i>
@@ -822,27 +824,27 @@
                                 </div>
                             </div>
                             <div class='box-card-body'>
-                                <table>
+                                <table style="width: 100%;text-align: center;border-spacing: unset;">
                                     <thead>
                                         <tr>
-                                            <th>專案名稱</th>
-                                            <th>PORT</th>
-                                            <th>申請者</th>
-                                            <th>申請單位</th>
-                                            <th>申請時間</th>
-                                            <th>建置者</th>
-                                            <th>操作</th>
+                                            <th style="padding: .5rem;font-size: 1.25rem;">專案名稱</th>
+                                            <th style="padding: .5rem;font-size: 1.25rem;">PORT</th>
+                                            <th style="padding: .5rem;font-size: 1.25rem;">申請者</th>
+                                            <th style="padding: .5rem;font-size: 1.25rem;">申請單位</th>
+                                            <th style="padding: .5rem;font-size: 1.25rem;">申請時間</th>
+                                            <th style="padding: .5rem;font-size: 1.25rem;">建置者</th>
+                                            <th style="padding: .5rem;font-size: 1.25rem;">操作</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <tr v-for="(customerJupyterInfo, index) of customerJupyterInfos">
-                                            <td>{{customerJupyterInfo.project_name}}</td>
-                                            <td>{{customerJupyterInfo.port}}</td>
-                                            <td>{{customerJupyterInfo.user_name}}</td>
-                                            <td>{{customerJupyterInfo.user_depart}}</td>
-                                            <td>{{customerJupyterInfo.create_time}}</td>
-                                            <td>{{customerJupyterInfo.spark_name}}</td>
-                                            <td>
+                                            <td style="padding: .25rem;border-top: 1px #aaa solid;">{{customerJupyterInfo.project_name}}</td>
+                                            <td style="padding: .25rem;border-top: 1px #aaa solid;">{{customerJupyterInfo.port}}</td>
+                                            <td style="padding: .25rem;border-top: 1px #aaa solid;">{{customerJupyterInfo.user_name}}</td>
+                                            <td style="padding: .25rem;border-top: 1px #aaa solid;">{{customerJupyterInfo.user_depart}}</td>
+                                            <td style="padding: .25rem;border-top: 1px #aaa solid;">{{customerJupyterInfo.create_time}}</td>
+                                            <td style="padding: .25rem;border-top: 1px #aaa solid;">{{customerJupyterInfo.spark_name}}</td>
+                                            <td style="padding: .25rem;border-top: 1px #aaa solid;">
                                                 <div class='customer-jupyter-active-list'>
                                                     <a class='hap-jupyter-btn btn-active' :href="'http://34.135.113.78:'+customerJupyterInfo.port+'/login?token='+customerJupyterInfo.user_token" target="_blank">
                                                         <i class='fas fa-code'></i>

@@ -28,6 +28,8 @@ var Vue_mainToolBox =  new Vue({
                 'Type': 'List', 
                 'opened': false,
                 'icon': 'far fa-calendar-alt',
+                'height' : 0,
+                'id' : 'main-toolbox-list-HAP_AIRJOB',
                 // 'svg': 'http://34.135.113.78:9000/static/dist/img/AirflowIcon-white-30-rotate-new.svg',
                 'List': [
                     {
@@ -158,6 +160,8 @@ var Vue_mainToolBox =  new Vue({
                         'Type': 'List',
                         'icon': 'fas fa-sliders-h',
                         'opened': false,
+                        'height' : 0,
+                        'id' : 'main-toolbox-list-System',
                         'List': [
                             {
                                 'Name': 'Jupyter 控制',
@@ -217,7 +221,6 @@ var Vue_mainToolBox =  new Vue({
                 else if (L_pageName.length == 2){
                     let S_pageName = L_pageName[0]
                     let S_listName = L_pageName[1]
-                    console.log(S_pageName,'->',S_listName)
                     if (this.D_labelList[S_pageName] == undefined) {
                         this.changePage({}, "Home")
                     }
@@ -227,6 +230,7 @@ var Vue_mainToolBox =  new Vue({
                         }
                         else {
                             console.log(S_pageName,'->',S_listName)
+                            this.D_labelList[S_pageName].opened = true
                             for (listItem of this.D_labelList[S_pageName].List){
                                 if (listItem.Name == S_listName){
                                     this.changePage(listItem, S_pageName+'.'+S_listName)
@@ -259,13 +263,22 @@ var Vue_mainToolBox =  new Vue({
 			}
 		},
 
-
+        calcListItemHeight(){
+            for (itemKey of Object.keys(this.D_labelList)){
+                if (this.D_labelList[itemKey].Type == "List"){
+                    this.D_labelList[itemKey].height = document.getElementById(this.D_labelList[itemKey].id).offsetHeight
+                }
+            }
+        },
 
     },
 
     created: function () {
         // this.changePage({},'Home')
         // this.loadUrlParas()
-    }
-})
+    },
 
+    updated: function () {
+        this.calcListItemHeight()
+    },
+})
