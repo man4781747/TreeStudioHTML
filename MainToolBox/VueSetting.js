@@ -75,6 +75,13 @@ var Vue_mainToolBox =  new Vue({
 
     methods:{
         changePage(labelItem,S_page){
+            Vue.set(
+                this.urlParas,
+                'page',
+                S_page
+            )
+            this.updateUrlParas()
+
             this.chosedPage = S_page
             if (S_page == 'Home'){
                 let element = document.getElementById("home-grid");
@@ -101,7 +108,7 @@ var Vue_mainToolBox =  new Vue({
                 element.style.display = 'none';
             } 
 
-            if (S_page == 'Jupyter 控制'){
+            if (S_page == 'System.Jupyter 控制'){
                 let element = document.getElementById("hap-jupyter-ctrl-window");
                 element.style.display = '';
                 Vue_JupyterCtrlWindow.updateCustomerJupyterInfos()
@@ -125,13 +132,9 @@ var Vue_mainToolBox =  new Vue({
         },
 
 		updateUrlParas(){
-
 			S_urlParastring = new URLSearchParams(this.urlParas).toString();
-			// S_fullUrlPath = location.host + location.pathname + '?' + S_urlParastring
 			S_fullUrlPath = "?" + S_urlParastring
 			history.pushState(null,null,S_fullUrlPath)
-
-			// location.search = new URLSearchParams(this.urlParas)
 		},
 
 		loadUrlParas(){
@@ -198,6 +201,62 @@ var Vue_mainToolBox =  new Vue({
                 )
 
 			}
+			if (this.urlParas['page'] != undefined){
+                let L_pageName = this.urlParas['page'].split('.')
+                if (L_pageName.length == 1){
+                    let S_pageName = L_pageName[0]
+                    if (this.D_labelList[S_pageName] == undefined) {
+                        this.changePage({}, "Home")
+                    }
+                    else {
+                        console.log(this.D_labelList[S_pageName])
+                        this.changePage(this.D_labelList[S_pageName], S_pageName)
+                    }
+
+                }
+                else if (L_pageName.length == 2){
+                    let S_pageName = L_pageName[0]
+                    let S_listName = L_pageName[1]
+                    console.log(S_pageName,'->',S_listName)
+                    if (this.D_labelList[S_pageName] == undefined) {
+                        this.changePage({}, "Home")
+                    }
+                    else {
+                        if (this.D_labelList[S_pageName].List == undefined) {
+                            this.changePage({}, "Home")
+                        }
+                        else {
+                            console.log(S_pageName,'->',S_listName)
+                            for (listItem of this.D_labelList[S_pageName].List){
+                                if (listItem.Name == S_listName){
+                                    this.changePage(listItem, S_pageName+'.'+S_listName)
+                                }
+                            }
+                        }
+                    }
+
+
+                }
+
+
+                // if (this.D_labelList[S_pageName] == undefined) {
+                //     this.changePage({}, "Home")
+                // }
+
+                // else if (this.D_labelList[S_pageName].Type == 'List'){
+                //     let S_listName = this.urlParas['list']
+                //     if (this.D_labelList[S_pageName][S_listName].Type != undefined ){
+                //         this.changePage(this.D_labelList[S_pageName][S_listName], S_listName)
+                //     }
+                // }
+                // else if (["Home", "URL", "Page"].indexOf(this.D_labelList[S_pageName].Type)!=-1){
+                //     console.log(this.D_labelList[S_pageName])
+                //     this.changePage(this.D_labelList[S_pageName], S_pageName)
+                // }
+                // else {
+                //     this.changePage({}, "Home")
+                // }
+			}
 		},
 
 
@@ -205,7 +264,8 @@ var Vue_mainToolBox =  new Vue({
     },
 
     created: function () {
-        this.changePage({},'Home')
-        this.loadUrlParas()
+        // this.changePage({},'Home')
+        // this.loadUrlParas()
     }
 })
+

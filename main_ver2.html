@@ -124,7 +124,7 @@
                                     class='main-toolbox-label-flex'
                                     :href="listItem.URL"
                                     target='_blank'
-                                    @click="changePage(listItem, listItem.Name)"
+                                    @click="changePage(listItem, labelName+'.'+listItem.Name)"
                                     >
                                         <i class='lable-icon' v-if='listItem.icon != undefined' :class="listItem.icon"></i>
                                         <div class='lable-string' style='dispaly: flex;'>
@@ -138,7 +138,7 @@
                                     :class='chosedPage==listItem.Name?"main-toolbox-label-btn-active":""'
                                     class='main-toolbox-label-flex'
                                     v-else-if="listItem.Type == 'Page'"
-                                    @click="changePage(listItem, listItem.Name)"
+                                    @click="changePage(listItem, labelName+'.'+listItem.Name)"
                                     >
                                         <i class='lable-icon' v-if='listItem.icon' :class="listItem.icon"></i>
                                         <div class='lable-string'>{{listItem.Name}}</div>

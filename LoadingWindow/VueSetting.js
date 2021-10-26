@@ -40,13 +40,13 @@ function welcomeWindowBuild(){
     }, 10);
 
     setTimeout(function(){
-        Vue_mainToolBox.openLoadSuccessWindow = false
+        Vue_WelcomeWindow.openLoadSuccessWindow = false
     },2000)
 
 }
 
 
-var Vue_mainToolBox =  new Vue({
+var Vue_WelcomeWindow =  new Vue({
     el: '#vue-load-success-window',
     data: {
         closeLoadingWindow: true,
@@ -61,3 +61,6 @@ var Vue_mainToolBox =  new Vue({
         welcomeWindowBuild()
     }
 })
+
+
+Vue_mainToolBox.loadUrlParas()
