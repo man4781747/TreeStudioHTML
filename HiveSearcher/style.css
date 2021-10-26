@@ -3,6 +3,10 @@
     padding: 0rem 4rem;
 }
 
+#hive-table-body{
+    overflow: auto;
+}
+
 #hive-searcher .search-bar {
     display: flex;
     border-radius: .5rem;

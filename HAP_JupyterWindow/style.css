@@ -98,6 +98,20 @@
     box-shadow: none;
 }
 
+#hap-jupyter-window .btn-update {
+    color: #333;
+    background-color: #eee;
+    border-color: #adb5bd;
+    box-shadow: none;
+}
+
+#hap-jupyter-window .btn-update:hover {
+    color: #333;
+    background-color: #aaa;
+    border-color: #adb5bd;
+    box-shadow: none;
+}
+
 .juypter-infomation{
     display: none;
     color: #000;

@@ -504,8 +504,7 @@
                                 <i class="fas fa-cloud-upload-alt anima-updown-in-2-sec" style="margin-right: .5rem;"></i>{{statusChangeStatus}}
                             </div>
                         </div>
-                        
-                        
+                          
                         <div class='top-window-alert-background' v-if="statusChangeWindowOpen==true" @click='statusChangeWindowOpen=false'>
                             <div>
                                 <div class='top-window-alert-window animate__animated' @click.stop="" :class="statusChangeWindowOpen?'animate__fadeInDown':'animate__fadeOutUp'">
@@ -551,8 +550,12 @@
                             ></div>
                         </div>
 
-
-                        <div>客製化環境</div>
+                        <div style="display: flex;justify-content: space-between;align-items: center;"
+                        @click="updateCustomerJupyterInfos()">
+                            <div>客製化環境</div>
+                            <i class="fas fa-sync-alt hap-jupyter-btn btn-update" style="margin: 0;"
+                            ></i>
+                        </div>
                         <hr style='width: 100%;'>
                         <table>
                             <thead>
@@ -808,10 +811,16 @@
                                 </div>
                             </div>
                         </div>
-    
-    
+                        <br>
                         <div class='box-card'>
-                            <div class='box-card-header'>客製化環境列表</div>
+                            <div class='box-card-header'>
+                                <div style="display: flex;justify-content: space-between;align-items: center;"
+                                @click="updateCustomerJupyterInfos()">
+                                    <div>客製化環境列表</div>
+                                    <i class="fas fa-sync-alt hap-jupyter-btn btn-update" style="margin: 0;"
+                                    ></i>
+                                </div>
+                            </div>
                             <div class='box-card-body'>
                                 <table>
                                     <thead>
@@ -842,15 +851,6 @@
                                                     :id="'hap-jupyter-ctrl-window-info-btn-'+customerJupyterInfo.port"
                                                     @click="openPopWindow($event, customerJupyterInfo, 'hap-jupyter-ctrl-window-info-btn-'+customerJupyterInfo.port)">
                                                         <i class='far fa-eye'></i>
-                                                        <!-- <div class='juypter-infomation' style='position:absolute;'>
-                                                            <p>Juypter Infomation</p>
-                                                            Spark Name: {{customerJupyterInfo.spark_name}}<br>
-                                                            Driver Memory: {{customerJupyterInfo.driver_memory}}G<br>
-                                                            Executor Memory: {{customerJupyterInfo.executor_memory}}G<br>
-                                                            Driver Cores: {{customerJupyterInfo.driver_cores}}<br>
-                                                            Executor Cores: {{customerJupyterInfo.executor_cores}}<br>
-                                                            Max Executors: {{customerJupyterInfo.max_executors}}
-                                                        </div> -->
                                                     </div>
                                                     <div class='hap-jupyter-btn' :class="customerJupyterInfo.status=='enable'?'btn-open':'btn-close'"
                                                         @click="clickSwitchCustomerJupyterButton(customerJupyterInfo)"

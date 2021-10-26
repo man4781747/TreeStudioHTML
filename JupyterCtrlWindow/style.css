@@ -49,6 +49,20 @@
     box-shadow: none;
 }
 
+#hap-jupyter-ctrl-window .btn-update {
+    color: #333;
+    background-color: #eee;
+    border-color: #adb5bd;
+    box-shadow: none;
+}
+
+#hap-jupyter-ctrl-window .btn-update:hover {
+    color: #333;
+    background-color: #7b8186;
+    border-color: #7b8186;
+    box-shadow: none;
+}
+
 #hap-jupyter-ctrl-window .btn-notwork {
     color: #fff;
     background-color: #adb5bd;
