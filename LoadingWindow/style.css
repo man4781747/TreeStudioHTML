@@ -23,11 +23,13 @@
     text-transform: uppercase;
     letter-spacing: 0.5em;
     overflow: hidden;
+    z-index: 2;
 }
   
 .vue-load-success-content .letter {
     display: inline-block;
     line-height: 1em;
+    z-index: 2;
 }
 
 
@@ -61,11 +63,13 @@
     font-size: 1em;
     letter-spacing: 0.3em;
     overflow: hidden;
+    z-index: 2;
 }
   
 .vue-load-success-content-2 .letter-2 {
     display: inline-block;
     line-height: .5em;
+    z-index: 2;
 }
 
 
@@ -88,4 +92,66 @@
 
 .delay-display-out-leave-to {
     opacity: 0;
+}
+
+.loading-window-table-item {
+    position: absolute;
+    font-size: 200px;
+    color: rgba(255, 255, 255, 0.5);
+    z-index: 2;
+}
+
+
+.loading-window-table-item .icon-on{
+    position: absolute;
+    top: -40px;
+    left: 50px;
+    color: #fff;
+    font-size: 100px;
+}
+
+
+
+.anima-updown-in-5-sec-30px {
+    animation-name:AnimaUpdownin5sec-30px;
+    animation-duration:5s;
+	animation-timing-function: infinite;
+	animation-iteration-count:infinite;
+	pointer-events: none;
+    position: relative;
+}
+
+@keyframes AnimaUpdownin5sec-30px{
+    from { top: -30px ; }
+    50%  { top: 0px; } 
+    to   { top: -30px; }
+}
+
+.anima-updown-in-3-sec-50px {
+    animation-name:AnimaUpdownin5sec-50px;
+    animation-duration:3s;
+	animation-timing-function: infinite;
+	animation-iteration-count:infinite;
+	pointer-events: none;
+    position: relative;
+}
+
+@keyframes AnimaUpdownin5sec-50px{
+    from { top: 10px ; }
+    50%  { top: 0px; } 
+    to   { top: 10px; }
+}
+
+.anima-rotate-in-3-sec-10deg {
+    animation-name:AnimaRotatein3sec-10deg;
+    animation-duration:3s;
+	animation-timing-function: infinite;
+	animation-iteration-count:infinite;
+	pointer-events: none;
+}
+
+@keyframes AnimaRotatein3sec-10deg{
+    from { transform:rotate(-10deg); }
+    50%  { transform:rotate(10deg); } 
+    to   { transform:rotate(-10deg); }
 }

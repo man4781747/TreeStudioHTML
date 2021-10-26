@@ -41,7 +41,7 @@ function welcomeWindowBuild(){
 
     setTimeout(function(){
         Vue_WelcomeWindow.openLoadSuccessWindow = false
-    },2000)
+    },1500)
 
 }
 
