@@ -43,6 +43,8 @@ var Vue_JupyterCtrlWindow =  new Vue({
         popwindowPositionY: 0,
         popwindowClass: '',
         popwindowInfoItem: {},
+
+        customerJupyterUpdateing: false,
     },
 
     computed: {
@@ -64,12 +66,15 @@ var Vue_JupyterCtrlWindow =  new Vue({
     methods:{
         // http://34.135.113.78:5005/get_docker_jupyter_sevice
         updateCustomerJupyterInfos(){
+            this.customerJupyterUpdateing = true
+
             fetch('http://34.135.113.78:5005/get_docker_jupyter_sevice')
             .then(function(response) {
                 return response.json();
             })
             .then(function(myJson) {
                 console.log(myJson);
+                Vue_JupyterCtrlWindow.customerJupyterUpdateing = false
                 Vue_JupyterCtrlWindow.customerJupyterInfos = myJson
             });
         },

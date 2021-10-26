@@ -500,7 +500,7 @@
                         </a>
                     </div>
     
-                    <div id='hap-jupyter-customer-list-window' style='display:grid;' :class="statusChangeWindowOpen?'animate__fadeIn':'animate__fadeOut'">
+                    <div id='hap-jupyter-customer-list-window' style='display:grid;position:relative;' :class="statusChangeWindowOpen?'animate__fadeIn':'animate__fadeOut'">
                         <div class='top-window-alert-window-lock' v-if="statusChangeStatus != ''" @click.stop="">
                             <div>
                                 <i class="fas fa-cloud-upload-alt anima-updown-in-2-sec" style="margin-right: .5rem;"></i>{{statusChangeStatus}}
@@ -552,54 +552,77 @@
                             ></div>
                         </div>
 
-                        <div style="display: flex;justify-content: space-between;align-items: center;"
-                        @click="updateCustomerJupyterInfos()">
-                            <div>客製化環境</div>
-                            <i class="fas fa-sync-alt hap-jupyter-btn btn-update" style="margin: 0;"
-                            ></i>
+                        <div>
+                            <div 
+                                v-if="customerJupyterUpdateing == true"
+                                style="
+                                display: flex;
+                                justify-content: center;
+                                align-items: center;
+                                position: absolute;
+                                width: 100%;
+                                height: 100%;
+                                background-color: rgba(0,0,0,.5);
+                                z-index: 800;
+                                left: 0;
+                                top: 0;font-size: 3rem;
+                                font-weight: 600;
+                                color: #efefef;">
+                                <i class="fas fa-sync-alt anima-updown-in-2-sec" style="margin-right: .5rem;"></i>
+                                更新中...
+                            </div>
+
+
+                            <div style="display: flex;justify-content: space-between;align-items: center;"
+                            @click="updateCustomerJupyterInfos()">
+                                <div>客製化環境</div>
+                                <i class="fas fa-sync-alt hap-jupyter-btn btn-update" style="margin: 0;"
+                                ></i>
+                            </div>
+                            <hr style='width: 100%;'>
+
+                            <table style='border-spacing: unset;width: 100%;'>
+                                <thead>
+                                    <tr>
+                                        <th style='padding: .5rem;font-size: 1.25rem;'>專案名稱</th>
+                                        <th style='padding: .5rem;font-size: 1.25rem;'>申請者</th>
+                                        <th style='padding: .5rem;font-size: 1.25rem;'>申請單位</th>
+                                        <th style='padding: .5rem;font-size: 1.25rem;'>申請時間</th>
+                                        <th style='padding: .5rem;font-size: 1.25rem;'>建置者</th>
+                                        <th style='padding: .5rem;font-size: 1.25rem;'>操作</th>
+                                    </tr>
+                                </thead>
+                                <tbody style='text-align: center;'>
+                                    <tr v-for="(customerJupyterInfo, index) of customerJupyterInfos">
+                                        <td style="padding: .25rem;border-top: 1px #aaa solid;">{{customerJupyterInfo.project_name}}</td>
+                                        <td style="padding: .25rem;border-top: 1px #aaa solid;">{{customerJupyterInfo.user_name}}</td>
+                                        <td style="padding: .25rem;border-top: 1px #aaa solid;">{{customerJupyterInfo.user_depart}}</td>
+                                        <td style="padding: .25rem;border-top: 1px #aaa solid;">{{customerJupyterInfo.create_time}}</td>
+                                        <td style="padding: .25rem;border-top: 1px #aaa solid;">{{customerJupyterInfo.spark_name}}</td>
+                                        <td style="padding: .25rem;border-top: 1px #aaa solid;">
+                                            <div class='customer-jupyter-active-list'>
+                                                <a class='hap-jupyter-btn btn-active' :href="'http://34.135.113.78:'+customerJupyterInfo.port+'/login?token='+customerJupyterInfo.user_token" target="_blank">
+                                                    <i class='fas fa-code'></i>
+                                                </a>
+                                                <div 
+                                                class='hap-jupyter-btn btn-info juypter-active-info-btn' 
+                                                style='position:relative;' 
+                                                :id='"hap-jupyter-window-info-btn-"+customerJupyterInfo.port'
+                                                @click='openPopWindow($event, customerJupyterInfo, "hap-jupyter-window-info-btn-"+customerJupyterInfo.port)'
+                                                >
+                                                    <i class='far fa-eye'></i>
+                                                </div>
+                                                <div class='hap-jupyter-btn' :class="customerJupyterInfo.status=='enable'?'btn-open':'btn-close'"
+                                                    @click="clickSwitchCustomerJupyterButton(customerJupyterInfo)"
+                                                >
+                                                    <i class='fas fa-power-off'></i>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
                         </div>
-                        <hr style='width: 100%;'>
-                        <table style='border-spacing: unset;'>
-                            <thead>
-                                <tr>
-                                    <th style='padding: .5rem;font-size: 1.25rem;'>專案名稱</th>
-                                    <th style='padding: .5rem;font-size: 1.25rem;'>申請者</th>
-                                    <th style='padding: .5rem;font-size: 1.25rem;'>申請單位</th>
-                                    <th style='padding: .5rem;font-size: 1.25rem;'>申請時間</th>
-                                    <th style='padding: .5rem;font-size: 1.25rem;'>建置者</th>
-                                    <th style='padding: .5rem;font-size: 1.25rem;'>操作</th>
-                                </tr>
-                            </thead>
-                            <tbody style='text-align: center;'>
-                                <tr v-for="(customerJupyterInfo, index) of customerJupyterInfos">
-                                    <td style="padding: .25rem;border-top: 1px #aaa solid;">{{customerJupyterInfo.project_name}}</td>
-                                    <td style="padding: .25rem;border-top: 1px #aaa solid;">{{customerJupyterInfo.user_name}}</td>
-                                    <td style="padding: .25rem;border-top: 1px #aaa solid;">{{customerJupyterInfo.user_depart}}</td>
-                                    <td style="padding: .25rem;border-top: 1px #aaa solid;">{{customerJupyterInfo.create_time}}</td>
-                                    <td style="padding: .25rem;border-top: 1px #aaa solid;">{{customerJupyterInfo.spark_name}}</td>
-                                    <td style="padding: .25rem;border-top: 1px #aaa solid;">
-                                        <div class='customer-jupyter-active-list'>
-                                            <a class='hap-jupyter-btn btn-active' :href="'http://34.135.113.78:'+customerJupyterInfo.port+'/login?token='+customerJupyterInfo.user_token" target="_blank">
-                                                <i class='fas fa-code'></i>
-                                            </a>
-                                            <div 
-                                            class='hap-jupyter-btn btn-info juypter-active-info-btn' 
-                                            style='position:relative;' 
-                                            :id='"hap-jupyter-window-info-btn-"+customerJupyterInfo.port'
-                                            @click='openPopWindow($event, customerJupyterInfo, "hap-jupyter-window-info-btn-"+customerJupyterInfo.port)'
-                                            >
-                                                <i class='far fa-eye'></i>
-                                            </div>
-                                            <div class='hap-jupyter-btn' :class="customerJupyterInfo.status=='enable'?'btn-open':'btn-close'"
-                                                @click="clickSwitchCustomerJupyterButton(customerJupyterInfo)"
-                                            >
-                                                <i class='fas fa-power-off'></i>
-                                            </div>
-                                        </div>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
                     </div>
     
     
@@ -814,7 +837,27 @@
                             </div>
                         </div>
                         <br>
-                        <div class='box-card'>
+                        <div class='box-card' style='position: relative;'>
+                            <div 
+                                v-if="customerJupyterUpdateing"
+                                style="
+                                display: flex;
+                                justify-content: center;
+                                align-items: center;
+                                position: absolute;
+                                width: 100%;
+                                height: 100%;
+                                background-color: rgba(0,0,0,.5);
+                                z-index: 800;
+                                left: 0;
+                                top: 0;font-size: 3rem;
+                                font-weight: 600;
+                                color: #efefef;">
+                                <i class="fas fa-sync-alt anima-updown-in-2-sec" style="margin-right: .5rem;"></i>
+                                更新中...
+                            </div>
+
+
                             <div class='box-card-header'>
                                 <div style="display: flex;justify-content: space-between;align-items: center;"
                                 @click="updateCustomerJupyterInfos()">

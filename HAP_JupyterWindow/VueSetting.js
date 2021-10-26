@@ -40,11 +40,16 @@ var Vue_JupyterWindow =  new Vue({
         ],
         customerJupyterInfos: [],
         
+        customerJupyterUpdateing: false,
+
     },
 
     methods:{
         // http://34.135.113.78:5005/get_docker_jupyter_sevice
         updateCustomerJupyterInfos(){
+            this.customerJupyterUpdateing = true
+
+
             fetch('http://34.135.113.78:5005/get_docker_jupyter_sevice')
             .then(function(response) {
                 return response.json();
@@ -52,6 +57,7 @@ var Vue_JupyterWindow =  new Vue({
             .then(function(myJson) {
                 console.log(myJson);
                 Vue_JupyterWindow.customerJupyterInfos = myJson
+                Vue_JupyterWindow.customerJupyterUpdateing = false
             });
         },
 
