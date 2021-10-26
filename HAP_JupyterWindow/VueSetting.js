@@ -1,3 +1,14 @@
+function getPosition (element) {
+    var x = 0;
+    var y = 0;
+    while ( element ) {
+      x += element.offsetLeft - element.scrollLeft + element.clientLeft;
+      y += element.offsetTop - element.scrollLeft + element.clientTop;
+      element = element.offsetParent;
+    }
+    return { x: x, y: y };
+}
+
 var Vue_JupyterWindow =  new Vue({
     el: '#hap-jupyter-window',
     data: {
@@ -5,6 +16,14 @@ var Vue_JupyterWindow =  new Vue({
         statusChangeWindowOpen: false,
         statusChangeWindowInfo: {},
         statusChangeStatus: '',
+
+        popwindowOpen: false,
+        popwindowBtnKey: '',
+        popwindowPositionX: 0,
+        popwindowPositionY: 0,
+        popwindowClass: '',
+        popwindowInfoItem: {},
+
         projectList:[
             {
                 'Name': '客戶智能科',
@@ -79,16 +98,42 @@ var Vue_JupyterWindow =  new Vue({
                 Vue_JupyterWindow.statusChangeStatus = ''
                 return null;
             })
-          
-          
-
-
         },
+
+        openPopWindow(event, popwindowInfoItem, S_btn_key){
+            this.popwindowBtnKey = S_btn_key
+            this.popwindowInfoItem = popwindowInfoItem
+            D_positionInfo = getPosition(document.getElementById(this.popwindowBtnKey))
+            this.popwindowPositionX = D_positionInfo.x + 'px'
+            this.popwindowPositionY = (D_positionInfo.y - document.documentElement.scrollTop) + 'px'
+            this.popwindowClass = 'pop-window-info-box-close'
+
+            this.popwindowOpen = true
+            setTimeout(function(){
+                Vue_JupyterWindow.popwindowPositionX = '0px'
+                Vue_JupyterWindow.popwindowPositionY = '0px'
+                Vue_JupyterWindow.popwindowClass = 'pop-window-info-box-open'
+            },10);
+            test = event
+        },
+
+        closePopWindow(){
+            D_positionInfo = getPosition(document.getElementById(this.popwindowBtnKey))
+            this.popwindowPositionX = D_positionInfo.x + 'px'
+            this.popwindowPositionY = (D_positionInfo.y - document.documentElement.scrollTop) + 'px'
+            this.popwindowClass = 'pop-window-info-box-close'
+
+            console.log(this.popwindowPositionX, this.popwindowPositionY)
+
+            setTimeout(function(){
+                Vue_JupyterWindow.popwindowOpen = false
+            },300);
+        },
+
     },
 
     created: function() {
         this.updateCustomerJupyterInfos()
-
     },
 })
 

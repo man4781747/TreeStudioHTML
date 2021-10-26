@@ -1,3 +1,14 @@
+function getPosition (element) {
+    var x = 0;
+    var y = 0;
+    while ( element ) {
+      x += element.offsetLeft - element.scrollLeft + element.clientLeft;
+      y += element.offsetTop - element.scrollLeft + element.clientTop;
+      element = element.offsetParent;
+    }
+    return { x: x, y: y };
+}
+
 var Vue_JupyterCtrlWindow =  new Vue({
     el: '#hap-jupyter-ctrl-window',
     data: {
@@ -25,6 +36,13 @@ var Vue_JupyterCtrlWindow =  new Vue({
         context: '',
         spark_name: '',
         max_executors: 1,
+
+        popwindowOpen: false,
+        popwindowBtnKey: '',
+        popwindowPositionX: 0,
+        popwindowPositionY: 0,
+        popwindowClass: '',
+        popwindowInfoItem: {},
     },
 
     computed: {
@@ -188,6 +206,37 @@ var Vue_JupyterCtrlWindow =  new Vue({
                 return null;
             })
         },
+
+        openPopWindow(event, popwindowInfoItem, S_btn_key){
+            this.popwindowBtnKey = S_btn_key
+            this.popwindowInfoItem = popwindowInfoItem
+            D_positionInfo = getPosition(document.getElementById(this.popwindowBtnKey))
+            this.popwindowPositionX = D_positionInfo.x + 'px'
+            this.popwindowPositionY =  (D_positionInfo.y - document.documentElement.scrollTop)  + 'px'
+            this.popwindowClass = 'pop-window-info-box-close'
+
+            this.popwindowOpen = true
+            setTimeout(function(){
+                Vue_JupyterCtrlWindow.popwindowPositionX = '0px'
+                Vue_JupyterCtrlWindow.popwindowPositionY = '0px'
+                Vue_JupyterCtrlWindow.popwindowClass = 'pop-window-info-box-open'
+            },10);
+            test = event
+        },
+
+        closePopWindow(){
+            D_positionInfo = getPosition(document.getElementById(this.popwindowBtnKey))
+            this.popwindowPositionX = D_positionInfo.x + 'px'
+            this.popwindowPositionY =  (D_positionInfo.y - document.documentElement.scrollTop) + 'px'
+            this.popwindowClass = 'pop-window-info-box-close'
+
+            console.log(this.popwindowPositionX, this.popwindowPositionY)
+
+            setTimeout(function(){
+                Vue_JupyterCtrlWindow.popwindowOpen = false
+            },300);
+        },
+
     },
 
     created: function() {

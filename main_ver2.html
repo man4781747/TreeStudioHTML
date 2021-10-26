@@ -524,6 +524,34 @@
                                 </div>
                             </div>
                         </div>
+
+                        <div class='pop-window' v-if="popwindowOpen">
+                            <div
+                            class="pop-window-info-box"
+                            :style="'left:'+popwindowPositionX+';top:'+popwindowPositionY+';'"
+                            :class="popwindowClass"
+                            @click="closePopWindow()"
+                            >
+                                <div class='pop-window-info' @click.stop=""
+                                >
+                                    <div class='pop-window-info-header'>Jupyter Infomation</div>
+                                    <div class='pop-window-info-body'>
+                                        Spark Name: {{popwindowInfoItem.spark_name}}<br>
+                                        Driver Memory: {{popwindowInfoItem.driver_memory}}G<br>
+                                        Executor Memory: {{popwindowInfoItem.executor_memory}}G<br>
+                                        Driver Cores: {{popwindowInfoItem.driver_cores}}<br>
+                                        Executor Cores: {{popwindowInfoItem.executor_cores}}<br>
+                                        Max Executors: {{popwindowInfoItem.max_executors}}
+                                    </div>
+                                </div>
+                            </div>
+                            <div 
+                                class="top-window-alert-background pop-window-background" 
+                                @click="closePopWindow()"
+                            ></div>
+                        </div>
+
+
                         <div>客製化環境</div>
                         <hr style='width: 100%;'>
                         <table>
@@ -549,17 +577,13 @@
                                             <a class='hap-jupyter-btn btn-active' :href="'http://34.135.113.78:'+customerJupyterInfo.port+'/login?token='+customerJupyterInfo.user_token" target="_blank">
                                                 <i class='fas fa-code'></i>
                                             </a>
-                                            <div class='hap-jupyter-btn btn-info juypter-active-info-btn' style='position:relative;'>
+                                            <div 
+                                            class='hap-jupyter-btn btn-info juypter-active-info-btn' 
+                                            style='position:relative;' 
+                                            :id='"hap-jupyter-window-info-btn-"+customerJupyterInfo.port'
+                                            @click='openPopWindow($event, customerJupyterInfo, "hap-jupyter-window-info-btn-"+customerJupyterInfo.port)'
+                                            >
                                                 <i class='far fa-eye'></i>
-                                                <div class='juypter-infomation' style='position:absolute;'>
-                                                    <p>Juypter Infomation</p>
-                                                    Spark Name: {{customerJupyterInfo.spark_name}}<br>
-                                                    Driver Memory: {{customerJupyterInfo.driver_memory}}G<br>
-                                                    Executor Memory: {{customerJupyterInfo.executor_memory}}G<br>
-                                                    Driver Cores: {{customerJupyterInfo.driver_cores}}<br>
-                                                    Executor Cores: {{customerJupyterInfo.executor_cores}}<br>
-                                                    Max Executors: {{customerJupyterInfo.max_executors}}
-                                                </div>
                                             </div>
                                             <div class='hap-jupyter-btn' :class="customerJupyterInfo.status=='enable'?'btn-open':'btn-close'"
                                                 @click="clickSwitchCustomerJupyterButton(customerJupyterInfo)"
@@ -664,6 +688,32 @@
                                     </div>
                                 </div>
                             </div>
+                        </div>
+
+                        <div class='pop-window' v-if="popwindowOpen">
+                            <div
+                            class="pop-window-info-box"
+                            :style="'left:'+popwindowPositionX+';top:'+popwindowPositionY+';'"
+                            :class="popwindowClass"
+                            @click="closePopWindow()"
+                            >
+                                <div class='pop-window-info' @click.stop=""
+                                >
+                                    <div class='pop-window-info-header'>Jupyter Infomation</div>
+                                    <div class='pop-window-info-body'>
+                                        Spark Name: {{popwindowInfoItem.spark_name}}<br>
+                                        Driver Memory: {{popwindowInfoItem.driver_memory}}G<br>
+                                        Executor Memory: {{popwindowInfoItem.executor_memory}}G<br>
+                                        Driver Cores: {{popwindowInfoItem.driver_cores}}<br>
+                                        Executor Cores: {{popwindowInfoItem.executor_cores}}<br>
+                                        Max Executors: {{popwindowInfoItem.max_executors}}
+                                    </div>
+                                </div>
+                            </div>
+                            <div 
+                                class="top-window-alert-background pop-window-background" 
+                                @click="closePopWindow()"
+                            ></div>
                         </div>
 
                         <div class='box-card'>
@@ -788,9 +838,11 @@
                                                     <a class='hap-jupyter-btn btn-active' :href="'http://34.135.113.78:'+customerJupyterInfo.port+'/login?token='+customerJupyterInfo.user_token" target="_blank">
                                                         <i class='fas fa-code'></i>
                                                     </a>
-                                                    <div class='hap-jupyter-btn btn-info juypter-active-info-btn' style='position:relative;'>
+                                                    <div class='hap-jupyter-btn btn-info juypter-active-info-btn' style='position:relative;' 
+                                                    :id="'hap-jupyter-ctrl-window-info-btn-'+customerJupyterInfo.port"
+                                                    @click="openPopWindow($event, customerJupyterInfo, 'hap-jupyter-ctrl-window-info-btn-'+customerJupyterInfo.port)">
                                                         <i class='far fa-eye'></i>
-                                                        <div class='juypter-infomation' style='position:absolute;'>
+                                                        <!-- <div class='juypter-infomation' style='position:absolute;'>
                                                             <p>Juypter Infomation</p>
                                                             Spark Name: {{customerJupyterInfo.spark_name}}<br>
                                                             Driver Memory: {{customerJupyterInfo.driver_memory}}G<br>
@@ -798,7 +850,7 @@
                                                             Driver Cores: {{customerJupyterInfo.driver_cores}}<br>
                                                             Executor Cores: {{customerJupyterInfo.executor_cores}}<br>
                                                             Max Executors: {{customerJupyterInfo.max_executors}}
-                                                        </div>
+                                                        </div> -->
                                                     </div>
                                                     <div class='hap-jupyter-btn' :class="customerJupyterInfo.status=='enable'?'btn-open':'btn-close'"
                                                         @click="clickSwitchCustomerJupyterButton(customerJupyterInfo)"
@@ -818,9 +870,7 @@
                         </div>
     
                     </div>
-    
-    
-    
+
                 </div>
 
                 <div id='url-description-window'>
