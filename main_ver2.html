@@ -36,6 +36,7 @@
         <transition name="delay-display-out">
             <div id='vue-load-success' v-if="openLoadSuccessWindow">
                 <div style="height: fit-content;position: relative;top: 12vh;z-index: 2;">
+                    <div class="vue-load-success-content-3"></div>
                     <div class="vue-load-success-content"></div>
                     <div class="vue-load-success-content-2"></div>
                 </div>
@@ -112,13 +113,13 @@
                     position: fixed;
                     bottom: 10vh;">
                         <i class="fas fa-circle" style="
-                            color: #007bff;
+                            color: rgb(0, 123, 255);
                             font-size: 100vw;
-                            bottom: 80vh;
+                            bottom: 150vh;
                             position: fixed;
                             left: 0px;
                             z-index: 3;
-                            text-shadow: rgb(0 123 255) 0rem 20rem 40rem;
+                            text-shadow: rgb(0 123 255) 0rem 50rem 400rem;
                         "></i>
                         <i class="far fa-circle" style="color: rgba(255, 255, 255, 0.1);
                         font-size: 100vw;
@@ -258,7 +259,7 @@
             </div>
             <div id='wrapper_page'>
                 <div id="home-grid" v-show="Vue_mainToolBox.chosedPage == 'Home'">
-                    <div class="box-small-card" id ="test-view">
+                    <!-- <div class="box-small-card" id ="test-view">
                         <div class="box-small-card-content">
                             <i class="fas fa-dice-d6"></i>
                             <div class="box-small-card-word">
@@ -280,7 +281,7 @@
                         <div class='box-small-card-title'>
                             Feature Store 特徵庫
                         </div>
-                    </div>
+                    </div> -->
     
                     <div class="box-small-card" id ="airjob-view">
                         <div class="box-small-card-content">
