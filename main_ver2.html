@@ -129,9 +129,6 @@
                     </div>
                 </div>
 
-
-
-
             </div>
         </transition>
         <div id='vue-loading-window' v-if="closeLoadingWindow">
@@ -668,7 +665,7 @@
 
                             <div style="display: flex;justify-content: space-between;align-items: center;"
                             @click="updateCustomerJupyterInfos()">
-                                <div>客製化環境</div>
+                                <div style="font-size: 1.5rem;color: #007bff;font-weight: 600;">客製化環境</div>
                                 <i class="fas fa-sync-alt hap-jupyter-btn btn-update" style="margin: 0;"
                                 ></i>
                             </div>
@@ -739,6 +736,7 @@
                                 <i class="fas fa-cloud-upload-alt anima-updown-in-2-sec" style="margin-right: .5rem;"></i>{{statusCreateStatus}}
                             </div>
                         </div>
+
                         <div class='top-window-alert-window-lock' v-if="statusDeleteStatus != ''" @click.stop="">
                             <div>
                                 <i class="fas fa-trash-alt anima-updown-in-2-sec" style="margin-right: .5rem;"></i>{{statusDeleteStatus}}
@@ -855,7 +853,7 @@
                                     </div>
                                     <div class='hap-jupyter-customer-ctrl-inputlabel'>
                                         <div>申請人</div>
-                                        <input class='hap-jupyter-customer-ctrl-input' type="text" v-model.trim="user_id" v-on:input="RemoveOtherWord('user_id')" placeholder="請輸入專案名稱">
+                                        <input class='hap-jupyter-customer-ctrl-input' type="text" v-model.trim="user_id" v-on:input="RemoveOtherWord('user_id')" placeholder="請輸入申請人名稱">
                                     </div>
                                     <div class='hap-jupyter-customer-ctrl-inputlabel'>
                                         <div>部門</div>

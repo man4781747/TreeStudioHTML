@@ -1,10 +1,12 @@
 #hive-searcher {
     background-color: #f5f7fa;
     padding: 0rem 4rem;
+    margin-bottom: 26px;
 }
 
 #hive-table-body{
     overflow: auto;
+    border: 1px#d1d0d0 solid;
 }
 
 #hive-searcher .search-bar {

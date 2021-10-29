@@ -122,6 +122,9 @@
     position: relative;
     border-top-left-radius: .25rem;
     border-top-right-radius: .25rem;
+    font-size: 1.5rem;
+    color: #007bff;
+    font-weight: 600;
 }
 
 .box-card-title {
