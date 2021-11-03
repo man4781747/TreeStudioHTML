@@ -86,10 +86,12 @@
     background-color: #fff;
 }
 
-.box-small-card-title {
+.box-small-card-title,
+.box-small-card-title *{
     color: #007bff;
     font-size: 1.5rem;
     font-weight: 600;
+    margin: 0;
 }
 
 .box-small-card-icon {
@@ -97,8 +99,9 @@
     width: 2rem;
 }
 
-.box-small-card-word {
-
+.box-small-card-word,
+.box-small-card-word *{
+    margin: 0;
 }
 
 .box-small-card-content {
@@ -106,6 +109,7 @@
     justify-content:space-between;
     padding-bottom: .75rem ;
     font-size: 2rem;
+    text-align: right;
 }
 
 .box-card {
@@ -261,17 +265,3 @@
 .fill-color {opacity:1;stroke-width:0;fill-opacity:0.3;}
 
 
-.small-scrollbar::-webkit-scrollbar-thumb {
-    border-radius: 10px;
-    -webkit-box-shadow: inset 0 0 6px rgb(0 0 0 / 50%);
-}
-
-.small-scrollbar::-webkit-scrollbar-track {
-    -webkit-box-shadow: inset 0 0 6px rgb(0 0 0 / 30%);
-    border-radius: 10px;
-}
-
-.small-scrollbar::-webkit-scrollbar {
-    width: 10px;
-    margin: 3px;
-}

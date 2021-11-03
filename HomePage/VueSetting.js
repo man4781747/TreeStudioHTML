@@ -33,13 +33,45 @@ Vue.component("airflow-icon", {
 	`
 })
 
-// var Vue_AirflowView =  new Vue({
-// 	el: '#home-grid',
-// 	data: {
-// 		test: 'ttt',
-// 	},
-// })
+Vue.component("home-page-small-item", {
+	template:`
+	<div class="box-small-card" id ="test-view">
+		<div class="box-small-card-content">
+			<div>
+				<slot name="icon">
+					<i class="fas fa-dice-d6"></i>
+				</slot>
+			</div>
+			<div class="box-small-card-word">
+				<slot name="content">
+					<p>Default Content</p>
+				</slot>
+			</div>
+		</div>
+		<div class='box-small-card-title'>
+			<slot name="title">
+				<p>Default title</p>
+			</slot>
+		</div>
+	</div>
+	`
+})
 
+var Vue_AirflowView =  new Vue({
+	el: '#teradata-info-small',
+	data: {
+		title: 'Teradata 分析型資料庫',
+		content: "1171 Tables",
+	},
+})
+
+var Vue_AirflowView =  new Vue({
+	el: '#feature-store-info-small',
+	data: {
+		title: 'Feature Store 特徵庫',
+		content: "102 Tables",
+	},
+})
 
 var Vue_AirflowView =  new Vue({
 	el: '#airflow-view',
@@ -124,19 +156,28 @@ var Vue_AirjobView =  new Vue({
 })
 
 
-
 var Vue_YesterdayFailList = new Vue({
 	el: '#yesterday-fail-list-window',
 	data: {
-		massage: '030',
 		failList : {},
 		projectChosed: '',
 		projectList: [],
-
 		AIRJOB_url : "http://34.80.102.147:8000/",
 	},
   
 	computed: {
+		failListAll(){
+			var failListAll = {}
+			for (let S_projectKey of Object.keys(this.failList)){
+				Object.assign(failListAll, this.failList[S_projectKey])
+				if (this.failList[S_projectKey]=='Loading'){
+					return 'Loading'
+				}
+
+			}
+			// return 'Loading'
+			return failListAll
+		},
 	},
   
 	methods: {
