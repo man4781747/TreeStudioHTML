@@ -534,77 +534,77 @@
                                 <thead>
                                     <tr>
                                         <th>
-                                            <div class='hive-table-header-item mouse-pointer' @click="sortByBtmChose('tableName')">
+                                            <div class='hive-table-header-item mouse-pointer' @click="sortByBtmChose('table_name')">
                                                 <i class="fas fa-sort-down" :style='"color:"+(
-                                                    (sortBy=="tableName"&sortValue==1)?"#000":"#999"
+                                                    (sortBy=="table_name"&sortValue==1)?"#000":"#999"
                                                     )+";"'></i>
                                                 <i class="fas fa-sort-up" :style='"color:"+(
-                                                    (sortBy=="tableName"&sortValue==-1)?"#000":"#999"
+                                                    (sortBy=="table_name"&sortValue==-1)?"#000":"#999"
                                                     )+";"'></i>
                                                 Table Name
                                             </div></th>
                                         <th>
-                                            <div class='hive-table-header-item mouse-pointer' @click="sortByBtmChose('tableName_Chinese')">
+                                            <div class='hive-table-header-item mouse-pointer' @click="sortByBtmChose('table_name_ch')">
                                                 <i class="fas fa-sort-down" :style='"color:"+(
-                                                    (sortBy=="tableName_Chinese"&sortValue==1)?"#000":"#999"
+                                                    (sortBy=="table_name_ch"&sortValue==1)?"#000":"#999"
                                                     )+";"'></i>
                                                 <i class="fas fa-sort-up" :style='"color:"+(
-                                                    (sortBy=="tableName_Chinese"&sortValue==-1)?"#000":"#999"
+                                                    (sortBy=="table_name_ch"&sortValue==-1)?"#000":"#999"
                                                     )+";"'></i>
                                                 中文名稱
                                             </div>
                                         </th>
                                         <th>
-                                            <div class='hive-table-header-item mouse-pointer' @click="sortByBtmChose('DBNanme')">
+                                            <div class='hive-table-header-item mouse-pointer' @click="sortByBtmChose('resource_database')">
                                                 <i class="fas fa-sort-down" :style='"color:"+(
-                                                    (sortBy=="DBNanme"&sortValue==1)?"#000":"#999"
+                                                    (sortBy=="resource_database"&sortValue==1)?"#000":"#999"
                                                     )+";"'></i>
                                                 <i class="fas fa-sort-up" :style='"color:"+(
-                                                    (sortBy=="DBNanme"&sortValue==-1)?"#000":"#999"
+                                                    (sortBy=="resource_database"&sortValue==-1)?"#000":"#999"
                                                     )+";"'></i>
                                                 資料庫
                                             </div>
                                         </th>
                                         <th>
-                                            <div class='hive-table-header-item mouse-pointer' @click="sortByBtmChose('lastUpdate')">
+                                            <div class='hive-table-header-item mouse-pointer' @click="sortByBtmChose('latest_updatetime')">
                                                 <i class="fas fa-sort-down" :style='"color:"+(
-                                                    (sortBy=="lastUpdate"&sortValue==1)?"#000":"#999"
+                                                    (sortBy=="latest_updatetime"&sortValue==1)?"#000":"#999"
                                                     )+";"'></i>
                                                 <i class="fas fa-sort-up" :style='"color:"+(
-                                                    (sortBy=="lastUpdate"&sortValue==-1)?"#000":"#999"
+                                                    (sortBy=="latest_updatetime"&sortValue==-1)?"#000":"#999"
                                                     )+";"'></i>
                                                 最後更新時間
                                             </div>
                                         </th>
                                         <th>
-                                            <div class='hive-table-header-item mouse-pointer' @click="sortByBtmChose('status')">
+                                            <div class='hive-table-header-item mouse-pointer' @click="sortByBtmChose('table_status')">
                                                 <i class="fas fa-sort-down" :style='"color:"+(
-                                                    (sortBy=="status"&sortValue==1)?"#000":"#999"
+                                                    (sortBy=="table_status"&sortValue==1)?"#000":"#999"
                                                     )+";"'></i>
                                                 <i class="fas fa-sort-up" :style='"color:"+(
-                                                    (sortBy=="status"&sortValue==-1)?"#000":"#999"
+                                                    (sortBy=="table_status"&sortValue==-1)?"#000":"#999"
                                                     )+";"'></i>
                                                 更新狀況
                                             </div>
                                         </th>
                                         <th>
-                                            <div class='hive-table-header-item mouse-pointer' @click="sortByBtmChose('updateFrequency')">
+                                            <div class='hive-table-header-item mouse-pointer' @click="sortByBtmChose('etl_freq')">
                                                 <i class="fas fa-sort-down" :style='"color:"+(
-                                                    (sortBy=="updateFrequency"&sortValue==1)?"#000":"#999"
+                                                    (sortBy=="etl_freq"&sortValue==1)?"#000":"#999"
                                                     )+";"'></i>
                                                 <i class="fas fa-sort-up" :style='"color:"+(
-                                                    (sortBy=="updateFrequency"&sortValue==-1)?"#000":"#999"
+                                                    (sortBy=="etl_freq"&sortValue==-1)?"#000":"#999"
                                                     )+";"'></i>
                                                 更新頻率
                                             </div>
                                         </th>
                                         <th>
-                                            <div class='hive-table-header-item mouse-pointer' @click="sortByBtmChose('buildDate')">
+                                            <div class='hive-table-header-item mouse-pointer' @click="sortByBtmChose('init_updatetime')">
                                                 <i class="fas fa-sort-down" :style='"color:"+(
-                                                    (sortBy=="buildDate"&sortValue==1)?"#000":"#999"
+                                                    (sortBy=="init_updatetime"&sortValue==1)?"#000":"#999"
                                                     )+";"'></i>
                                                 <i class="fas fa-sort-up" :style='"color:"+(
-                                                    (sortBy=="buildDate"&sortValue==-1)?"#000":"#999"
+                                                    (sortBy=="init_updatetime"&sortValue==-1)?"#000":"#999"
                                                     )+";"'></i>
                                                 上架時間
                                             </div>
@@ -613,23 +613,23 @@
                                 </thead>
                                 <tbody>
                                     <tr v-for="(data, index) in tableData[pageChose]" 
-                                        :style="data.status=='異常'?'background-color: antiquewhite;':''"
+                                        :style="data.table_status=='異常'?'background-color: antiquewhite;':''"
                                     >
-                                        <td>{{data.tableName}}</td>
-                                        <td>{{data.tableName_Chinese}}</td>
-                                        <td>{{data.DBNanme}}</td>
-                                        <td>{{data.lastUpdate}}</td>
+                                        <td>{{data.table_name}}</td>
+                                        <td>{{data.table_name_ch}}</td>
+                                        <td>{{data.resource_database}}</td>
+                                        <td>{{data.latest_updatetime}}</td>
                                         <td>
-                                            <div v-if="data.status=='異常'" >
-                                                {{data.status}}
+                                            <div v-if="data.table_status=='異常'" >
+                                                {{data.table_status}}
                                             </div>
                                             <div v-else>
-                                                {{data.status}}
+                                                {{data.table_status}}
                                             </div>
                                         
                                         </td>
-                                        <td>{{data.updateFrequency}}</td>
-                                        <td>{{data.buildDate}}</td>
+                                        <td>{{data.etl_freq}}</td>
+                                        <td>{{data.init_updatetime}}</td>
                                     </tr>
                                 </tbody>
                             </table>

@@ -85,23 +85,33 @@ var Vue_HiveSearcher = new Vue({
         },
 
         updateTableInfoList(){
-            this.pageChose = 0
-            this.pageListChose = 0
-            var newList = []
 
-            for (testIndex in [...Array(532).keys()]){
-                newList.push({
-                    'tableName': 'TableName_' + testIndex,
-                    'tableName_Chinese': '中文名稱_' + testIndex,
-                    'DBNanme': 'DBNanme_' + testIndex,
-                    'lastUpdate': 'lastUpdate_' + testIndex,
-                    'status': (Math.random()>0.5)?'正常':'異常',
-                    'updateFrequency': '頻率_' + testIndex,
-                    'buildDate': '上架時間_' + testIndex,
-                })
-            }
+            
+			fetch(hive_table_status_URL)
+			.then(function(response) {
+				return response.json()
+			})
+			.then(function(myJson) {
+                Vue_HiveSearcher.tableInfoList = myJson
+			});
 
-            this.tableInfoList = newList
+            // this.pageChose = 0
+            // this.pageListChose = 0
+            // var newList = []
+
+            // for (testIndex in [...Array(532).keys()]){
+            //     newList.push({
+            //         'tableName': 'TableName_' + testIndex,
+            //         'tableName_Chinese': '中文名稱_' + testIndex,
+            //         'DBNanme': 'DBNanme_' + testIndex,
+            //         'lastUpdate': 'lastUpdate_' + testIndex,
+            //         'status': (Math.random()>0.5)?'正常':'異常',
+            //         'updateFrequency': '頻率_' + testIndex,
+            //         'buildDate': '上架時間_' + testIndex,
+            //     })
+            // }
+
+            // this.tableInfoList = newList
         },
 
         sortByBtmChose(sortByStr){
