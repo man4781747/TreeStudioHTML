@@ -4,4 +4,5 @@ from . import views
 
 urlpatterns = [
     path(r'mainHTML/', views.mainHTML),
+    path(r'Test_hive_table_status_URL/', views.Test_hive_table_status),
 ]
