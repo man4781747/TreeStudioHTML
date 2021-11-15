@@ -1,0 +1,348 @@
+#hap-jupyter-ctrl-window {
+    margin: .5rem 2.5rem;
+}
+
+
+.customer-jupyter-active-list {
+    display: flex;
+    justify-content: center;
+}
+
+.hap-jupyter-btn {
+    cursor: pointer;
+    text-decoration:none;
+    margin-right: .5rem;
+    display: flex;
+    font-weight: 400;
+    color: #212529;
+    text-align: center;
+    vertical-align: middle;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    background-color: transparent;
+    border: 1px solid transparent;
+    padding: .375rem .75rem;
+    font-size: 1rem;
+    line-height: 1.5;
+    border-radius: .25rem;
+    transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+}
+
+#hap-jupyter-ctrl-window .hap-jupyter-btn i {
+    line-height: 1.5;
+    margin: 0 .3rem;
+    
+}
+
+#hap-jupyter-ctrl-window .btn-active {
+    color: #fff;
+    background-color: #007bff;
+    border-color: #007bff;
+    box-shadow: none;
+}
+
+#hap-jupyter-ctrl-window .btn-active:hover {
+    color: #fff;
+    background-color: #0069d9;
+    border-color: #0062cc;
+    box-shadow: none;
+}
+
+#hap-jupyter-ctrl-window .btn-update {
+    color: #333;
+    background-color: #eee;
+    border-color: #adb5bd;
+    box-shadow: none;
+}
+
+#hap-jupyter-ctrl-window .btn-update:hover {
+    color: #333;
+    background-color: #7b8186;
+    border-color: #7b8186;
+    box-shadow: none;
+}
+
+#hap-jupyter-ctrl-window .btn-notwork {
+    color: #fff;
+    background-color: #adb5bd;
+    border-color: #adb5bd;
+    box-shadow: none;
+}
+
+
+#hap-jupyter-ctrl-window .btn-info {
+    color: #fff;
+    background-color: #48a2b9;
+    border-color: #48a2b9;
+    box-shadow: none;
+}
+
+#hap-jupyter-ctrl-window .btn-info:hover {
+    color: #fff;
+    background-color: #138496;
+    border-color: #117a8b;
+}
+
+#hap-jupyter-ctrl-window .btn-close {
+    color: #fff;
+    background-color: #dc3545;
+    border-color: #dc3545;
+    box-shadow: none;
+}
+
+#hap-jupyter-ctrl-window .btn-close:hover {
+    color: #fff;
+    background-color: #e87b86;
+    border-color: #e87b86;
+    box-shadow: none;
+}
+
+#hap-jupyter-ctrl-window .btn-open {
+    color: #fff;
+    background-color: #28a745;
+    border-color: #28a745;
+    box-shadow: none;
+}
+
+#hap-jupyter-ctrl-window .btn-open:hover {
+    color: #fff;
+    background-color: #73c686;
+    border-color: #73c686;
+    box-shadow: none;
+}
+
+.juypter-infomation{
+    display: none;
+    color: #000;
+    box-shadow: 0 0 1px rgb(0 0 0 / 13%), 0 1px 3px rgb(0 0 0 / 20%);
+    padding: .75rem 1.25rem;
+    background-color: #fff;
+    z-index: 10;
+    width: 20vw;
+    text-align: left;
+    top: 120%;
+    left: -10vw;
+}
+
+.juypter-active-info-btn:hover .juypter-infomation{
+    display: unset;
+}
+
+
+.top-window-alert-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1050;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background-color: rgba(0, 0, 0, .6);
+    display: flex;
+    justify-content: center;
+}
+
+.top-window-alert-window-lock{
+    top: 0;
+    left: 0;
+    z-index: 9999;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background-color: rgba(0, 0, 0, .6);
+    display: flex;
+    justify-content: center;
+    position: fixed;
+    line-height: 100vh;
+    color: #fff;
+    font-size: 2rem;
+}
+
+.top-window-alert-window {
+    margin: 3rem 0;
+    box-shadow: 0 0.5rem 1rem rgb(0 0 0 / 50%);
+    display: grid;
+    pointer-events: auto;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid rgba(0,0,0,.2);
+    border-radius: .3rem;
+    box-shadow: 0 0.25rem 0.5rem rgb(0 0 0 / 50%);
+    width: 50vw;
+    position: relative;
+}
+
+.top-window-alert-footer {
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-flex-wrap: wrap;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+    -webkit-align-items: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-justify-content: space-between!important;
+    -ms-flex-pack: justify!important;
+    justify-content: space-between!important;
+    padding: .75rem;
+    border-top: 1px solid #e9ecef;
+    border-bottom-right-radius: calc(.3rem - 1px);
+    border-bottom-left-radius: calc(.3rem - 1px);
+}
+
+.top-window-alert-header {
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-align-items: flex-start;
+    -ms-flex-align: start;
+    align-items: flex-start;
+    -webkit-justify-content: space-between;
+    -ms-flex-pack: justify;
+    justify-content: space-between;
+    padding: 1rem;
+    border-bottom: 1px solid #e9ecef;
+    border-top-left-radius: calc(.3rem - 1px);
+    border-top-right-radius: calc(.3rem - 1px);
+}
+
+.top-window-alert-header p {
+    font-size: 1.5rem;
+    margin: 0;
+}
+
+.top-window-alert-body {
+    padding: .75rem;
+    font-weight: 500;
+    overflow: auto;
+    max-height: 60vh;
+}
+
+.anima-updown-in-2-sec {
+    animation-name:AnimaUpdownin2sec;
+    animation-duration:1s;
+	animation-timing-function: linear;
+	animation-iteration-count:infinite;
+	pointer-events: none;
+    position: relative;
+}
+
+@keyframes AnimaUpdownin2sec{
+    from { top: 0px ; }
+    25%  { top: -5px; } 
+    75%  { top: 5px; } 
+    to   { top: 0px; }
+}
+
+
+.hap-jupyter-customer-ctrl-inputlabel-list {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-column-gap: 10px;
+    grid-row-gap: 1em;
+    margin-right: -7.5px;
+    margin-left: -7.5px;
+}
+
+.hap-jupyter-customer-ctrl-inputlabel {
+    font-size: 1.25rem;
+    position: relative;
+    margin-bottom: .5rem;
+}
+
+.hap-jupyter-customer-ctrl-inputlabel * {
+    height: 2rem;
+    width: 100%;
+}
+
+.hap-jupyter-customer-ctrl-inputlabel-big {
+    position: relative;
+    grid-column-start: 1;
+    grid-column-end: 4;
+}
+
+.hap-jupyter-customer-ctrl-input {
+    margin: 0;
+    width: calc( 100% - 4px);
+}
+
+#hap-jupyter-customer-ctrl-submit-btn {
+    width: 100%;
+    display: unset;
+}
+
+#hap-jupyter-customer-ctrl-submit-btn-warning-window {
+    position: relative;
+    top: -1.3rem;
+    padding-top: 1rem;
+    padding-bottom: .05rem;
+    border-radius: .25rem;
+    background-color: #ffc107;
+    color: #222;
+    z-index: 1;
+}
+
+.pop-window-info-box {
+    position: fixed;
+    z-index: 9999;
+    transition: all 0.3s;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.pop-window-info {
+    background-color: #fff;
+    -webkit-box-shadow: 0 2px 6px rgb(0 0 0 / 20%);
+    box-shadow: 0 2px 6px rgb(0 0 0 / 20%);
+    border-radius: 5px; 
+    padding: 15px;
+    min-width: 33%;
+}
+
+.pop-window-info-header {
+    padding-bottom: 10px;
+    font-size: 1.5rem;
+    color: #212529;
+}
+
+
+.pop-window-info-body {
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #212529;
+    text-align: left;
+}
+
+.pop-window-info-box-open {
+    width: 100%;
+    height: 100%;
+    opacity: 1;
+    max-width: 100%;
+    max-height: 100%;
+}
+
+.pop-window-info-box-close {
+    width: 0%;
+    height: 0%;
+    opacity: 0;
+    max-width: 0%;
+    max-height: 0%;
+}
+
+.pop-window-background {
+    transition: all .3s;
+}
+
+.pop-window-info-box-close ~.pop-window-background {
+    opacity: 0;
+}
+
+.pop-window-info-box-open ~.pop-window-background {
+    opacity: 1;
+}
