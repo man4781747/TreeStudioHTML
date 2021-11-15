@@ -126,18 +126,24 @@ var Vue_JupyterWindow =  new Vue({
         popwindowClass: '',
         popwindowInfoItem: {},
 
+        serverPortList: {
+            '9h000': '8950',
+            '9h001': '8951',
+            '9h002': '8952',
+        },
+
         projectList:[
             {
                 'Name': '客戶智能科',
-                'url': 'http://34.135.113.78:8901/',
+                'url': jupyterURL+':8901/',
             },
             {
                 'Name': '商業智能科',
-                'url': 'http://34.135.113.78:8902/',
+                'url': jupyterURL+':8902/',
             },
             {
                 'Name': '數據經營部',
-                'url': 'http://34.135.113.78:8900/',
+                'url': jupyterURL+':8900/',
             },
         ],
         customerJupyterInfos: [],
@@ -147,20 +153,28 @@ var Vue_JupyterWindow =  new Vue({
     },
 
     methods:{
-        // http://34.135.113.78:5005/get_docker_jupyter_sevice
+        // http://88.248.13.77:8950/get_docker_jupyter_service
+        // http://88.248.13.77:8951/get_docker_jupyter_service
+        // http://88.248.13.77:8952/get_docker_jupyter_service
+
         updateCustomerJupyterInfos(){
             this.customerJupyterUpdateing = true
+            Vue_JupyterWindow.customerJupyterInfos = []
 
-
-            fetch('http://34.135.113.78:5005/get_docker_jupyter_sevice')
-            .then(function(response) {
-                return response.json();
-            })
-            .then(function(myJson) {
-                console.log(myJson);
-                Vue_JupyterWindow.customerJupyterInfos = myJson
-                Vue_JupyterWindow.customerJupyterUpdateing = false
-            });
+            for (let S_serverType of Object.keys(this.serverPortList)){
+                fetch(jupyterURL+":"+this.serverPortList[S_serverType]+"/get_docker_jupyter_service")
+                .then(function(response) {
+                    return response.json();
+                })
+                .then(function(myJson) {
+                    console.log(myJson);
+                    for (D_infoItem of myJson){
+                        D_infoItem['serverType'] = S_serverType
+                    }
+                    Vue_JupyterWindow.customerJupyterInfos.push(myJson)
+                    Vue_JupyterWindow.customerJupyterUpdateing = false
+                });
+            }
         },
 
         clickSwitchCustomerJupyterButton(customerJupyterInfo){
@@ -171,20 +185,23 @@ var Vue_JupyterWindow =  new Vue({
 
         switchCustomerJupyterStatus(D_customerJupyterInfo){
             var url, D_postData
+
+            S_serverType = D_customerJupyterInfo['serverType']
+            this.serverPortList[S_serverType]
             if (D_customerJupyterInfo.status == 'enable'){
                 // 現在是開的，要關掉
-                url = "http://34.135.113.78:5005/" + "stop_docker_jupyter_sevice"
+                url = jupyterURL+this.serverPortList[S_serverType]+"/stop_docker_jupyter_sevice"
                 D_postData = {
                     port: D_customerJupyterInfo.port, 
-                    user_name: D_customerJupyterInfo.user_name, 
+                    user_id: D_customerJupyterInfo.user_id, 
                     status: 'disable',
                 }
             } else if (D_customerJupyterInfo.status == 'disable') {
                 // 現在是觀的，要打開
-                url = "http://34.135.113.78:5005/" + "start_docker_jupyter_sevice"
+                url = jupyterURL+this.serverPortList[S_serverType]+"/start_docker_jupyter_sevice"
                 D_postData = {
                     port: D_customerJupyterInfo.port, 
-                    user_name: D_customerJupyterInfo.user_name, 
+                    user_id: D_customerJupyterInfo.user_id, 
                     status: 'enable',
                 }
             }
