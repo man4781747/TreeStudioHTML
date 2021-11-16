@@ -173,16 +173,30 @@ var Vue_JupyterCtrlWindow =  new Vue({
             if ((this.user_id.length != 8) | (Number(this.user_id) > -1 == false)){
                 wraningList.push('申請人ID應為8位數之原編')
             }
-
-
             return wraningList
+        },
+
+        L_unUsedPortList(){
+            L_portList = []
+            for (i of [...Array(51).keys()]){
+                L_portList.push(i+8900)
+            }
+            Set_portList = new Set(L_portList)
+            for (L_projectInfo of this.customerJupyterInfos){
+                for (D_jupyterInfo of L_projectInfo){
+                    Set_portList.delete(
+                        parseInt(D_jupyterInfo.port)
+                    )
+                }
+            }
+            return Array.from(Set_portList);
         },
     },
 
     methods:{
         updateCustomerJupyterInfos(){
             this.customerJupyterUpdateing = true
-            Vue_JupyterWindow.customerJupyterInfos = []
+            Vue_JupyterCtrlWindow.customerJupyterInfos = []
 
             for (S_serverType of Object.keys(this.serverPortList)){
 
@@ -193,7 +207,7 @@ var Vue_JupyterCtrlWindow =  new Vue({
                 .then(function(myJson) {
                     console.log(myJson);
                     Vue_JupyterCtrlWindow.customerJupyterUpdateing = false
-                    Vue_JupyterCtrlWindow.customerJupyterInfos = myJson
+                    Vue_JupyterCtrlWindow.customerJupyterInfos.push(myJson)
                 });
             }
         },

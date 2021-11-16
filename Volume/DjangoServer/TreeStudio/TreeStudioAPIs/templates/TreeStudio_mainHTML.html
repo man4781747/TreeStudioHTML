@@ -909,7 +909,9 @@
                                 <div class='hap-jupyter-customer-ctrl-inputlabel-list'>
                                     <div class='hap-jupyter-customer-ctrl-inputlabel'>
                                         <div>Port (8900~8950)</div>
-                                        <input class='hap-jupyter-customer-ctrl-input' type="number" v-model="portNum" min=8900 max=8950>
+                                        <select style='height: calc( 2rem + 4px);' v-model="portNum">
+                                            <option v-for="num of L_unUsedPortList">{{num}}</option>
+                                        </select>
                                     </div>
                                     <div class='hap-jupyter-customer-ctrl-inputlabel'>
                                         <div>Token</div>
@@ -1041,34 +1043,37 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr v-for="(customerJupyterInfo, index) of customerJupyterInfos">
-                                            <td style="padding: .25rem;border-top: 1px #aaa solid;">{{customerJupyterInfo.project_name}}</td>
-                                            <td style="padding: .25rem;border-top: 1px #aaa solid;">{{customerJupyterInfo.port}}</td>
-                                            <td style="padding: .25rem;border-top: 1px #aaa solid;">{{customerJupyterInfo.user_name}}</td>
-                                            <td style="padding: .25rem;border-top: 1px #aaa solid;">{{customerJupyterInfo.user_depart}}</td>
-                                            <td style="padding: .25rem;border-top: 1px #aaa solid;">{{customerJupyterInfo.create_time}}</td>
-                                            <td style="padding: .25rem;border-top: 1px #aaa solid;">{{customerJupyterInfo.spark_name}}</td>
-                                            <td style="padding: .25rem;border-top: 1px #aaa solid;">
-                                                <div class='customer-jupyter-active-list'>
-                                                    <a class='hap-jupyter-btn btn-active' :href="jupyterURL+':'+customerJupyterInfo.port+'/login?token='+customerJupyterInfo.user_token" target="_blank">
-                                                        <i class='fas fa-code'></i>
-                                                    </a>
-                                                    <div class='hap-jupyter-btn btn-info juypter-active-info-btn' style='position:relative;' 
-                                                    :id="'hap-jupyter-ctrl-window-info-btn-'+customerJupyterInfo.port"
-                                                    @click="openPopWindow($event, customerJupyterInfo, 'hap-jupyter-ctrl-window-info-btn-'+customerJupyterInfo.port)">
-                                                        <i class='far fa-eye'></i>
+                                        <template v-for="(L_projectInfo, index) of customerJupyterInfos">
+                                            <tr v-for="(customerJupyterInfo, index) of L_projectInfo">
+                                                <td style="padding: .25rem;border-top: 1px #aaa solid;">{{customerJupyterInfo.project_name}}</td>
+                                                <td style="padding: .25rem;border-top: 1px #aaa solid;">{{customerJupyterInfo.port}}</td>
+                                                <td style="padding: .25rem;border-top: 1px #aaa solid;">{{customerJupyterInfo.user_name}}</td>
+                                                <td style="padding: .25rem;border-top: 1px #aaa solid;">{{customerJupyterInfo.user_depart}}</td>
+                                                <td style="padding: .25rem;border-top: 1px #aaa solid;">{{customerJupyterInfo.create_time}}</td>
+                                                <td style="padding: .25rem;border-top: 1px #aaa solid;">{{customerJupyterInfo.spark_name}}</td>
+                                                <td style="padding: .25rem;border-top: 1px #aaa solid;">
+                                                    <div class='customer-jupyter-active-list'>
+                                                        <a class='hap-jupyter-btn btn-active' :href="jupyterURL+':'+customerJupyterInfo.port+'/login?token='+customerJupyterInfo.user_token" target="_blank">
+                                                            <i class='fas fa-code'></i>
+                                                        </a>
+                                                        <div class='hap-jupyter-btn btn-info juypter-active-info-btn' style='position:relative;' 
+                                                        :id="'hap-jupyter-ctrl-window-info-btn-'+customerJupyterInfo.port"
+                                                        @click="openPopWindow($event, customerJupyterInfo, 'hap-jupyter-ctrl-window-info-btn-'+customerJupyterInfo.port)">
+                                                            <i class='far fa-eye'></i>
+                                                        </div>
+                                                        <div class='hap-jupyter-btn' :class="customerJupyterInfo.status=='enable'?'btn-open':'btn-close'"
+                                                            @click="clickSwitchCustomerJupyterButton(customerJupyterInfo)"
+                                                        >
+                                                            <i class='fas fa-power-off'></i>
+                                                        </div>
+                                                        <div class='hap-jupyter-btn btn-close' @click="clickDeleteJupyterBtn(customerJupyterInfo)">
+                                                            <i class="fas fa-trash-alt"></i>
+                                                        </div>
                                                     </div>
-                                                    <div class='hap-jupyter-btn' :class="customerJupyterInfo.status=='enable'?'btn-open':'btn-close'"
-                                                        @click="clickSwitchCustomerJupyterButton(customerJupyterInfo)"
-                                                    >
-                                                        <i class='fas fa-power-off'></i>
-                                                    </div>
-                                                    <div class='hap-jupyter-btn btn-close' @click="clickDeleteJupyterBtn(customerJupyterInfo)">
-                                                        <i class="fas fa-trash-alt"></i>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                        </tr>
+                                                </td>
+                                            </tr>
+                                        </template>
+
                                     </tbody>
                                 </table>     
                             </div>
