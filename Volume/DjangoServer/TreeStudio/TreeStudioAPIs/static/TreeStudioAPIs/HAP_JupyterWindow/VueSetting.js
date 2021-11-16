@@ -40,42 +40,6 @@
 //  "user_token":"i9h000"
 // }
 
-
-// [POST] Running service
-
-// http://88.248.13.77:8950/running_docker_jupyter_service
-// http://88.248.13.77:8951/running_docker_jupyter_service
-// http://88.248.13.77:8952/running_docker_jupyter_service
-
-// {
-//  "port": "8900",
-//  "user_id": "00865936", 
-//  "user_depart": "i9h000", 
-//  "user_name": "i9h000", 
-//  "user_token": "i9h000", 
-//  "project_name": "common project", 
-//  "context": "this is a test", 
-//  "status": "enable", 
-//  "spark_name": "master", 
-//  "driver_memory": "4", 
-//  "executor_memory": "4", 
-//  "driver_cores": "2", 
-//  "executor_cores": "2", 
-//  "max_executors": "6"
-// }
-
-// [POST] Delete Service
-
-// http://88.248.13.77:8950/close_docker_jupyter_service
-// http://88.248.13.77:8951/close_docker_jupyter_service
-// http://88.248.13.77:8952/close_docker_jupyter_service
-
-// {
-//  "port": "8900", 
-//  "user_id": "00000000"
-// }
-
-
 // [POST] Start service
 
 // http://88.248.13.77:8950/start_docker_jupyter_service
@@ -126,6 +90,8 @@ var Vue_JupyterWindow =  new Vue({
         popwindowClass: '',
         popwindowInfoItem: {},
 
+        jupyterURL : jupyterURL,
+
         serverPortList: {
             '9h000': '8950',
             '9h001': '8951',
@@ -161,16 +127,13 @@ var Vue_JupyterWindow =  new Vue({
             this.customerJupyterUpdateing = true
             Vue_JupyterWindow.customerJupyterInfos = []
 
-            for (let S_serverType of Object.keys(this.serverPortList)){
+            for (S_serverType of Object.keys(this.serverPortList)){
                 fetch(jupyterURL+":"+this.serverPortList[S_serverType]+"/get_docker_jupyter_service")
                 .then(function(response) {
                     return response.json();
                 })
                 .then(function(myJson) {
                     console.log(myJson);
-                    for (D_infoItem of myJson){
-                        D_infoItem['serverType'] = S_serverType
-                    }
                     Vue_JupyterWindow.customerJupyterInfos.push(myJson)
                     Vue_JupyterWindow.customerJupyterUpdateing = false
                 });
@@ -186,11 +149,10 @@ var Vue_JupyterWindow =  new Vue({
         switchCustomerJupyterStatus(D_customerJupyterInfo){
             var url, D_postData
 
-            S_serverType = D_customerJupyterInfo['serverType']
-            this.serverPortList[S_serverType]
+            this.serverPortList[D_customerJupyterInfo['user_depart']]
             if (D_customerJupyterInfo.status == 'enable'){
                 // 現在是開的，要關掉
-                url = jupyterURL+this.serverPortList[S_serverType]+"/stop_docker_jupyter_sevice"
+                url = jupyterURL+':'+this.serverPortList[S_serverType]+"/stop_docker_jupyter_sevice"
                 D_postData = {
                     port: D_customerJupyterInfo.port, 
                     user_id: D_customerJupyterInfo.user_id, 
@@ -198,7 +160,7 @@ var Vue_JupyterWindow =  new Vue({
                 }
             } else if (D_customerJupyterInfo.status == 'disable') {
                 // 現在是觀的，要打開
-                url = jupyterURL+this.serverPortList[S_serverType]+"/start_docker_jupyter_sevice"
+                url = jupyterURL+':'+this.serverPortList[S_serverType]+"/start_docker_jupyter_sevice"
                 D_postData = {
                     port: D_customerJupyterInfo.port, 
                     user_id: D_customerJupyterInfo.user_id, 

@@ -837,9 +837,12 @@
                                         <i class='fas fa-times' @click='checkCreateNewCustomerJupyterWindowOpen=false'></i>
                                     </div>
                                     <div class='top-window-alert-body'>
+                                        Port: {{portNum}}<br>
                                         專案名稱: {{projectName}} <br>
-                                        申請人: {{user_id}} <br>
+                                        申請人ID: {{user_id}} <br>
+                                        申請人名稱: {{user_name}} <br>
                                         部門: {{user_depart}} <br>
+                                        Token: {{tokenStr}} <br>
                                         Core數: {{driver_cores}} <br>
                                         Ram大小: {{driver_memory}} GB
                                     </div>
@@ -918,17 +921,19 @@
                                         <input class='hap-jupyter-customer-ctrl-input' type="text" v-model.trim="projectName" v-on:input="RemoveOtherWord('projectName')" placeholder="請輸入專案名稱">
                                     </div>
                                     <div class='hap-jupyter-customer-ctrl-inputlabel'>
-                                        <div>申請人</div>
-                                        <input class='hap-jupyter-customer-ctrl-input' type="text" v-model.trim="user_id" v-on:input="RemoveOtherWord('user_id')" placeholder="請輸入申請人名稱">
+                                        <div>申請人名稱(User Name)</div>
+                                        <input class='hap-jupyter-customer-ctrl-input' type="text" v-model.trim="user_name" v-on:input="RemoveOtherWord('user_name')" placeholder="請輸入申請人名稱">
                                     </div>
                                     <div class='hap-jupyter-customer-ctrl-inputlabel'>
-                                        <div>部門</div>
+                                        <div>申請人ID(User ID: 8位數)</div>
+                                        <input class='hap-jupyter-customer-ctrl-input' type="text" v-model.trim="user_id" v-on:input="RemoveOtherWord('user_id')" placeholder="請輸入申請人員編">
+                                    </div>
+                                    <div class='hap-jupyter-customer-ctrl-inputlabel'>
+                                        <div>部門(與Jupyter權限有關，慎選)</div>
                                         <select style='height: calc( 2rem + 4px);' v-model="user_depart">
-                                            <option selected>客戶智能科</option>
-                                            <option>商業智能科</option>
-                                            <option>數據經營部</option>
-                                            <option>數據工程組</option>
-                                            <option>其他</option>
+                                            <option selected>9h000</option>
+                                            <option>9h001</option>
+                                            <option>9h002</option>
                                         </select>
                                     </div>
                                     <div class='hap-jupyter-customer-ctrl-inputlabel'>
@@ -1046,7 +1051,7 @@
                                             <td style="padding: .25rem;border-top: 1px #aaa solid;">{{customerJupyterInfo.spark_name}}</td>
                                             <td style="padding: .25rem;border-top: 1px #aaa solid;">
                                                 <div class='customer-jupyter-active-list'>
-                                                    <a class='hap-jupyter-btn btn-active' :href="'http://34.135.113.78:'+customerJupyterInfo.port+'/login?token='+customerJupyterInfo.user_token" target="_blank">
+                                                    <a class='hap-jupyter-btn btn-active' :href="jupyterURL+':'+customerJupyterInfo.port+'/login?token='+customerJupyterInfo.user_token" target="_blank">
                                                         <i class='fas fa-code'></i>
                                                     </a>
                                                     <div class='hap-jupyter-btn btn-info juypter-active-info-btn' style='position:relative;' 
