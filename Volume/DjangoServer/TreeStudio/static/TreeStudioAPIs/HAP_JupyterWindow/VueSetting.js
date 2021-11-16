@@ -152,7 +152,7 @@ var Vue_JupyterWindow =  new Vue({
             this.serverPortList[D_customerJupyterInfo['user_depart']]
             if (D_customerJupyterInfo.status == 'enable'){
                 // 現在是開的，要關掉
-                url = jupyterURL+':'+this.serverPortList[S_serverType]+"/stop_docker_jupyter_sevice"
+                url = jupyterURL+':'+this.serverPortList[S_serverType]+"/stop_docker_jupyter_service"
                 D_postData = {
                     port: D_customerJupyterInfo.port, 
                     user_id: D_customerJupyterInfo.user_id, 
@@ -160,7 +160,7 @@ var Vue_JupyterWindow =  new Vue({
                 }
             } else if (D_customerJupyterInfo.status == 'disable') {
                 // 現在是觀的，要打開
-                url = jupyterURL+':'+this.serverPortList[S_serverType]+"/start_docker_jupyter_sevice"
+                url = jupyterURL+':'+this.serverPortList[S_serverType]+"/start_docker_jupyter_service"
                 D_postData = {
                     port: D_customerJupyterInfo.port, 
                     user_id: D_customerJupyterInfo.user_id, 
