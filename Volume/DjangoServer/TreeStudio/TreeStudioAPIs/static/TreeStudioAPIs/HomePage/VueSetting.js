@@ -240,60 +240,56 @@ var Vue_TableUpdate = new Vue({
 	},
   
 	computed: {
-		
+		last50TableInfoList(){
+			var last50Table = []
+			for (D_tableInfo of this.tableInfoList){
+				if (D_tableInfo.latest_updatetime == ""){
+					continue
+				}
+				last50Table.push(D_tableInfo)
+				if (last50Table.length >= 51 ){
+					break
+				}
+			}
+			return last50Table
+		},
+
+		updateOn2WeekNumber(){
+			var targetDate = new Date(new Date().getTime() - (14 * 24 * 60 * 60 * 1000));
+			var returnNum = 0
+			for (D_tableInfo of this.tableInfoList){
+				if (targetDate <= Date.parse(D_tableInfo.latest_updatetime)){
+					returnNum = returnNum + 1
+				}
+			}
+			return returnNum
+		},
 	},
   
 	methods: {
 		updateTableInfoList(){
-			var newData = []
-			// for (test in [...Array(6)).keys()]){
-			// 	newData.push(
-			// 		{
-			// 			'Name': 'TableName文字_'+test,
-			// 			'UpdateDateTime': "時間文字_"+test,
-			// 			'UpdateFrequency' : '雙週',
-			// 		}
-			// 	)
-			// }
-			newData.push(
-				{
-					'Name': 'DTAAB001',
-					'UpdateDateTime': "2021-09-28 14:00:00",
-					'UpdateFrequency' : '雙週',
-				}
-			)
-			newData.push(
-				{
-					'Name': 'DTAAB002',
-					'UpdateDateTime': "2021-09-28 14:00:00",
-					'UpdateFrequency' : '雙週',
-				}
-			)
-			newData.push(
-				{
-					'Name': 'DTAAB110',
-					'UpdateDateTime': "2021-09-28 14:00:00",
-					'UpdateFrequency' : '雙週',
-				}
-			)
-			newData.push(
-				{
-					'Name': 'DTAAB222',
-					'UpdateDateTime': "2021-09-28 14:00:00",
-					'UpdateFrequency' : '雙週',
-				}
-			)
-			newData.push(
-				{
-					'Name': 'DTAAB330',
-					'UpdateDateTime': "2021-09-29 14:00:00",
-					'UpdateFrequency' : '雙週',
-				}
-			)
+			fetch(hive_table_status_URL)
+			.then(function(response) {
+				return response.json()
+			})
+			.then(function(myJson) {
+				myJson.sort(function(a, b) {
+					var datetimeA = a.latest_updatetime
+					var datetimeB = b.latest_updatetime
+					if (datetimeA < datetimeB) {
+					  return 1;
+					}
+					if (datetimeA > datetimeB) {
+					  return -1;
+					}
+					return 0;
+				  });
+                Vue_TableUpdate.tableInfoList = myJson
+			});
+		},
 
-
-
-			this.tableInfoList = newData
+		openHiveSearchPage(){
+			Vue_mainToolBox.changePage({},'HAP_Table')
 		},
 	},
 

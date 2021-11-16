@@ -31,7 +31,7 @@
     rel="stylesheet"
     href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
     /> -->
-    <script src="/static/TreeStudioAPIs/animateCSS/animate.min.css"></script>
+    <link rel="stylesheet" href="/static/TreeStudioAPIs/animateCSS/animate.min.css">
     
     <script src="/static/TreeStudioAPIs/Misc/Params.js"></script>
 
@@ -321,7 +321,7 @@
                         </div>
                         <div class='box-card-body'>
                             <div style="height: 100%;display: grid;grid-auto-rows: min-content auto;">
-                                <p style='font-weight: 600;margin-top: 0px;'>近兩周導入數量:{{tableInfoList.length}}</p>
+                                <p style='font-weight: 600;margin-top: 0px;'>近兩周導入數量:{{updateOn2WeekNumber}}</p>
                                 <div class='small-scrollbar' style="overflow: auto;">
                                     <table class="dealut-table" style='width: 100%;'>
                                         <colgroup>
@@ -337,15 +337,15 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr v-for="(tableInfo, index) in tableInfoList" v-if="index < 15">
-                                                <td><div>{{tableInfo.Name}}</div></td>
-                                                <td style='position: relative;'><div class='nowrap text-overflow-hidden'>{{tableInfo.UpdateDateTime}}</div></td>
-                                                <td style='position: relative;'><div class='nowrap text-overflow-hidden'>{{tableInfo.UpdateFrequency}}</div></td>
+                                            <tr v-for="(tableInfo, index) in last50TableInfoList" v-if="index < 50">
+                                                <td><div>{{tableInfo.table_name}}</div></td>
+                                                <td style='position: relative;'><div class='nowrap text-overflow-hidden'>{{tableInfo.latest_updatetime}}</div></td>
+                                                <td style='position: relative;'><div class='nowrap text-overflow-hidden'>{{tableInfo.etl_freq}}</div></td>
                                             </tr>
                                             <tr v-else>
-                                                <td><div>123</div></td>
-                                                <td style='position: relative;'><div class='nowrap text-overflow-hidden'>123</div></td>
-                                                <td style='position: relative;'><div class='nowrap text-overflow-hidden'>123</div></td>
+                                                <td><div>...</div></td>
+                                                <td><div>...</div></td>
+                                                <td><div>...</div></td>
                                             </tr>
                                         </tbody>
                                     </table>
@@ -354,7 +354,7 @@
                         </div>
                         <div class='box-card-footer'>
                             <div></div>
-                            <a>More..</a>
+                            <a class='moreButton' @click="openHiveSearchPage()">More..</a>
                         </div>
                     </div>
     
@@ -369,7 +369,7 @@
                             <div style="display: grid;position: relative;height: 100%;grid-auto-rows: auto;">
                                 
                                 <div 
-                                    style="display: grid;position: relative;height: 100%;overflow: auto;"
+                                    style="display: grid;position: relative;height: 100%;overflow: auto;grid-template-rows: min-content 1fr;"
                                 >
                                     <template v-if="failListAll == 'Loading'">
                                         <div class='loading-window text-v-center text-h-center'>
@@ -489,7 +489,7 @@
                         </div>
                         <div class='box-card-footer'>
                             <div></div>
-                            <a>More..</a>
+                            <a class='moreButton'>More..</a>
                         </div>
                     </div>
                 </div>
@@ -663,8 +663,7 @@
                             <div>
                                 <div class='top-window-alert-window animate__animated' @click.stop="" :class="statusChangeWindowOpen?'animate__fadeInDown':'animate__fadeOutUp'">
                                     
-                                    <div class='top-window-aler
-                                    t-header'>
+                                    <div class='top-window-alert-header'>
                                         <p>確認要{{statusChangeWindowInfo.status=='enable'?'關閉':'打開'}}此項目?</p>
                                         <i class='fas fa-times' @click='statusChangeWindowOpen=false'></i>
                                     </div>
