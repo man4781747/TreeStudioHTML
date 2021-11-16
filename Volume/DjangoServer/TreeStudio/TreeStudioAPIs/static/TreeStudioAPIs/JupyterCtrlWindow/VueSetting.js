@@ -134,13 +134,13 @@ var Vue_JupyterCtrlWindow =  new Vue({
         user_id: '',
         user_name: '',
         user_depart: '9h000',
-        driver_cores: 1,
-        executor_cores: 1,
-        driver_memory: 1,
-        executor_memory:1,
+        driver_cores: 2,
+        executor_cores: 2,
+        driver_memory: 2,
+        executor_memory:2,
         context: '',
         spark_name: '',
-        max_executors: 1,
+        max_executors: 2,
 
         popwindowOpen: false,
         popwindowBtnKey: '',
@@ -173,6 +173,12 @@ var Vue_JupyterCtrlWindow =  new Vue({
             if ((this.user_id.length != 8) | (Number(this.user_id) > -1 == false)){
                 wraningList.push('申請人ID應為8位數之原編')
             }
+            if (this.D_existsUserName[this.user_name] != undefined){
+                wraningList.push('申請人名稱(User Name)已被使用，請更換')
+            }
+            if (this.D_existsSparkName[this.spark_name] != undefined){
+                wraningList.push('Spark Name已被使用，請更換')
+            }
             return wraningList
         },
 
@@ -190,6 +196,26 @@ var Vue_JupyterCtrlWindow =  new Vue({
                 }
             }
             return Array.from(Set_portList);
+        },
+
+        D_existsSparkName(){
+            D_return = {}
+            for (L_projectInfo of this.customerJupyterInfos){
+                for (D_jupyterInfo of L_projectInfo){
+                    D_return[D_jupyterInfo.spark_name] = true
+                }
+            }
+            return D_return
+        },
+
+        D_existsUserName(){
+            D_return = {}
+            for (L_projectInfo of this.customerJupyterInfos){
+                for (D_jupyterInfo of L_projectInfo){
+                    D_return[D_jupyterInfo.user_name] = true
+                }
+            }
+            return D_return
         },
     },
 
@@ -303,6 +329,10 @@ var Vue_JupyterCtrlWindow =  new Vue({
 
 		RemoveOtherWord(S_strTypeName){
 			this[S_strTypeName] = this[S_strTypeName].replaceAll(/\W/gm,'_')
+		},
+
+		LowerWord(S_strTypeName){
+			this[S_strTypeName] = this[S_strTypeName].replaceAll(/\W/gm,'_').toLowerCase()
 		},
 
         clickDeleteJupyterBtn(customerJupyterInfo){

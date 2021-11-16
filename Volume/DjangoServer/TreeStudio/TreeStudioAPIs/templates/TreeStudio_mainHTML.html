@@ -915,7 +915,7 @@
                                     </div>
                                     <div class='hap-jupyter-customer-ctrl-inputlabel'>
                                         <div>Token</div>
-                                        <input class='hap-jupyter-customer-ctrl-input' type="text" v-model.trim="tokenStr" v-on:input="RemoveOtherWord('tokenStr')" placeholder="請輸入Token">
+                                        <input class='hap-jupyter-customer-ctrl-input' type="text" v-model.trim="tokenStr" v-on:input="LowerWord('tokenStr')" placeholder="請輸入Token">
                                     </div>
                                     <div class='hap-jupyter-customer-ctrl-inputlabel'>
                                         <div>專案名稱</div>
@@ -943,26 +943,36 @@
                                     </div>
                                     <div class='hap-jupyter-customer-ctrl-inputlabel'>
                                         <div>Driver Memory</div>
-                                        <input class='hap-jupyter-customer-ctrl-input' type="number" v-model="driver_memory" min=1 max=128>
+                                        <select style='height: calc( 2rem + 4px);' v-model="driver_memory">
+                                            <option v-for="num of [2,4,6,8,10,12,14,16,18,20,22,24,26,28,30,32]">{{num}}</option>
+                                        </select>
                                     </div>
                                     <div class='hap-jupyter-customer-ctrl-inputlabel'>
                                         <div>Executor Memory</div>
-                                        <input class='hap-jupyter-customer-ctrl-input' type="number" v-model="executor_memory" min=1 max=128>
+                                        <select style='height: calc( 2rem + 4px);' v-model="executor_memory">
+                                            <option v-for="num of [2,4,6,8,10,12,14,16,18,20,22,24,26,28,30,32]">{{num}}</option>
+                                        </select>
                                     </div>
 
 
                                     <div class='hap-jupyter-customer-ctrl-inputlabel'>
                                         <div>Driver Cores</div>
-                                        <input class='hap-jupyter-customer-ctrl-input' type="number" v-model="driver_cores" min=1 max=32>
+                                        <select style='height: calc( 2rem + 4px);' v-model="driver_cores">
+                                            <option v-for="num of [1,2,3,4,5,6,7,8]">{{num}}</option>
+                                        </select>
                                     </div>
 
                                     <div class='hap-jupyter-customer-ctrl-inputlabel'>
                                         <div>Executor Cores</div>
-                                        <input class='hap-jupyter-customer-ctrl-input' type="number" v-model="executor_cores" min=1 max=32>
+                                        <select style='height: calc( 2rem + 4px);' v-model="executor_cores">
+                                            <option v-for="num of [1,2,3,4,5,6,7,8]">{{num}}</option>
+                                        </select>
                                     </div>
                                     <div class='hap-jupyter-customer-ctrl-inputlabel'>
                                         <div>Max Executors</div>
-                                        <input class='hap-jupyter-customer-ctrl-input' type="number" v-model="max_executors" min=1 max=32>
+                                        <select style='height: calc( 2rem + 4px);' v-model="max_executors">
+                                            <option v-for="num of [1,2,3,4,5,6,7,8,9,10,11,12]">{{num}}</option>
+                                        </select>
                                     </div>
                                     
                                     <div class='hap-jupyter-customer-ctrl-inputlabel-big'>
