@@ -126,6 +126,8 @@ var Vue_JupyterWindow =  new Vue({
         popwindowClass: '',
         popwindowInfoItem: {},
 
+        jupyterURL : jupyterURL,
+
         serverPortList: {
             '9h000': '8950',
             '9h001': '8951',
