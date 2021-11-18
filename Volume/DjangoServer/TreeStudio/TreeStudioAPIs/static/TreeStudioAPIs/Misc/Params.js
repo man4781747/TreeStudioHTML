@@ -5,4 +5,4 @@ var jupyterURL = "http://88.248.13.77"
 
 var HueURL = "https://88.248.13.3:8888/hue"
 
-var YarnURL = "https://88.248.13.3:8088"
+var YarnURL = "http://88.248.13.3:8088"

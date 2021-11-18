@@ -229,7 +229,7 @@ var Vue_JupyterCtrlWindow =  new Vue({
                 return null
             }
 
-            fetch(jupyterURL+":"+this.serverPortList[S_serverType]+"/get_docker_jupyter_service")
+            fetch(jupyterURL+":"+this.serverPortList[L_projectList[I_index]]+"/get_docker_jupyter_service")
             .then(function(response) {
                 Vue_JupyterCtrlWindow.customerJupyterUpdateing = false
                 Vue_JupyterCtrlWindow.customerJupyterInfos.push(response.json())
