@@ -220,22 +220,22 @@ var Vue_JupyterCtrlWindow =  new Vue({
     },
 
     methods:{
-        updateCustomerJupyterInfos(){
+        updateCustomerJupyterInfos(I_index=0){
+            var I_index = I_index
             this.customerJupyterUpdateing = true
             Vue_JupyterCtrlWindow.customerJupyterInfos = []
-
-            for (S_serverType of Object.keys(this.serverPortList)){
-
-                fetch(jupyterURL+":"+this.serverPortList[S_serverType]+"/get_docker_jupyter_service")
-                .then(function(response) {
-                    return response.json();
-                })
-                .then(function(myJson) {
-                    console.log(myJson);
-                    Vue_JupyterCtrlWindow.customerJupyterUpdateing = false
-                    Vue_JupyterCtrlWindow.customerJupyterInfos.push(myJson)
-                });
+            L_projectList = Object.keys(this.serverPortList)
+            if (I_index >= L_projectList.length){
+                return null
             }
+
+            fetch(jupyterURL+":"+this.serverPortList[S_serverType]+"/get_docker_jupyter_service")
+            .then(function(response) {
+                Vue_JupyterCtrlWindow.customerJupyterUpdateing = false
+                Vue_JupyterCtrlWindow.customerJupyterInfos.push(response.json())
+            }).catch(
+                Vue_JupyterCtrlWindow.updateCustomerJupyterInfos(I_index + 1)
+            )
         },
 
         clickSwitchCustomerJupyterButton(customerJupyterInfo){

@@ -9,7 +9,7 @@ else
 fi
 
 containerName=tree_studio_server
-port_out=8801
+port_out=8999
 port_in=8000
 dockerfilePath=$(pwd)/../../Volume/DjangoServer/TreeStudio
 # echo $dockerfilePath
@@ -33,6 +33,15 @@ else
     docker rm -f $containerID
     echo "Stop server DONE"
 fi
+
+workpoolPath=/workpool/treestudio
+ftppoolPath=/ftppool/docker_resource/treestudio/TreeStudio
+if [ -d $workpoolPath ] && [ -d $ftppoolPath]; then
+    echo "Update server files"
+    rm -rf $workpoolPath/TreeStudio
+    cp -r $ftppoolPath $workpoolPath
+fi
+
 echo "Try to reboot server..."
 docker run -tid --name $containerName -p $port_out:$port_in \
 -v $dockerfilePath:/code \

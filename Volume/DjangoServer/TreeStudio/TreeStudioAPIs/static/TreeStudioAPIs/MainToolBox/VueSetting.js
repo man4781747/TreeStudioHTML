@@ -66,7 +66,7 @@ var Vue_mainToolBox =  new Vue({
             'HAP_Yarn': {
                 'Name': 'HAP Yarn 系統',
                 'Type': 'URL',
-                'URL': '123',
+                'URL': YarnURL,
                 'icon': 'fas fa-tachometer-alt',
                 'title': 'HAP Yarn 系統',
                 'content': 'HAP Yarn 系統介紹',
