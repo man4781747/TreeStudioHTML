@@ -123,21 +123,27 @@ var Vue_JupyterWindow =  new Vue({
         // http://88.248.13.77:8951/get_docker_jupyter_service
         // http://88.248.13.77:8952/get_docker_jupyter_service
 
-        updateCustomerJupyterInfos(){
+        updateCustomerJupyterInfos(I_index=0){
+            var I_index = I_index
             this.customerJupyterUpdateing = true
             Vue_JupyterWindow.customerJupyterInfos = []
-
-            for (S_serverType of Object.keys(this.serverPortList)){
-                fetch(jupyterURL+":"+this.serverPortList[S_serverType]+"/get_docker_jupyter_service")
-                .then(function(response) {
-                    return response.json();
-                })
-                .then(function(myJson) {
-                    console.log(myJson);
-                    Vue_JupyterWindow.customerJupyterInfos.push(myJson)
-                    Vue_JupyterWindow.customerJupyterUpdateing = false
-                });
+            L_projectList = Object.keys(this.serverPortList)
+            if (I_index >= L_projectList.length){
+                return null
             }
+
+            fetch(jupyterURL+":"+this.serverPortList[L_projectList[I_index]]+"/get_docker_jupyter_service")
+            .then(function(response) {
+                return response.json()
+            })
+            .then(function(myJson) {
+                Vue_JupyterWindow.customerJupyterUpdateing = false
+                Vue_JupyterWindow.customerJupyterInfos.push(myJson)
+            })
+            .catch(function(){
+                console.log('FetchFail')
+                Vue_JupyterWindow.updateCustomerJupyterInfos(I_index + 1)
+            })
         },
 
         clickSwitchCustomerJupyterButton(customerJupyterInfo){

@@ -231,11 +231,16 @@ var Vue_JupyterCtrlWindow =  new Vue({
 
             fetch(jupyterURL+":"+this.serverPortList[L_projectList[I_index]]+"/get_docker_jupyter_service")
             .then(function(response) {
+                return response.json()
+            })
+            .then(function(myJson) {
                 Vue_JupyterCtrlWindow.customerJupyterUpdateing = false
-                Vue_JupyterCtrlWindow.customerJupyterInfos.push(response.json())
-            }).catch(
+                Vue_JupyterCtrlWindow.customerJupyterInfos.push(myJson)
+            })
+            .catch(function(){
+                console.log('FetchFail')
                 Vue_JupyterCtrlWindow.updateCustomerJupyterInfos(I_index + 1)
-            )
+            })
         },
 
         clickSwitchCustomerJupyterButton(customerJupyterInfo){
