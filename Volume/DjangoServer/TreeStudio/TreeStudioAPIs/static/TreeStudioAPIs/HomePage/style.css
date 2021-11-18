@@ -55,7 +55,7 @@
 #home-grid {
     display: grid;
     padding: 15px calc(1rem + 7.5px);
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(2, 1fr);
     grid-column-gap: 10px;
     grid-row-gap: 1em;
     grid-auto-rows: auto;
@@ -71,8 +71,8 @@
 }
 
 #yesterday-fail-list-window {
-    grid-column-start: 3;
-    grid-column-end: 5;
+    grid-column-start: 1;
+    grid-column-end: 3;
 }
 
 #table-update-window {

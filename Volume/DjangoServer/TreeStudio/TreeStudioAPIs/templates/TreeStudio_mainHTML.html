@@ -264,7 +264,7 @@
             <div id='wrapper_page'>
                 <div id="home-grid" v-show="Vue_mainToolBox.chosedPage == 'Home'">
 
-                    <home-page-small-item id='teradata-info-small'>
+                    <!-- <home-page-small-item id='teradata-info-small'>
                         <template v-slot:icon>
                             <i class="fas fa-dice-d6"></i>
                         </template>
@@ -287,209 +287,214 @@
                             <p>{{title}}</p>
                         </template>
                     </home-page-small-item>
-    
-                    <home-page-small-item id='airjob-view'>
-                        <template v-slot:icon>
-                            <airjob-icon class='box-small-card-icon' style='height: 2rem;'></airjob-icon>
-                        </template>
-                        <template v-slot:content>
-                            <p>{{dagJobNum}} Jobs</p>
-                        </template>
-                        <template v-slot:title>
-                            <p>AIRJOB 自主排程</p>
-                        </template>
-                    </home-page-small-item>
+     -->
 
-                    <home-page-small-item id='airflow-view'>
-                        <template v-slot:icon>
-                            <airflow-icon class='box-small-card-icon' style='height: 2rem;'></airflow-icon>
-                        </template>
-                        <template v-slot:content>
-                            <p>{{dagJobNum}} Jobs</p>
-                        </template>
-                        <template v-slot:title>
-                            <p>Airflow 系統排程</p>
-                        </template>
-                    </home-page-small-item>
-    
                     <!-- 更新Table視窗 -->
-                    <div id='table-update-window' class="box-card">
-                        <div class='box-card-header'>
-                            <div class='box-card-title'>
-                                已更新Table
-                            </div>
-                        </div>
-                        <div class='box-card-body'>
-                            <div style="height: 100%;display: grid;grid-auto-rows: min-content auto;">
-                                <p style='font-weight: 600;margin-top: 0px;'>近兩周導入數量:{{updateOn2WeekNumber}}</p>
-                                <div class='small-scrollbar' style="overflow: auto;">
-                                    <table class="dealut-table" style='width: 100%;'>
-                                        <colgroup>
-                                            <col style="">
-                                            <col style="width: 1px;">
-                                            <col style="width: 1px;">
-                                        </colgroup>
-                                        <thead>
-                                            <tr>
-                                                <th class='nowrap'>Table Name</th>
-                                                <th class='nowrap' style="max-width: 10rem;min-width: 10rem;">更新時間</th>
-                                                <th class='nowrap' style="max-width: 5rem;min-width: 5rem;">更新頻率</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr v-for="(tableInfo, index) in last50TableInfoList" v-if="index < 50">
-                                                <td><div>{{tableInfo.table_name}}</div></td>
-                                                <td style='position: relative;'><div class='nowrap text-overflow-hidden'>{{tableInfo.latest_updatetime}}</div></td>
-                                                <td style='position: relative;'><div class='nowrap text-overflow-hidden'>{{tableInfo.etl_freq}}</div></td>
-                                            </tr>
-                                            <tr v-else>
-                                                <td><div>...</div></td>
-                                                <td><div>...</div></td>
-                                                <td><div>...</div></td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
+                    <div>
+                        <div id='table-update-window' class="box-card" style="height: 100%;">
+                            <div class='box-card-header'>
+                                <div class='box-card-title'>
+                                    已更新Table
                                 </div>
                             </div>
-                        </div>
-                        <div class='box-card-footer'>
-                            <div></div>
-                            <a class='moreButton' @click="openHiveSearchPage()">More..</a>
+                            <div class='box-card-body'>
+                                <div style="height: 100%;display: grid;grid-auto-rows: min-content auto;">
+                                    <p style='font-weight: 600;margin-top: 0px;'>近兩周導入數量:{{updateOn2WeekNumber}}</p>
+                                    <div class='small-scrollbar' style="overflow: auto;">
+                                        <table class="dealut-table" style='width: 100%;'>
+                                            <colgroup>
+                                                <col style="">
+                                                <col style="width: 1px;">
+                                                <col style="width: 1px;">
+                                            </colgroup>
+                                            <thead>
+                                                <tr>
+                                                    <th class='nowrap'>Table Name</th>
+                                                    <th class='nowrap' style="max-width: 10rem;min-width: 10rem;">更新時間</th>
+                                                    <th class='nowrap' style="max-width: 5rem;min-width: 5rem;">更新頻率</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr v-for="(tableInfo, index) in last50TableInfoList" v-if="index < 50">
+                                                    <td><div>{{tableInfo.table_name}}</div></td>
+                                                    <td style='position: relative;'><div class='nowrap text-overflow-hidden'>{{tableInfo.latest_updatetime}}</div></td>
+                                                    <td style='position: relative;'><div class='nowrap text-overflow-hidden'>{{tableInfo.etl_freq}}</div></td>
+                                                </tr>
+                                                <tr v-else>
+                                                    <td><div>...</div></td>
+                                                    <td><div>...</div></td>
+                                                    <td><div>...</div></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class='box-card-footer'>
+                                <div></div>
+                                <a class='moreButton' @click="openHiveSearchPage()">More..</a>
+                            </div>
                         </div>
                     </div>
-    
-                    <!-- AIRJOB異常通知 -->
-                    <div id='yesterday-fail-list-window' class="box-card">
-                        <div class='box-card-header'>
-                            <div class='box-card-title'>
-                                AIRJOB近七天異常通知
-                            </div>
-                        </div>
-                        <div class='box-card-body'>
-                            <div style="display: grid;position: relative;height: 100%;grid-auto-rows: auto;">
-                                
-                                <div 
-                                    style="display: grid;position: relative;height: 100%;overflow: auto;grid-template-rows: min-content 1fr;"
-                                >
-                                    <template v-if="failListAll == 'Loading'">
-                                        <div class='loading-window text-v-center text-h-center'>
-                                            <i class="fas fa-spinner anima-360-in-2-sec"></i>
-                                            <label>Loading</label>
-                                        </div>
-                                    </template>
-                                    <template v-else>
-                                        <template v-if="Object.keys(failListAll).length == 0">
-                                            沒有任何錯誤，太棒惹!
-                                        </template>
-                                        <template v-else>
-                                            <p style='font-weight: 600;'>昨日異常數:{{Object.keys(failListAll).length}}</p>
-                                            <div class='small-scrollbar' style="overflow: auto;">
-                                                <table class="dealut-table" style='width: 100%;'>
-                                                    <colgroup>
-                                                        <col span="2" style="width: 1px;">
-                                                        <col style="">
-                                                        <col style="">
-                                                    </colgroup>
-                                                    <thead>
-                                                        <tr>
-                                                            <th class='nowrap' style="max-width: 5rem;min-width: 5rem;">排程ID</th>
-                                                            <th class='nowrap' style="max-width: 5rem;min-width: 5rem;">Owner</th>
-                                                            <th class='nowrap'>排程時間</th>
-                                                            <th class='nowrap' style="max-width: 5rem;min-width: 5rem;">執行時間</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        <!-- <template v-for="inn in [...Array(300).keys()]"> -->
-                                                        <tr v-for="(failInfo, dag_id, index) in failListAll">
-                                                            <td>
-                                                                <a
-                                                                    :href="airjobURL+'AirFlowUploadWeb/testHTML/'+dag_id.split('_')[0]+'/?Page=dagInfoView&dag_id='+dag_id"
-                                                                    target="_blank"
-                                                                >{{dag_id}}</a>
-                                                            </td>
-                                                            <td style='position: relative;'><div class='nowrap text-overflow-hidden'>{{failInfo.owner}}</div></td>
-                                                            <td style='position: relative;'><div class='nowrap text-overflow-hidden'>{{failInfo.scheduleString}}</div></td>
-                                                            <td style='position: relative;'><div class='nowrap text-overflow-hidden'>{{new Date(failInfo.failList[0].execution_date).format('(w) yyyy-MM-dd hh:mm:ss')}}</div></td>
-                                                            
-                                                        </tr>
-                                                        <!-- </template> -->
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                        </template>
-                                    </template>
-            
-                                </div>
-                                
-                                <div v-if='false'>
-                                    <template v-for="(projectName, index) in projectList">
-                                        <!-- <input :id="'fail-window-'+projectName" type="radio" :value="projectName" v-model="projectChosed"> -->
-                                        <label class="btn-base" :for="'fail-window-'+projectName"
-                                            :class="projectChosed==projectName?'btn-style-primary':'btn-style-close'"
-                                            style='margin-right: .75rem;'
-                                        >{{projectName}}
-                                            <input style='display: none;' :id="'fail-window-'+projectName" type="radio" :value="projectName" v-model="projectChosed">
-                                        </label>
-                                    </template>
-                                </div>
-                                <hr v-if='false' style="width:100%;">
-                                <div v-if='false' 
-                                    v-for="(projectName, index) in projectList" 
-                                    v-show="projectName == projectChosed"
-                                    style="display: grid;position: relative;height: 100%;overflow: auto;"
-                                >
-                                    <template v-if="failList[projectName] == 'Loading'">
-                                        <div class='loading-window text-v-center text-h-center'>
-                                            <i class="fas fa-spinner anima-360-in-2-sec"></i>
-                                            <label>Loading</label>
-                                        </div>
-                                    </template>
-                                    <template v-else>
-                                        <template v-if="Object.keys(failList[projectName]).length == 0">
-                                            沒有任何錯誤，太棒惹!
-                                        </template>
-                                        <template v-else>
-                                            <p style='font-weight: 600;'>昨日異常數:{{Object.keys(failList[projectName]).length}}</p>
-                                            <div class='small-scrollbar' style="overflow: auto;">
-                                                <table class="dealut-table" style='width: 100%;'>
-                                                    <colgroup>
-                                                        <col span="2" style="width: 1px;">
-                                                        <col style="">
-                                                        <col style="">
-                                                    </colgroup>
-                                                    <thead>
-                                                        <tr>
-                                                            <th class='nowrap' style="max-width: 5rem;min-width: 5rem;">排程ID</th>
-                                                            <th class='nowrap' style="max-width: 5rem;min-width: 5rem;">Owner</th>
-                                                            <th class='nowrap'>排程時間</th>
-                                                            <th class='nowrap' style="max-width: 5rem;min-width: 5rem;">執行時間</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        <!-- <template v-for="inn in [...Array(300).keys()]"> -->
-                                                        <tr v-for="(failInfo, dag_id, index) in failList[projectName]">
-                                                            <td><a
-                                                                    :href="airjobURL+'AirFlowUploadWeb/testHTML/'+projectName+'/?Page=dagInfoView&dag_id='+dag_id"
-                                                                    target="_blank"
-                                                                >{{dag_id}}</a></td>
-                                                            <td style='position: relative;'><div class='nowrap text-overflow-hidden'>{{failInfo.owner}}</div></td>
-                                                            <td style='position: relative;'><div class='nowrap text-overflow-hidden'>{{failInfo.scheduleString}}</div></td>
-                                                            <td style='position: relative;'><div class='nowrap text-overflow-hidden'>{{new Date(failInfo.failList[0].execution_date).format('(w) yyyy-MM-dd hh:mm:ss')}}</div></td>
-                                                            
-                                                        </tr>
-                                                        <!-- </template> -->
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                        </template>
-                                    </template>
-            
+                    <div style='display: grid;grid-template-columns: repeat(2, 1fr);grid-column-gap: 10px;grid-row-gap: 1em;grid-template-rows: min-content auto;'>
+                        <!-- <div style='display: grid;grid-template-columns: repeat(2, 1fr);'> -->
+                            <home-page-small-item id='airjob-view'>
+                                <template v-slot:icon>
+                                    <airjob-icon class='box-small-card-icon' style='height: 2rem;'></airjob-icon>
+                                </template>
+                                <template v-slot:content>
+                                    <p>{{dagJobNum}} Jobs</p>
+                                </template>
+                                <template v-slot:title>
+                                    <p>AIRJOB 自主排程</p>
+                                </template>
+                            </home-page-small-item>
+        
+                            <home-page-small-item id='airflow-view'>
+                                <template v-slot:icon>
+                                    <airflow-icon class='box-small-card-icon' style='height: 2rem;'></airflow-icon>
+                                </template>
+                                <template v-slot:content>
+                                    <p>{{dagJobNum}} Jobs</p>
+                                </template>
+                                <template v-slot:title>
+                                    <p>Airflow 系統排程</p>
+                                </template>
+                            </home-page-small-item>
+                        <!-- </div> -->
+                        <!-- AIRJOB異常通知 -->
+                        <div id='yesterday-fail-list-window' class="box-card">
+                            <div class='box-card-header'>
+                                <div class='box-card-title'>
+                                    AIRJOB近七天異常通知
                                 </div>
                             </div>
-                        </div>
-                        <div class='box-card-footer'>
-                            <div></div>
-                            <a class='moreButton'>More..</a>
+                            <div class='box-card-body'>
+                                <div style="display: grid;position: relative;height: 100%;grid-auto-rows: auto;">
+                                    
+                                    <div 
+                                        style="display: grid;position: relative;height: 100%;overflow: auto;grid-template-rows: min-content 1fr;"
+                                    >
+                                        <template v-if="failListAll == 'Loading'">
+                                            <div class='loading-window text-v-center text-h-center'>
+                                                <i class="fas fa-spinner anima-360-in-2-sec"></i>
+                                                <label>Loading</label>
+                                            </div>
+                                        </template>
+                                        <template v-else>
+                                            <template v-if="Object.keys(failListAll).length == 0">
+                                                沒有任何錯誤，太棒惹!
+                                            </template>
+                                            <template v-else>
+                                                <p style='font-weight: 600;'>昨日異常數:{{Object.keys(failListAll).length}}</p>
+                                                <div class='small-scrollbar' style="overflow: auto;">
+                                                    <table class="dealut-table" style='width: 100%;'>
+                                                        <colgroup>
+                                                            <col span="2" style="width: 1px;">
+                                                            <col style="">
+                                                            <col style="">
+                                                        </colgroup>
+                                                        <thead>
+                                                            <tr>
+                                                                <th class='nowrap' style="max-width: 5rem;min-width: 5rem;">排程ID</th>
+                                                                <th class='nowrap' style="max-width: 5rem;min-width: 5rem;">Owner</th>
+                                                                <th class='nowrap'>排程時間</th>
+                                                                <th class='nowrap' style="max-width: 5rem;min-width: 5rem;">執行時間</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <!-- <template v-for="inn in [...Array(300).keys()]"> -->
+                                                            <tr v-for="(failInfo, dag_id, index) in failListAll">
+                                                                <td>
+                                                                    <a
+                                                                        :href="airjobURL+'AirFlowUploadWeb/testHTML/'+dag_id.split('_')[0]+'/?Page=dagInfoView&dag_id='+dag_id"
+                                                                        target="_blank"
+                                                                    >{{dag_id}}</a>
+                                                                </td>
+                                                                <td style='position: relative;'><div class='nowrap text-overflow-hidden'>{{failInfo.owner}}</div></td>
+                                                                <td style='position: relative;'><div class='nowrap text-overflow-hidden'>{{failInfo.scheduleString}}</div></td>
+                                                                <td style='position: relative;'><div class='nowrap text-overflow-hidden'>{{new Date(failInfo.failList[0].execution_date).format('(w) yyyy-MM-dd hh:mm:ss')}}</div></td>
+                                                                
+                                                            </tr>
+                                                            <!-- </template> -->
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </template>
+                                        </template>
+                
+                                    </div>
+                                    
+                                    <div v-if='false'>
+                                        <template v-for="(projectName, index) in projectList">
+                                            <!-- <input :id="'fail-window-'+projectName" type="radio" :value="projectName" v-model="projectChosed"> -->
+                                            <label class="btn-base" :for="'fail-window-'+projectName"
+                                                :class="projectChosed==projectName?'btn-style-primary':'btn-style-close'"
+                                                style='margin-right: .75rem;'
+                                            >{{projectName}}
+                                                <input style='display: none;' :id="'fail-window-'+projectName" type="radio" :value="projectName" v-model="projectChosed">
+                                            </label>
+                                        </template>
+                                    </div>
+                                    <hr v-if='false' style="width:100%;">
+                                    <div v-if='false' 
+                                        v-for="(projectName, index) in projectList" 
+                                        v-show="projectName == projectChosed"
+                                        style="display: grid;position: relative;height: 100%;overflow: auto;"
+                                    >
+                                        <template v-if="failList[projectName] == 'Loading'">
+                                            <div class='loading-window text-v-center text-h-center'>
+                                                <i class="fas fa-spinner anima-360-in-2-sec"></i>
+                                                <label>Loading</label>
+                                            </div>
+                                        </template>
+                                        <template v-else>
+                                            <template v-if="Object.keys(failList[projectName]).length == 0">
+                                                沒有任何錯誤，太棒惹!
+                                            </template>
+                                            <template v-else>
+                                                <p style='font-weight: 600;'>昨日異常數:{{Object.keys(failList[projectName]).length}}</p>
+                                                <div class='small-scrollbar' style="overflow: auto;">
+                                                    <table class="dealut-table" style='width: 100%;'>
+                                                        <colgroup>
+                                                            <col span="2" style="width: 1px;">
+                                                            <col style="">
+                                                            <col style="">
+                                                        </colgroup>
+                                                        <thead>
+                                                            <tr>
+                                                                <th class='nowrap' style="max-width: 5rem;min-width: 5rem;">排程ID</th>
+                                                                <th class='nowrap' style="max-width: 5rem;min-width: 5rem;">Owner</th>
+                                                                <th class='nowrap'>排程時間</th>
+                                                                <th class='nowrap' style="max-width: 5rem;min-width: 5rem;">執行時間</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <!-- <template v-for="inn in [...Array(300).keys()]"> -->
+                                                            <tr v-for="(failInfo, dag_id, index) in failList[projectName]">
+                                                                <td><a
+                                                                        :href="airjobURL+'AirFlowUploadWeb/testHTML/'+projectName+'/?Page=dagInfoView&dag_id='+dag_id"
+                                                                        target="_blank"
+                                                                    >{{dag_id}}</a></td>
+                                                                <td style='position: relative;'><div class='nowrap text-overflow-hidden'>{{failInfo.owner}}</div></td>
+                                                                <td style='position: relative;'><div class='nowrap text-overflow-hidden'>{{failInfo.scheduleString}}</div></td>
+                                                                <td style='position: relative;'><div class='nowrap text-overflow-hidden'>{{new Date(failInfo.failList[0].execution_date).format('(w) yyyy-MM-dd hh:mm:ss')}}</div></td>
+                                                                
+                                                            </tr>
+                                                            <!-- </template> -->
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </template>
+                                        </template>
+                
+                                    </div>
+                                </div>
+                            </div>
+                            <div class='box-card-footer'>
+                                <div></div>
+                                <a class='moreButton'>More..</a>
+                            </div>
                         </div>
                     </div>
                 </div>
