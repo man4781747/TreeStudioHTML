@@ -47,7 +47,7 @@ fi
 echo "Try to reboot server..."
 docker run -tid --name $containerName -p $port_out:$port_in \
 -v $djangofilePath:/code \
-$imageName sudo python manage.py runserver 0.0.0.0:$port_in
+$imageName sudo python manage.py runserver 0.0.0.0:$port_in --insecure
 
 echo "Reboot server DONE"
 
