@@ -93,9 +93,9 @@ var Vue_JupyterWindow =  new Vue({
         jupyterURL : jupyterURL,
 
         serverPortList: {
-            '9h000': '8950',
-            '9h001': '8951',
-            '9h002': '8952',
+            '9h000': '8990',
+            '9h001': '8991',
+            '9h002': '8992',
         },
 
         projectList:[
@@ -105,11 +105,11 @@ var Vue_JupyterWindow =  new Vue({
             },
             {
                 'Name': '商業智能科',
-                'url': jupyterURL+':8902/',
+                'url': jupyterURL+':8931/',
             },
             {
                 'Name': '數據經營部',
-                'url': jupyterURL+':8900/',
+                'url': jupyterURL+':8961/',
             },
         ],
         customerJupyterInfos: [],

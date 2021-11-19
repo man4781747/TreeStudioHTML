@@ -152,9 +152,9 @@ var Vue_JupyterCtrlWindow =  new Vue({
         customerJupyterUpdateing: false,
 
         serverPortList: {
-            '9h000': '8950',
-            '9h001': '8951',
-            '9h002': '8952',
+            '9h000': '8990',
+            '9h001': '8991',
+            '9h002': '8992',
         },
     },
 
@@ -179,13 +179,25 @@ var Vue_JupyterCtrlWindow =  new Vue({
             if (this.D_existsSparkName[this.spark_name] != undefined){
                 wraningList.push('Spark Name已被使用，請更換')
             }
+            if (this.L_unUsedPortList.indexOf(parseInt(this.portNum))==-1){
+                wraningList.push('請選擇Port號')
+            }
+
             return wraningList
         },
 
         L_unUsedPortList(){
             L_portList = []
-            for (i of [...Array(51).keys()]){
-                L_portList.push(i+8900)
+
+            D_portStart = {
+                '9h000': 8961,
+                '9h001': 8901,
+                '9h002': 8931,
+            }
+
+
+            for (i of [...Array(15).keys()]){
+                L_portList.push(i*2+D_portStart[this.user_depart])
             }
             Set_portList = new Set(L_portList)
             for (L_projectInfo of this.customerJupyterInfos){
@@ -313,6 +325,7 @@ var Vue_JupyterCtrlWindow =  new Vue({
                 "driver_cores": this.driver_cores.toString(),
                 "executor_cores": this.executor_cores.toString(),
                 "max_executors": this.max_executors.toString(),
+                "ui_port": (parseInt(this.portNum)+1).toString(),
             }
             console.log(D_postData)
             this.statusCreateStatus = '建立中，請稍後...'

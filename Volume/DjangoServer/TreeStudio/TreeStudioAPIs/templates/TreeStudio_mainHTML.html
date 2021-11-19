@@ -758,7 +758,7 @@
                                 </thead>
                                 <tbody style='text-align: center;'>
                                     <template v-for="(projectJupyterInfoList, index) of customerJupyterInfos">
-                                        <tr v-for="(customerJupyterInfo, index) of projectJupyterInfoList">
+                                        <tr v-for="(customerJupyterInfo, index) of projectJupyterInfoList" v-if="['8901','8931','8961'].indexOf(customerJupyterInfo.port)==-1">
                                             <td style="padding: .25rem;border-top: 1px #aaa solid;">{{customerJupyterInfo.project_name}}</td>
                                             <td style="padding: .25rem;border-top: 1px #aaa solid;">{{customerJupyterInfo.user_name}}</td>
                                             <td style="padding: .25rem;border-top: 1px #aaa solid;">{{customerJupyterInfo.user_depart}}</td>
@@ -920,7 +920,15 @@
                             <div class='box-card-body' style='max-height:unset;'>
                                 <div class='hap-jupyter-customer-ctrl-inputlabel-list'>
                                     <div class='hap-jupyter-customer-ctrl-inputlabel'>
-                                        <div>Port (8900~8950)</div>
+                                        <div>部門(與Jupyter權限有關，慎選)</div>
+                                        <select style='height: calc( 2rem + 4px);' v-model="user_depart">
+                                            <option selected>9h000</option>
+                                            <option>9h001</option>
+                                            <option>9h002</option>
+                                        </select>
+                                    </div>
+                                    <div class='hap-jupyter-customer-ctrl-inputlabel'>
+                                        <div>Port</div>
                                         <select style='height: calc( 2rem + 4px);' v-model="portNum">
                                             <option v-for="num of L_unUsedPortList">{{num}}</option>
                                         </select>
@@ -940,14 +948,6 @@
                                     <div class='hap-jupyter-customer-ctrl-inputlabel'>
                                         <div>申請人ID(User ID: 8位數)</div>
                                         <input class='hap-jupyter-customer-ctrl-input' type="text" v-model.trim="user_id" v-on:input="RemoveOtherWord('user_id')" placeholder="請輸入申請人員編">
-                                    </div>
-                                    <div class='hap-jupyter-customer-ctrl-inputlabel'>
-                                        <div>部門(與Jupyter權限有關，慎選)</div>
-                                        <select style='height: calc( 2rem + 4px);' v-model="user_depart">
-                                            <option selected>9h000</option>
-                                            <option>9h001</option>
-                                            <option>9h002</option>
-                                        </select>
                                     </div>
                                     <div class='hap-jupyter-customer-ctrl-inputlabel'>
                                         <div>Spark Name</div>
