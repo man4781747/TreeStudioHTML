@@ -146,7 +146,7 @@
 }
 
 .box-card-body {
-    min-height: 10vh;
+    min-height: 40vh;
     padding: 1.25rem;
     width: calc( 100% - 2.5rem);
     overflow: auto;

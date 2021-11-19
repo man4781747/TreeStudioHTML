@@ -399,7 +399,7 @@
                                                                 <th class='nowrap' style="max-width: 5rem;min-width: 5rem;">排程ID</th>
                                                                 <th class='nowrap' style="max-width: 5rem;min-width: 5rem;">Owner</th>
                                                                 <th class='nowrap'>排程時間</th>
-                                                                <th class='nowrap' style="max-width: 5rem;min-width: 5rem;">執行時間</th>
+                                                                <th class='nowrap' style="max-width: 5rem;min-width: 5rem;">最後失敗執行時間</th>
                                                             </tr>
                                                         </thead>
                                                         <tbody>
@@ -413,7 +413,14 @@
                                                                 </td>
                                                                 <td style='position: relative;'><div class='nowrap text-overflow-hidden'>{{failInfo.owner}}</div></td>
                                                                 <td style='position: relative;'><div class='nowrap text-overflow-hidden'>{{failInfo.scheduleString}}</div></td>
-                                                                <td style='position: relative;'><div class='nowrap text-overflow-hidden'>{{new Date(failInfo.failList[0].execution_date).format('(w) yyyy-MM-dd hh:mm:ss')}}</div></td>
+                                                                <td style='position: relative;'>
+                                                                    <a
+                                                                        :href="airjobURL+'AirFlowUploadWeb/testHTML/'+dag_id.split('_')[0]+'/?Page=dagInfoView&dag_id='+dag_id+'&SheetChose=Runs_history&dag_run_id='+failInfo.LastFail.dag_run_id.replace('+','%2B')"
+                                                                        style='white-space: nowrap;'
+                                                                        target="_blank"
+                                                                    >{{new Date(failInfo.LastFail.execution_date).format('(w) yyyy-MM-dd hh:mm:ss')}}</a>
+                                                                    <!-- <div class='nowrap text-overflow-hidden'>{{new Date(failInfo.failList[0].execution_date).format('(w) yyyy-MM-dd hh:mm:ss')}}</div> -->
+                                                                </td>
                                                                 
                                                             </tr>
                                                             <!-- </template> -->

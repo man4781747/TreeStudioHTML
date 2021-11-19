@@ -197,7 +197,7 @@ var Vue_YesterdayFailList = new Vue({
 				'Loading'
 			)
 
-			fetch(this.airjobURL + 'AirFlowUploadWeb/API/v1/'+S_project+'/GetYesterdayFailTaskList_v1/')
+			fetch(this.airjobURL + 'AirFlowUploadWeb/API/v1/'+S_project+'/Get7DayFailTaskList/')
 			.then(function(response) {
 				return response.json()
 			})
