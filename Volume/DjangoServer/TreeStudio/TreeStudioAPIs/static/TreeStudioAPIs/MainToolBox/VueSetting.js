@@ -16,7 +16,7 @@ var Vue_mainToolBox =  new Vue({
                 'URL': HueURL,
                 'icon': 'fas fa-poll',
                 'title': 'HAP Hue',
-                'content': 'HAP Hue介紹',
+                'content': 'Hue為Hadoop的HAP環境中，進行資料探索的工具，若想獲得詳細資訊，請至Wiki搜尋 "Hue"',
             },
             'HAP_Jupyter': {
                 'Name': 'HAP Jupyter',
@@ -38,7 +38,7 @@ var Vue_mainToolBox =  new Vue({
                         'URL': airjobURL + 'AirFlowUploadWeb/testHTML/9h000/',
                         'icon': 'far fa-circle',
                         'title': 'AIRJOB: 9h000',
-                        'content': '自主排程系統',
+                        'content': 'AIRJOB為以Airflow為底層延伸設計的自主排程系統。',
                     },
                     {
                         'Name': '9h001',
@@ -46,7 +46,7 @@ var Vue_mainToolBox =  new Vue({
                         'URL': airjobURL + 'AirFlowUploadWeb/testHTML/9h001/',
                         'icon': 'far fa-circle',
                         'title': 'AIRJOB: 9h001',
-                        'content': '自主排程系統',
+                        'content': 'AIRJOB為以Airflow為底層延伸設計的自主排程系統。',
                     },
                     {
                         'Name': '9h002',
@@ -54,7 +54,7 @@ var Vue_mainToolBox =  new Vue({
                         'URL': airjobURL + 'AirFlowUploadWeb/testHTML/9h002/',
                         'icon': 'far fa-circle',
                         'title': 'AIRJOB: 9h002',
-                        'content': '自主排程系統',
+                        'content': 'AIRJOB為以Airflow為底層延伸設計的自主排程系統。',
                     },
                 ]
             },
@@ -69,7 +69,7 @@ var Vue_mainToolBox =  new Vue({
                 'URL': YarnURL,
                 'icon': 'fas fa-tachometer-alt',
                 'title': 'HAP Yarn 系統',
-                'content': 'HAP Yarn 系統介紹',
+                'content': 'HAP Yarn 系統',
             },
             
         },
