@@ -1,13 +1,13 @@
 function welcomeWindowBuild(){
     setTimeout(function() {
         var textWrapper = document.querySelector('.vue-load-success-content');
-        textWrapper.innerHTML = "TREE  STUDIO".replace(/\S/g, "<span class='letter'>$&</span>");
+        textWrapper.innerHTML = "AKIRA PORTAL".replace(/\S/g, "<span class='letter'>$&</span>");
 
         var textWrapper_2 = document.querySelector('.vue-load-success-content-2');
         textWrapper_2.innerHTML = "All You Need In Here".replace(/\S/g, "<span class='letter-2'>$&</span>");
 
         var textWrapper_3 = document.querySelector('.vue-load-success-content-3');
-        textWrapper_3.innerHTML = "HAP".replace(/\S/g, "<span class='letter-3'>$&</span>");
+        textWrapper_3.innerHTML = "my page".replace(/\S/g, "<span class='letter-3'>$&</span>");
 
 
         anime.timeline({loop: false})
