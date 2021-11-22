@@ -10,18 +10,21 @@ var Vue_mainToolBox =  new Vue({
                 'Type': 'Home',
                 'icon': 'fas fa-home',
             },
-            'HAP_Hue': {
-                'Name': 'HAP Hue',
+            'Jupyter_Notebook': {
+                'Name': 'Jupyter Notebook',
                 'Type': 'URL',
-                'URL': HueURL,
+                'URL': jupyterURL,
                 'icon': 'fas fa-poll',
-                'title': 'HAP Hue',
-                'content': 'HAP Hue介紹',
+                'title': 'Jupyter Notebook',
+                'content': 'Jupyter Notebook',
             },
-            'HAP_Jupyter': {
-                'Name': 'HAP Jupyter',
-                'Type': 'Page',
-                'icon': 'fab fa-python',
+            'Jupyter_Lab': {
+                'Name': 'Jupyter Lab',
+                'Type': 'URL',
+                'URL': jupyterLabURL,
+                'icon': 'fas fa-poll',
+                'title': 'Jupyter Lab',
+                'content': 'Jupyter Lab',
             },
             'HAP_AIRJOB': {
                 'Name': 'HAP AIRJOB',
@@ -30,48 +33,33 @@ var Vue_mainToolBox =  new Vue({
                 'icon': 'far fa-calendar-alt',
                 'height' : 0,
                 'id' : 'main-toolbox-list-HAP_AIRJOB',
-                // 'svg': 'http://34.135.113.78:9000/static/dist/img/AirflowIcon-white-30-rotate-new.svg',
                 'List': [
                     {
                         'Name': '9h000',
                         'Type': 'URL',
-                        'URL': airjobURL + 'AirFlowUploadWeb/testHTML/9h000/',
+                        'URL': airjobURL + 'AIRJOB/9h000/',
                         'icon': 'far fa-circle',
                         'title': 'AIRJOB: 9h000',
-                        'content': '自主排程系統',
+                        'content': 'AIRJOB為以Airflow為底層延伸設計的自主排程系統。',
                     },
                     {
                         'Name': '9h001',
                         'Type': 'URL',
-                        'URL': airjobURL + 'AirFlowUploadWeb/testHTML/9h001/',
+                        'URL': airjobURL + 'AIRJOB/9h001/',
                         'icon': 'far fa-circle',
                         'title': 'AIRJOB: 9h001',
-                        'content': '自主排程系統',
+                        'content': 'AIRJOB為以Airflow為底層延伸設計的自主排程系統。',
                     },
                     {
                         'Name': '9h002',
                         'Type': 'URL',
-                        'URL': airjobURL + 'AirFlowUploadWeb/testHTML/9h002/',
+                        'URL': airjobURL + 'AIRJOB/9h002/',
                         'icon': 'far fa-circle',
                         'title': 'AIRJOB: 9h002',
-                        'content': '自主排程系統',
+                        'content': 'AIRJOB為以Airflow為底層延伸設計的自主排程系統。',
                     },
                 ]
             },
-            'HAP_Table': {
-                'Name': 'HAP 資料表查詢',
-                'Type': 'Page',
-                'icon': 'fas fa-table',
-            },
-            'HAP_Yarn': {
-                'Name': 'HAP Yarn 系統',
-                'Type': 'URL',
-                'URL': '123',
-                'icon': 'fas fa-tachometer-alt',
-                'title': 'HAP Yarn 系統',
-                'content': 'HAP Yarn 系統介紹',
-            },
-            
         },
     },
 
@@ -93,31 +81,31 @@ var Vue_mainToolBox =  new Vue({
                 element.style.display = 'none';
             } 
 
-            if (S_page == 'HAP_Table'){
-                let element = document.getElementById("hive-searcher");
-                element.style.display = '';
-            } else {
-                let element = document.getElementById("hive-searcher");
-                element.style.display = 'none';
-            } 
+            // if (S_page == 'HAP_Table'){
+            //     let element = document.getElementById("hive-searcher");
+            //     element.style.display = '';
+            // } else {
+            //     let element = document.getElementById("hive-searcher");
+            //     element.style.display = 'none';
+            // } 
 
-            if (S_page == 'HAP_Jupyter'){
-                let element = document.getElementById("hap-jupyter-window");
-                element.style.display = '';
-                Vue_JupyterWindow.updateCustomerJupyterInfos()
-            } else {
-                let element = document.getElementById("hap-jupyter-window");
-                element.style.display = 'none';
-            } 
+            // if (S_page == 'HAP_Jupyter'){
+            //     let element = document.getElementById("hap-jupyter-window");
+            //     element.style.display = '';
+            //     Vue_JupyterWindow.updateCustomerJupyterInfos()
+            // } else {
+            //     let element = document.getElementById("hap-jupyter-window");
+            //     element.style.display = 'none';
+            // } 
 
-            if (S_page == 'System.Jupyter 控制'){
-                let element = document.getElementById("hap-jupyter-ctrl-window");
-                element.style.display = '';
-                Vue_JupyterCtrlWindow.updateCustomerJupyterInfos()
-            } else {
-                let element = document.getElementById("hap-jupyter-ctrl-window");
-                element.style.display = 'none';
-            } 
+            // if (S_page == 'System.Jupyter 控制'){
+            //     let element = document.getElementById("hap-jupyter-ctrl-window");
+            //     element.style.display = '';
+            //     Vue_JupyterCtrlWindow.updateCustomerJupyterInfos()
+            // } else {
+            //     let element = document.getElementById("hap-jupyter-ctrl-window");
+            //     element.style.display = 'none';
+            // } 
 
 
             if (labelItem.Type == 'URL'){
