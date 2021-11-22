@@ -318,7 +318,7 @@
                                             <tbody>
                                                 <tr v-for="(tableInfo, index) in last50TableInfoList" v-if="index < 50">
                                                     <td><div>{{tableInfo.table_name}}</div></td>
-                                                    <td style='position: relative;'><div class='nowrap text-overflow-hidden'>{{tableInfo.latest_updatetime}}</div></td>
+                                                    <td style='position: relative;'><div class='nowrap text-overflow-hidden'>{{tableInfo.latest_updatetime.replaceAll('/','-')}}</div></td>
                                                     <td style='position: relative;'><div class='nowrap text-overflow-hidden'>{{tableInfo.etl_freq}}</div></td>
                                                 </tr>
                                                 <tr v-else>
@@ -631,7 +631,7 @@
                                         <td>{{data.table_name}}</td>
                                         <td>{{data.table_name_ch}}</td>
                                         <td>{{data.resource_database}}</td>
-                                        <td>{{data.latest_updatetime}}</td>
+                                        <td>{{data.latest_updatetime.replaceAll('/','-')}}</td>
                                         <td>
                                             <div v-if="data.table_status=='異常'" >
                                                 {{data.table_status}}
