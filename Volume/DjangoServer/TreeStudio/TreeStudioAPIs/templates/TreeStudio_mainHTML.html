@@ -762,7 +762,10 @@
                                         <tr v-for="(customerJupyterInfo, index) of projectJupyterInfoList" v-if="['8901','8931','8961'].indexOf(customerJupyterInfo.port)==-1">
                                             <td style="padding: .25rem;border-top: 1px #aaa solid;">{{customerJupyterInfo.project_name}}</td>
                                             <td style="padding: .25rem;border-top: 1px #aaa solid;">{{customerJupyterInfo.user_name}}</td>
-                                            <td style="padding: .25rem;border-top: 1px #aaa solid;">{{customerJupyterInfo.user_depart}}</td>
+                                            <td v-if="customerJupyterInfo.user_depart=='9h000'" style="padding: .25rem;border-top: 1px #aaa solid;">數據經營部</td>
+                                            <td v-else-if="customerJupyterInfo.user_depart=='9h001'" style="padding: .25rem;border-top: 1px #aaa solid;">客戶智能科</td>
+                                            <td v-else-if="customerJupyterInfo.user_depart=='9h002'" style="padding: .25rem;border-top: 1px #aaa solid;">商業智能科</td>
+                                            <td v-else style="padding: .25rem;border-top: 1px #aaa solid;">未知的部門代號，請通知工程組排除</td>
                                             <td style="padding: .25rem;border-top: 1px #aaa solid;">{{customerJupyterInfo.create_time}}</td>
                                             <td style="padding: .25rem;border-top: 1px #aaa solid;">{{customerJupyterInfo.spark_name}}</td>
                                             <td style="padding: .25rem;border-top: 1px #aaa solid;">
@@ -923,9 +926,9 @@
                                     <div class='hap-jupyter-customer-ctrl-inputlabel'>
                                         <div>部門(與Jupyter權限有關，慎選)</div>
                                         <select style='height: calc( 2rem + 4px);' v-model="user_depart">
-                                            <option selected>9h000</option>
-                                            <option>9h001</option>
-                                            <option>9h002</option>
+                                            <option selected value="9h000">數據經營部</option>
+                                            <option value="9h001">客戶智能科</option>
+                                            <option value="9h002">商業智能科</option>
                                         </select>
                                     </div>
                                     <div class='hap-jupyter-customer-ctrl-inputlabel'>
@@ -1071,7 +1074,10 @@
                                                 <td style="padding: .25rem;border-top: 1px #aaa solid;">{{customerJupyterInfo.project_name}}</td>
                                                 <td style="padding: .25rem;border-top: 1px #aaa solid;">{{customerJupyterInfo.port}}</td>
                                                 <td style="padding: .25rem;border-top: 1px #aaa solid;">{{customerJupyterInfo.user_name}}</td>
-                                                <td style="padding: .25rem;border-top: 1px #aaa solid;">{{customerJupyterInfo.user_depart}}</td>
+                                                <td v-if="customerJupyterInfo.user_depart=='9h000'" style="padding: .25rem;border-top: 1px #aaa solid;">數據經營部</td>
+                                                <td v-else-if="customerJupyterInfo.user_depart=='9h000'" style="padding: .25rem;border-top: 1px #aaa solid;">客戶智能科</td>
+                                                <td v-else-if="customerJupyterInfo.user_depart=='9h000'" style="padding: .25rem;border-top: 1px #aaa solid;">商業智能科</td>
+                                                <td v-else style="padding: .25rem;border-top: 1px #aaa solid;">未知的部門代號，請通知工程組排除</td>
                                                 <td style="padding: .25rem;border-top: 1px #aaa solid;">{{customerJupyterInfo.create_time}}</td>
                                                 <td style="padding: .25rem;border-top: 1px #aaa solid;">{{customerJupyterInfo.spark_name}}</td>
                                                 <td style="padding: .25rem;border-top: 1px #aaa solid;">

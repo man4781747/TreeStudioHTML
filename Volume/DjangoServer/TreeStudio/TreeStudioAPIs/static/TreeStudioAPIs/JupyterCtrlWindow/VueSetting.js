@@ -196,8 +196,8 @@ var Vue_JupyterCtrlWindow =  new Vue({
             }
 
 
-            for (i of [...Array(15).keys()]){
-                L_portList.push(i*2+D_portStart[this.user_depart])
+            for (i of [...Array(10).keys()]){
+                L_portList.push(i*3+D_portStart[this.user_depart])
             }
             Set_portList = new Set(L_portList)
             for (L_projectInfo of this.customerJupyterInfos){
@@ -313,7 +313,6 @@ var Vue_JupyterCtrlWindow =  new Vue({
                 "port": this.portNum.toString(),
                 "user_id": this.user_id,
                 "user_depart": this.user_depart,
-                "user_id": this.user_id,
                 "user_name": this.user_name,
                 "user_token": this.tokenStr,
                 "project_name": this.projectName,
