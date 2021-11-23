@@ -35,7 +35,7 @@ var Vue_mainToolBox =  new Vue({
                     {
                         'Name': '9h000',
                         'Type': 'URL',
-                        'URL': airjobURL + 'AirFlowUploadWeb/testHTML/9h000/',
+                        'URL': airjobURL + 'AIRJOB/9h000/',
                         'icon': 'far fa-circle',
                         'title': 'AIRJOB: 9h000',
                         'content': 'AIRJOB為以Airflow為底層延伸設計的自主排程系統。',
@@ -43,7 +43,7 @@ var Vue_mainToolBox =  new Vue({
                     {
                         'Name': '9h001',
                         'Type': 'URL',
-                        'URL': airjobURL + 'AirFlowUploadWeb/testHTML/9h001/',
+                        'URL': airjobURL + 'AIRJOB/9h001/',
                         'icon': 'far fa-circle',
                         'title': 'AIRJOB: 9h001',
                         'content': 'AIRJOB為以Airflow為底層延伸設計的自主排程系統。',
@@ -51,7 +51,7 @@ var Vue_mainToolBox =  new Vue({
                     {
                         'Name': '9h002',
                         'Type': 'URL',
-                        'URL': airjobURL + 'AirFlowUploadWeb/testHTML/9h002/',
+                        'URL': airjobURL + 'AIRJOB/9h002/',
                         'icon': 'far fa-circle',
                         'title': 'AIRJOB: 9h002',
                         'content': 'AIRJOB為以Airflow為底層延伸設計的自主排程系統。',

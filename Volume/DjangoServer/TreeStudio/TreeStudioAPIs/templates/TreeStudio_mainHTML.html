@@ -408,7 +408,7 @@
                                                             <tr v-for="(failInfo, dag_id, index) in failListAll">
                                                                 <td>
                                                                     <a
-                                                                        :href="airjobURL+'AirFlowUploadWeb/testHTML/'+dag_id.split('_')[0]+'/?Page=dagInfoView&dag_id='+dag_id"
+                                                                        :href="airjobURL+'AIRJOB/'+dag_id.split('_')[0]+'/?Page=dagInfoView&dag_id='+dag_id"
                                                                         target="_blank"
                                                                     >{{dag_id}}</a>
                                                                 </td>
@@ -416,7 +416,7 @@
                                                                 <td style='position: relative;'><div class='nowrap text-overflow-hidden'>{{failInfo.scheduleString}}</div></td>
                                                                 <td style='position: relative;'>
                                                                     <a
-                                                                        :href="airjobURL+'AirFlowUploadWeb/testHTML/'+dag_id.split('_')[0]+'/?Page=dagInfoView&dag_id='+dag_id+'&SheetChose=Runs_history&dag_run_id='+failInfo.LastFail.dag_run_id.replace('+','%2B')"
+                                                                        :href="airjobURL+'AIRJOB/'+dag_id.split('_')[0]+'/?Page=dagInfoView&dag_id='+dag_id+'&SheetChose=Runs_history&dag_run_id='+failInfo.LastFail.dag_run_id.replace('+','%2B')"
                                                                         style='white-space: nowrap;'
                                                                         target="_blank"
                                                                     >{{new Date(failInfo.LastFail.execution_date).format('(w) yyyy-MM-dd hh:mm:ss')}}</a>
@@ -481,7 +481,7 @@
                                                             <!-- <template v-for="inn in [...Array(300).keys()]"> -->
                                                             <tr v-for="(failInfo, dag_id, index) in failList[projectName]">
                                                                 <td><a
-                                                                        :href="airjobURL+'AirFlowUploadWeb/testHTML/'+projectName+'/?Page=dagInfoView&dag_id='+dag_id"
+                                                                        :href="airjobURL+'AIRJOB/'+projectName+'/?Page=dagInfoView&dag_id='+dag_id"
                                                                         target="_blank"
                                                                     >{{dag_id}}</a></td>
                                                                 <td style='position: relative;'><div class='nowrap text-overflow-hidden'>{{failInfo.owner}}</div></td>
