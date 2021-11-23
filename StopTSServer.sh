@@ -1,4 +1,4 @@
-containerName=tree_studio_server
+containerName=treestudio-server-container
 
 echo 'Try to get container ID which name is '$containerName
 

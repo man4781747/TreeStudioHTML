@@ -8,9 +8,10 @@ else
     exit 1
 fi
 
-containerName=tree_studio_server
+containerName=treestudio-server-container
 port_out=8999
 port_in=8000
+imageName=airjob-server:lastest
 dockerfilePath=$(pwd)/../../Volume/DjangoServer/TreeStudio
 # echo $dockerfilePath
 
@@ -34,18 +35,18 @@ else
     echo "Stop server DONE"
 fi
 
-workpoolPath=/workpool/treestudio
-ftppoolPath=/ftppool/docker_resource/treestudio/TreeStudio
-if [ -d $workpoolPath ] && [ -d $ftppoolPath]; then
-    echo "Update server files"
-    rm -rf $workpoolPath/TreeStudio
-    cp -r $ftppoolPath $workpoolPath
-fi
+# workpoolPath=/workpool/treestudio
+# ftppoolPath=/ftppool/docker_resource/treestudio/TreeStudio
+# if [ -d $workpoolPath ] && [ -d $ftppoolPath]; then
+#     echo "Update server files"
+#     rm -rf $workpoolPath/TreeStudio
+#     cp -r $ftppoolPath $workpoolPath
+# fi
 
 echo "Try to reboot server..."
 docker run -tid --name $containerName -p $port_out:$port_in \
 -v $dockerfilePath:/code \
-treestudiohtml_web sudo sh runServerBash.sh
+$imageName sudo sh runServerBash.sh
 
 echo "Reboot server DONE"
 

@@ -138,3 +138,17 @@
     left: 0px;
     line-height: 1.2rem;
 }
+
+#hive-searcher .btn-update {
+    color: #333;
+    background-color: #eee;
+    border-color: #adb5bd;
+    box-shadow: none;
+}
+
+#hive-searcher .btn-update:hover {
+    color: #333;
+    background-color: #7b8186;
+    border-color: #7b8186;
+    box-shadow: none;
+}

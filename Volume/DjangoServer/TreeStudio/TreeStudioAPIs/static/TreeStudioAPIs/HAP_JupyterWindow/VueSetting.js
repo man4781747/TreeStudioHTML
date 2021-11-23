@@ -156,6 +156,7 @@ var Vue_JupyterWindow =  new Vue({
             var url, D_postData
 
             this.serverPortList[D_customerJupyterInfo['user_depart']]
+            S_serverType = D_customerJupyterInfo['user_depart']
             if (D_customerJupyterInfo.status == 'enable'){
                 // 現在是開的，要關掉
                 url = jupyterURL+':'+this.serverPortList[S_serverType]+"/stop_docker_jupyter_service"

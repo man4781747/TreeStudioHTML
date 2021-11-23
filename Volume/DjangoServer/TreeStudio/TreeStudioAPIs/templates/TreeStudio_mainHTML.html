@@ -509,6 +509,7 @@
     
                 <div id='hive-searcher'>
                     <h1>Hive 資料表查詢</h1>
+                    
                     <h3>顯示目前 HAP Hive 所有資料表的最新更新資訊，如要檢視Table的歷史紀錄，可以參考Feature Store裡的td2hive_table_update。</h3>
                     <div style='display: flex;justify-content: center;'>
                         <div class='search-bar'>
@@ -519,7 +520,10 @@
                     <hr>
                     <div id='hive-table'>
                         <div id='hive-table-header'>
-                            <label style="font-size: 2rem;font-weight: 600;">Page: {{parseInt(pageChose) + 1}}</label>
+                            <div style='display: flex;'>
+                                <label style="font-size: 2rem;font-weight: 600;">Page: {{parseInt(pageChose) + 1}}</label>
+                                <i class="fas fa-sync-alt hap-jupyter-btn btn-update" @click="updateTableInfoList()" style="margin-left: 0.5rem;line-height: 1.5;"></i>
+                            </div>
                             <div class='page-choser'>
                                 <div v-if="pageListChose==0" class='page-chose-btn page-chose-btn-noactive'>
                                     <i class="fas fa-angle-double-left"></i>
@@ -753,13 +757,13 @@
                                         <th style='padding: .5rem;font-size: 1.25rem;'>申請者</th>
                                         <th style='padding: .5rem;font-size: 1.25rem;'>申請單位</th>
                                         <th style='padding: .5rem;font-size: 1.25rem;'>申請時間</th>
-                                        <th style='padding: .5rem;font-size: 1.25rem;'>建置者</th>
+                                        <th style='padding: .5rem;font-size: 1.25rem;'>Spark UI啟用?</th>
                                         <th style='padding: .5rem;font-size: 1.25rem;'>操作</th>
                                     </tr>
                                 </thead>
                                 <tbody style='text-align: center;'>
                                     <template v-for="(projectJupyterInfoList, index) of customerJupyterInfos">
-                                        <tr v-for="(customerJupyterInfo, index) of projectJupyterInfoList" v-if="['8901','8931','8961'].indexOf(customerJupyterInfo.port)==-1">
+                                        <tr v-for="(customerJupyterInfo, index) of projectJupyterInfoList" v-if="['8901','8931','8961','8981','8983','8985'].indexOf(customerJupyterInfo.port)==-1">
                                             <td style="padding: .25rem;border-top: 1px #aaa solid;">{{customerJupyterInfo.project_name}}</td>
                                             <td style="padding: .25rem;border-top: 1px #aaa solid;">{{customerJupyterInfo.user_name}}</td>
                                             <td v-if="customerJupyterInfo.user_depart=='9h000'" style="padding: .25rem;border-top: 1px #aaa solid;">數據經營部</td>
@@ -767,7 +771,9 @@
                                             <td v-else-if="customerJupyterInfo.user_depart=='9h002'" style="padding: .25rem;border-top: 1px #aaa solid;">商業智能科</td>
                                             <td v-else style="padding: .25rem;border-top: 1px #aaa solid;">未知的部門代號，請通知工程組排除</td>
                                             <td style="padding: .25rem;border-top: 1px #aaa solid;">{{customerJupyterInfo.create_time}}</td>
-                                            <td style="padding: .25rem;border-top: 1px #aaa solid;">{{customerJupyterInfo.spark_name}}</td>
+                                            <td v-if="customerJupyterInfo.spark_ui=='false'" style="padding: .25rem;border-top: 1px #aaa solid;">關閉</td>
+                                            <td v-else-if="customerJupyterInfo.spark_ui=='true'" style="padding: .25rem;border-top: 1px #aaa solid;">啟用</td>
+                                            <td v-else style="padding: .25rem;border-top: 1px #aaa solid;">未知的格式，請通知工程組排除</td>
                                             <td style="padding: .25rem;border-top: 1px #aaa solid;">
                                                 <div class='customer-jupyter-active-list'>
                                                     <a class='hap-jupyter-btn btn-active' :href="jupyterURL+':'+customerJupyterInfo.port" target="_blank">
@@ -858,6 +864,7 @@
                                         申請人名稱: {{user_name}} <br>
                                         部門: {{user_depart}} <br>
                                         Token: {{tokenStr}} <br>
+                                        Spark UI啟用: {{spark_ui}} <br>
                                         Core數: {{driver_cores}} <br>
                                         Ram大小: {{driver_memory}} GB
                                     </div>
@@ -956,6 +963,13 @@
                                     <div class='hap-jupyter-customer-ctrl-inputlabel'>
                                         <div>Spark Name</div>
                                         <input class='hap-jupyter-customer-ctrl-input' type="text" v-model.trim="spark_name" v-on:input="RemoveOtherWord('spark_name')" placeholder="請輸入Spark Name">
+                                    </div>
+                                    <div class='hap-jupyter-customer-ctrl-inputlabel'>
+                                        <div>啟用Spark UI</div>
+                                        <select style='height: calc( 2rem + 4px);' v-model="spark_ui">
+                                            <option selected value="false">關閉</option>
+                                            <option value="true">啟用</option>
+                                        </select>
                                     </div>
                                     <div class='hap-jupyter-customer-ctrl-inputlabel'>
                                         <div>Driver Memory</div>
@@ -1064,7 +1078,7 @@
                                             <th style="padding: .5rem;font-size: 1.25rem;">申請者</th>
                                             <th style="padding: .5rem;font-size: 1.25rem;">申請單位</th>
                                             <th style="padding: .5rem;font-size: 1.25rem;">申請時間</th>
-                                            <th style="padding: .5rem;font-size: 1.25rem;">建置者</th>
+                                            <th style="padding: .5rem;font-size: 1.25rem;">Spark UI</th>
                                             <th style="padding: .5rem;font-size: 1.25rem;">操作</th>
                                         </tr>
                                     </thead>
@@ -1075,11 +1089,13 @@
                                                 <td style="padding: .25rem;border-top: 1px #aaa solid;">{{customerJupyterInfo.port}}</td>
                                                 <td style="padding: .25rem;border-top: 1px #aaa solid;">{{customerJupyterInfo.user_name}}</td>
                                                 <td v-if="customerJupyterInfo.user_depart=='9h000'" style="padding: .25rem;border-top: 1px #aaa solid;">數據經營部</td>
-                                                <td v-else-if="customerJupyterInfo.user_depart=='9h000'" style="padding: .25rem;border-top: 1px #aaa solid;">客戶智能科</td>
-                                                <td v-else-if="customerJupyterInfo.user_depart=='9h000'" style="padding: .25rem;border-top: 1px #aaa solid;">商業智能科</td>
+                                                <td v-else-if="customerJupyterInfo.user_depart=='9h001'" style="padding: .25rem;border-top: 1px #aaa solid;">客戶智能科</td>
+                                                <td v-else-if="customerJupyterInfo.user_depart=='9h002'" style="padding: .25rem;border-top: 1px #aaa solid;">商業智能科</td>
                                                 <td v-else style="padding: .25rem;border-top: 1px #aaa solid;">未知的部門代號，請通知工程組排除</td>
                                                 <td style="padding: .25rem;border-top: 1px #aaa solid;">{{customerJupyterInfo.create_time}}</td>
-                                                <td style="padding: .25rem;border-top: 1px #aaa solid;">{{customerJupyterInfo.spark_name}}</td>
+                                                <td v-if="customerJupyterInfo.spark_ui=='false'" style="padding: .25rem;border-top: 1px #aaa solid;">關閉</td>
+                                                <td v-else-if="customerJupyterInfo.spark_ui=='true'" style="padding: .25rem;border-top: 1px #aaa solid;">啟用</td>
+                                                <td v-else style="padding: .25rem;border-top: 1px #aaa solid;">未知的格式，請通知工程組排除</td>
                                                 <td style="padding: .25rem;border-top: 1px #aaa solid;">
                                                     <div class='customer-jupyter-active-list'>
                                                         <a class='hap-jupyter-btn btn-active' :href="jupyterURL+':'+customerJupyterInfo.port+'/login?token='+customerJupyterInfo.user_token" target="_blank">

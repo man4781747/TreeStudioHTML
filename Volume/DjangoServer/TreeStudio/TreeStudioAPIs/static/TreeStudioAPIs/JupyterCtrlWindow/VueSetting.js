@@ -141,6 +141,7 @@ var Vue_JupyterCtrlWindow =  new Vue({
         context: '',
         spark_name: '',
         max_executors: 2,
+        spark_ui: false,
 
         popwindowOpen: false,
         popwindowBtnKey: '',
@@ -189,16 +190,20 @@ var Vue_JupyterCtrlWindow =  new Vue({
         L_unUsedPortList(){
             L_portList = []
 
+
+            // 個項目最後一個port是開給AIRJOB專用的
             D_portStart = {
-                '9h000': 8961,
-                '9h001': 8901,
-                '9h002': 8931,
+                '9h000': [8961, 8966, 8971, 8976, 8981],
+                '9h001': [8901, 8906, 8911, 8916, 8921, 8926, 8983],
+                '9h002': [8931, 8936, 8941, 8946, 8951, 8956, 8985],
             }
 
 
-            for (i of [...Array(10).keys()]){
-                L_portList.push(i*3+D_portStart[this.user_depart])
-            }
+            // for (i of [...Array(10).keys()]){
+            //     L_portList.push(i*3+D_portStart[this.user_depart])
+            // }
+            L_portList = D_portStart[this.user_depart]
+
             Set_portList = new Set(L_portList)
             for (L_projectInfo of this.customerJupyterInfos){
                 for (D_jupyterInfo of L_projectInfo){
@@ -325,6 +330,7 @@ var Vue_JupyterCtrlWindow =  new Vue({
                 "executor_cores": this.executor_cores.toString(),
                 "max_executors": this.max_executors.toString(),
                 "ui_port": (parseInt(this.portNum)+1).toString(),
+                "spark_ui": ""+this.spark_ui,
             }
             console.log(D_postData)
             this.statusCreateStatus = '建立中，請稍後...'
