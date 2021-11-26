@@ -146,7 +146,7 @@ var Vue_mainToolBox =  new Vue({
 				D_paras[pair[0]] = pair[1]
 			}
 			this.urlParas = D_paras
-			console.log(this.urlParas)
+			//console.log(this.urlParas)
 			this.actionByUrlParas()
 		},
 
@@ -189,7 +189,7 @@ var Vue_mainToolBox =  new Vue({
                         this.changePage({}, "Home")
                     }
                     else {
-                        console.log(this.D_labelList[S_pageName])
+                        ////console.log(this.D_labelList[S_pageName])
                         this.changePage(this.D_labelList[S_pageName], S_pageName)
                     }
 
@@ -205,7 +205,7 @@ var Vue_mainToolBox =  new Vue({
                             this.changePage({}, "Home")
                         }
                         else {
-                            console.log(S_pageName,'->',S_listName)
+                            ////console.log(S_pageName,'->',S_listName)
                             this.D_labelList[S_pageName].opened = true
                             for (listItem of this.D_labelList[S_pageName].List){
                                 if (listItem.Name == S_listName){
@@ -227,7 +227,7 @@ var Vue_mainToolBox =  new Vue({
                 //     }
                 // }
                 // else if (["Home", "URL", "Page"].indexOf(this.D_labelList[S_pageName].Type)!=-1){
-                //     console.log(this.D_labelList[S_pageName])
+                //     ////console.log(this.D_labelList[S_pageName])
                 //     this.changePage(this.D_labelList[S_pageName], S_pageName)
                 // }
                 // else {

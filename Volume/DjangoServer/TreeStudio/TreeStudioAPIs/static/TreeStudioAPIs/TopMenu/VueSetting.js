@@ -66,7 +66,7 @@ var Vue_TopMenuWindow =  new Vue({
                 var img = canvas.toDataURL('image/png'); //image data of canvas
                 //  var doc = new jsPDF({orientation: 'landscape',format:'a4'});
                 var doc = new jsPDF("l", "pt", [canvas.width, canvas.height]);
-                console.log([canvas.width, canvas.height])
+                //console.log([canvas.width, canvas.height])
                 doc.addImage(img, 'PNG', 0, 0, canvas.width, canvas.height);
                 doc.save('page.pdf');
                 }
@@ -106,7 +106,7 @@ var Vue_TopMenuWindow =  new Vue({
 //          var img = canvas.toDataURL('image/png'); //image data of canvas
 //          //  var doc = new jsPDF({orientation: 'landscape',format:'a4'});
 //          var doc = new jsPDF("l", "pt", [canvas.width, canvas.height]);
-//          console.log([canvas.width, canvas.height])
+//          //console.log([canvas.width, canvas.height])
 //          doc.addImage(img, 'PNG', 0, 0, canvas.width, canvas.height);
 //          doc.save('page.pdf');
 //        }

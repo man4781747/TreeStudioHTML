@@ -261,7 +261,7 @@ var Vue_JupyterCtrlWindow =  new Vue({
                 Vue_JupyterCtrlWindow.customerJupyterInfos.push(myJson)
             })
             .catch(function(){
-                console.log('FetchFail')
+                //console.log('FetchFail')
                 Vue_JupyterCtrlWindow.updateCustomerJupyterInfos(I_index + 1)
             })
 
@@ -294,7 +294,7 @@ var Vue_JupyterCtrlWindow =  new Vue({
 
         clickSwitchCustomerJupyterButton(customerJupyterInfo){
             this.statusChangeWindowOpen = true
-            console.log(customerJupyterInfo)
+            //console.log(customerJupyterInfo)
             this.statusChangeWindowInfo = customerJupyterInfo
         },
 
@@ -331,7 +331,7 @@ var Vue_JupyterCtrlWindow =  new Vue({
                 },
             })
             .then(function(response) {
-                console.log(response)
+                //console.log(response)
                 test = response
                 Vue_JupyterCtrlWindow.updateCustomerJupyterInfos()
                 Vue_JupyterCtrlWindow.statusChangeWindowOpen = false
@@ -364,7 +364,7 @@ var Vue_JupyterCtrlWindow =  new Vue({
                 "ui_port": (parseInt(this.portNum)+1).toString(),
                 "spark_ui": ""+this.spark_ui,
             }
-            console.log(D_postData)
+            //console.log(D_postData)
             this.statusCreateStatus = '建立中，請稍後...'
 
             fetch(url, {
@@ -375,7 +375,7 @@ var Vue_JupyterCtrlWindow =  new Vue({
                 },
             })
             .then(function(response) {
-                console.log(response)
+                //console.log(response)
                 Vue_JupyterCtrlWindow.checkCreateNewCustomerJupyterWindowOpen = false
                 Vue_JupyterCtrlWindow.statusCreateStatus = ''
                 Vue_JupyterCtrlWindow.updateCustomerJupyterInfos()
@@ -391,7 +391,7 @@ var Vue_JupyterCtrlWindow =  new Vue({
 		},
 
         clickDeleteJupyterBtn(customerJupyterInfo){
-            console.log(customerJupyterInfo)
+            //console.log(customerJupyterInfo)
             this.deleteJupyterWindowOpen= true
             Vue.set(
                 this,
@@ -418,7 +418,7 @@ var Vue_JupyterCtrlWindow =  new Vue({
                 },
             })
             .then(function(response) {
-                console.log(response)
+                //console.log(response)
                 test = response
                 Vue_JupyterCtrlWindow.updateCustomerJupyterInfos()
                 Vue_JupyterCtrlWindow.deleteJupyterWindowOpen = false
@@ -450,7 +450,7 @@ var Vue_JupyterCtrlWindow =  new Vue({
             this.popwindowPositionY =  (D_positionInfo.y - document.documentElement.scrollTop) + 'px'
             this.popwindowClass = 'pop-window-info-box-close'
 
-            console.log(this.popwindowPositionX, this.popwindowPositionY)
+            //console.log(this.popwindowPositionX, this.popwindowPositionY)
 
             setTimeout(function(){
                 Vue_JupyterCtrlWindow.popwindowOpen = false

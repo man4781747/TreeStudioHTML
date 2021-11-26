@@ -182,7 +182,7 @@ var Vue_YesterdayFailList = new Vue({
 	methods: {
 		updateAllFailList(L_projectList){
 			for (S_project of L_projectList){
-				console.log(S_project)
+				//console.log(S_project)
 				this.updateFailListByProjectID(S_project)
 			}
 		},
@@ -199,7 +199,7 @@ var Vue_YesterdayFailList = new Vue({
 				return response.json()
 			})
 			.then(function(myJson) {
-				console.log(myJson)
+				//console.log(myJson)
 				Vue.set(
 					Vue_YesterdayFailList.failList,
 					S_project,
