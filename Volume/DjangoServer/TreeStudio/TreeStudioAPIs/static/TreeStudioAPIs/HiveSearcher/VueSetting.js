@@ -11,6 +11,11 @@ var Vue_HiveSearcher = new Vue({
         sortBy: '',
         sortValue: 1,
         title_filter: {
+            index : {
+                'filter_str': '',
+                'open': false,
+                'show_name': '#',
+            },
             table_name : {
                 'filter_str': '',
                 'open': false,
@@ -74,8 +79,15 @@ var Vue_HiveSearcher = new Vue({
                 for (let itemInfo of this.tableInfoList){
                     sortByList.push([itemInfo[this.sortBy],itemInfo])
                 }
+                
+                if (this.sortBy == 'index'){
+                    sortByList.sort(function(a, b) {
+                        return a - b;
+                      });
+                } else {
+                    sortByList.sort()
+                }
 
-                sortByList.sort()
                 if (this.sortValue == -1){
                     sortByList.reverse()
                 }
@@ -111,7 +123,7 @@ var Vue_HiveSearcher = new Vue({
             } else {
                 for (let itemInfo of afterTitleFilterList){
                     for (key of Object.keys(itemInfo)){
-                        if (itemInfo[key].indexOf(this.filterStr.trim())!= -1){
+                        if ((''+itemInfo[key]).indexOf(this.filterStr.trim())!= -1){
                             afterFilterList.push(itemInfo)
                             break
                         }
@@ -160,10 +172,13 @@ var Vue_HiveSearcher = new Vue({
 				return response.json()
 			})
 			.then(function(myJson) {
+                I_index = 1
                 for (let item of myJson){
                     item.table_name = item.table_name.toLowerCase()
                     item.resource_database = item.resource_database.toLowerCase()
                     item.latest_updatetime = item.latest_updatetime.replaceAll('/','-')
+                    item.index = I_index
+                    I_index = I_index +1
                 }
                 Vue_HiveSearcher.tableInfoList = myJson
 			});

@@ -689,6 +689,7 @@
                                     <tr v-for="(data, index) in tableData[pageChose]" 
                                         :style="data.table_status=='異常'?'background-color: antiquewhite;':''"
                                     >
+                                        <td>{{data.index}}</td>
                                         <td>{{data.table_name}}</td>
                                         <td>{{data.table_name_ch}}</td>
                                         <td>{{data.resource_database}}</td>
