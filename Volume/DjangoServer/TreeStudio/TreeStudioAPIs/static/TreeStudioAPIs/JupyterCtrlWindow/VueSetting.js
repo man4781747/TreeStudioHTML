@@ -460,7 +460,7 @@ var Vue_JupyterCtrlWindow =  new Vue({
     },
 
     created: function() {
-        this.updateCustomerJupyterInfos()
+        // this.updateCustomerJupyterInfos()
 
     },
 })
