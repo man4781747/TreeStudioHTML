@@ -146,6 +146,30 @@ body{
     background-color: rgba(0,0,0,.05);
 }
 
+.ts-table .table-header-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+}
+
+.ts-table .table-title-and-filter{
+    display: flex;
+    align-items: center;
+    position: relative;
+    margin-right: 0.2rem;
+}
+
+.ts-table .table-title-and-filter .fa-filter{
+    font-size: .9rem;
+    margin-right: .2rem;
+    color: rgb(153, 153, 153);
+}
+
+.ts-table .table-title-and-filter .fa-filter:hover{
+    color: var(--title-green);
+}
+
 /* 文字垂直置中 */
 .text-v-center {
     vertical-align: top;

@@ -163,9 +163,44 @@ var Vue_YesterdayFailList = new Vue({
 		projectChosed: '',
 		projectList: [],
 		airjobURL: airjobURL,
+        title_filter: {
+            DAG_ID : {
+                'filter_str': '',
+                'open': false,
+                'show_name': '排程ID',
+            },
+            owner : {
+                'filter_str': '',
+                'open': false,
+                'show_name': 'Owner',
+            },
+            scheduleString : {
+                'filter_str': '',
+                'open': false,
+                'show_name': '排程時間',
+            },
+            failTime : {
+                'filter_str': '',
+                'open': false,
+                'show_name': '最後失敗執行時間',
+            },
+        },
+		sortBy : '',
+		sortValue: 1,
 	},
   
 	computed: {
+		allFailCount(){
+			var failListAll = {}
+			for (let S_projectKey of Object.keys(this.failList)){
+				Object.assign(failListAll, this.failList[S_projectKey])
+				if (this.failList[S_projectKey]=='Loading'){
+					return 0
+				}
+			}
+			return Object.keys(failListAll).length
+		},
+
 		failListAll(){
 			var failListAll = {}
 			for (let S_projectKey of Object.keys(this.failList)){
@@ -173,8 +208,75 @@ var Vue_YesterdayFailList = new Vue({
 				if (this.failList[S_projectKey]=='Loading'){
 					return 'Loading'
 				}
-
 			}
+
+            if (this.sortBy != ""){
+				if (this.sortBy != 'failTime'){
+					var sortedList = {}
+					var sortByList = []
+					for (let S_dagId of Object.keys(failListAll)){
+						sortByList.push([failListAll[S_dagId][this.sortBy],failListAll[S_dagId]])
+					}
+					
+					sortByList.sort()
+	
+					if (this.sortValue == -1){
+						sortByList.reverse()
+					}
+					
+					for (let itemInfo_after of sortByList){
+						sortedList[itemInfo_after[1]['DAG_ID']] = itemInfo_after[1]
+					}
+					failListAll = sortedList
+				}
+				else {
+					var sortedList = {}
+					var sortByList = []
+					for (let S_dagId of Object.keys(failListAll)){
+						sortByList.push([failListAll[S_dagId].LastFail.start_date,failListAll[S_dagId]])
+					}
+					
+					sortByList.sort()
+	
+					if (this.sortValue == -1){
+						sortByList.reverse()
+					}
+					
+					for (let itemInfo_after of sortByList){
+						sortedList[itemInfo_after[1]['DAG_ID']] = itemInfo_after[1]
+					}
+					failListAll = sortedList
+				}
+            } 
+
+
+
+
+            for (let S_titleChose of Object.keys(this.title_filter)){
+                if (this.title_filter[S_titleChose].filter_str.trim()==""){
+                    continue
+                }
+                else {
+					if (S_titleChose != 'failTime'){
+						afterTitleFilterList_chose = {}
+						for (let S_datID of Object.keys(failListAll)){
+							if (failListAll[S_datID][S_titleChose].indexOf(this.title_filter[S_titleChose].filter_str.trim())!= -1){
+								afterTitleFilterList_chose[S_datID] = failListAll[S_datID]
+							}
+						}
+						failListAll = afterTitleFilterList_chose
+					} else {
+						afterTitleFilterList_chose = {}
+						for (let S_datID of Object.keys(failListAll)){
+							S_dateStr = new Date(failListAll[S_datID].LastFail.start_date).format('(w) yyyy-MM-dd hh:mm:ss')
+							if (S_dateStr.indexOf(this.title_filter[S_titleChose].filter_str.trim())!= -1){
+								afterTitleFilterList_chose[S_datID] = failListAll[S_datID]
+							}
+						}
+						failListAll = afterTitleFilterList_chose
+					}
+                }
+            }
 			return failListAll
 		},
 	},
@@ -186,6 +288,15 @@ var Vue_YesterdayFailList = new Vue({
 				this.updateFailListByProjectID(S_project)
 			}
 		},
+
+        sortByBtmChose(sortByStr){
+            if (this.sortBy == sortByStr){
+                this.sortValue = this.sortValue * -1
+            } else {
+                this.sortValue = 1
+            }
+            this.sortBy = sortByStr
+        },
 
 		updateFailListByProjectID(S_project){
 			Vue.set(

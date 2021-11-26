@@ -407,28 +407,69 @@
                                         style="display: grid;position: relative;height: 100%;overflow: auto;grid-template-rows: min-content 1fr;"
                                         v-else
                                     >
-                                        <template v-if="Object.keys(failListAll).length == 0">
-                                            沒有任何錯誤，太棒惹!
-                                        </template>
-                                        <template v-else>
-                                            <p style='font-weight: 600;margin-top: 0px;'>七日內異常排程數: {{Object.keys(failListAll).length}}</p>
-                                            <div class='small-scrollbar' style="overflow: auto;">
-                                                <table class="ts-table" style='width: 100%;'>
-                                                    <colgroup>
-                                                        <col span="2" style="width: 1px;">
-                                                        <col style="">
-                                                        <col style="">
-                                                    </colgroup>
-                                                    <thead>
-                                                        <tr>
-                                                            <th class='nowrap' style="max-width: 5rem;min-width: 5rem;">排程ID</th>
-                                                            <th class='nowrap' style="max-width: 5rem;min-width: 5rem;">Owner</th>
-                                                            <th class='nowrap'>排程時間</th>
-                                                            <th class='nowrap' style="width: 1px;">最後失敗執行時間</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody class='n2_1_gray'>
-                                                        <!-- <template v-for="inn in [...Array(300).keys()]"> -->
+                                        <p style='font-weight: 600;margin-top: 0px;'>七日內異常排程數: {{allFailCount}}</p>
+                                        <div class='small-scrollbar' style="overflow: auto;">
+                                            <table class="ts-table" style='width: 100%;'>
+                                                <colgroup>
+                                                    <col span="2" style="width: 1px;">
+                                                    <col style="">
+                                                    <col style="">
+                                                </colgroup>
+                                                <thead>
+                                                    <tr>
+                                                        <th v-for='(filter_info, filter_name, filter_index) in title_filter'>
+                                                            <div class='table-header-item mouse-pointer' @click="sortByBtmChose(filter_name)">
+                                                                <div class='table-title-and-filter'>
+                                                                    <i 
+                                                                        class="fas fa-filter" 
+                                                                        @click.stop="filter_info.open=!filter_info.open"
+                                                                        :style="filter_info.filter_str.trim()!=''?'color:var(--loading-green);':''"
+                                                                    ></i>
+                                                                    <div v-if='!filter_info.open'>
+                                                                        {{filter_info.show_name}}
+                                                                    </div>
+                                                                    <input @click.stop v-else v-model.trim='filter_info.filter_str'>
+                                                                </div>
+                                                                <div style='position: relative;'>
+                                                                    <i class="fas fa-sort-down" style='position: absolute;right: 0;bottom: 0;' :style='"color:"+(
+                                                                        (sortBy==filter_name&sortValue==1)?"#000":"#999"
+                                                                        )+";"'></i>
+                                                                    <i class="fas fa-sort-up" :style='"color:"+(
+                                                                        (sortBy==filter_name&sortValue==-1)?"#000":"#999"
+                                                                        )+";"'></i>
+                                                                </div>
+                                                            </div>
+                                                        </th>
+                                                        <!-- <th class='nowrap' style="max-width: 5rem;min-width: 5rem;">排程ID</th>
+                                                        <th class='nowrap' style="max-width: 5rem;min-width: 5rem;">Owner</th> -->
+                                                        <!-- <th>
+                                                            <div class='table-header-item mouse-pointer' @click="sortByBtmChose('fail_time')">
+                                                                <div class='table-title-and-filter'>
+                                                                    <i 
+                                                                        class="fas fa-filter" 
+                                                                        @click.stop="filter_info.open=!filter_info.open"
+                                                                        :style="filter_info.filter_str.trim()!=''?'color:var(--loading-green);':''"
+                                                                    ></i>
+                                                                    <div v-if='!filter_info.open'>
+                                                                        最後失敗執行時間
+                                                                    </div>
+                                                                    <input @click.stop v-else v-model.trim='filter_info.filter_str'>
+                                                                </div>
+                                                                <div style='position: relative;'>
+                                                                    <i class="fas fa-sort-down" style='position: absolute;right: 0;bottom: 0;' :style='"color:"+(
+                                                                        (sortBy==filter_name&sortValue==1)?"#000":"#999"
+                                                                        )+";"'></i>
+                                                                    <i class="fas fa-sort-up" :style='"color:"+(
+                                                                        (sortBy==filter_name&sortValue==-1)?"#000":"#999"
+                                                                        )+";"'></i>
+                                                                </div>
+                                                            </div>
+                                                        </th> -->
+                                                    </tr>
+                                                </thead>
+                                                <tbody class='n2_1_gray'>
+                                                    <!-- <template v-for="inn in [...Array(300).keys()]"> -->
+                                                    <template v-if="Object.keys(failListAll).length != 0">
                                                         <tr v-for="(failInfo, dag_id, index) in failListAll">
                                                             <td>
                                                                 <a
@@ -448,13 +489,18 @@
                                                                 >{{new Date(failInfo.LastFail.execution_date).format('(w) yyyy-MM-dd hh:mm:ss')}}</a>
                                                                 <!-- <div class='nowrap text-overflow-hidden'>{{new Date(failInfo.failList[0].execution_date).format('(w) yyyy-MM-dd hh:mm:ss')}}</div> -->
                                                             </td>
-                                                            
                                                         </tr>
-                                                        <!-- </template> -->
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                        </template>
+                                                    </template>
+                                                    <tr v-else>
+                                                        <td>...</td>
+                                                        <td>...</td>
+                                                        <td>...</td>
+                                                        <td>...</td>
+                                                    </tr>
+                                                    <!-- </template> -->
+                                                </tbody>
+                                            </table>
+                                        </div>
                 
                                     </div>
                                     
