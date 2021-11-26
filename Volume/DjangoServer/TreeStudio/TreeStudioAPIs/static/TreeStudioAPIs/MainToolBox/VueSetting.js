@@ -33,27 +33,27 @@ var Vue_mainToolBox =  new Vue({
                 // 'svg': 'http://34.135.113.78:9000/static/dist/img/AirflowIcon-white-30-rotate-new.svg',
                 'List': [
                     {
-                        'Name': '9h000',
+                        'Name': '數據經營部',
                         'Type': 'URL',
                         'URL': airjobURL + 'AIRJOB/9h000/',
                         'icon': 'far fa-circle',
-                        'title': 'AIRJOB: 9h000',
+                        'title': 'AIRJOB: 數據經營部',
                         'content': 'AIRJOB為以Airflow為底層延伸設計的自主排程系統。',
                     },
                     {
-                        'Name': '9h001',
+                        'Name': '客戶智能科',
                         'Type': 'URL',
                         'URL': airjobURL + 'AIRJOB/9h001/',
                         'icon': 'far fa-circle',
-                        'title': 'AIRJOB: 9h001',
+                        'title': 'AIRJOB: 客戶智能科',
                         'content': 'AIRJOB為以Airflow為底層延伸設計的自主排程系統。',
                     },
                     {
-                        'Name': '9h002',
+                        'Name': '商業智能科',
                         'Type': 'URL',
                         'URL': airjobURL + 'AIRJOB/9h002/',
                         'icon': 'far fa-circle',
-                        'title': 'AIRJOB: 9h002',
+                        'title': 'AIRJOB: 商業智能科',
                         'content': 'AIRJOB為以Airflow為底層延伸設計的自主排程系統。',
                     },
                 ]

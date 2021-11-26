@@ -11,7 +11,7 @@ fi
 containerName=tree_studio_server
 port_out=8999
 port_in=8000
-imageName=airjob-server:lastest
+imageName=airjob-server:latest
 
 djangofilePath=$(pwd)/../../Volume/DjangoServer/TreeStudio
 # echo $djangofilePath

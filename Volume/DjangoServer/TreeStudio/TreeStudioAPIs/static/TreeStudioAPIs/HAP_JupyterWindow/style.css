@@ -1,14 +1,10 @@
-#hap-jupyter-window {
-    margin: .5rem 2.5rem;
-}
-
 #hap-jupyter-project-list-window, 
 #hap-jupyter-customer-list-window{
-    box-shadow: 0 0 1px rgb(0 0 0 / 13%), 0 1px 3px rgb(0 0 0 / 20%);
+    /* box-shadow: 0 0 1px rgb(0 0 0 / 13%), 0 1px 3px rgb(0 0 0 / 20%);
     padding: .75rem 1.25rem;
     background-color: #fff;
     display: flex;
-    margin-bottom: 1.75rem;
+    margin-bottom: 1.75rem; */
 }
 
 .customer-jupyter-active-list {

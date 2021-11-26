@@ -117,6 +117,8 @@ var Vue_JupyterCtrlWindow =  new Vue({
         checkCreateNewCustomerJupyterWindowOpen: false,
         statusCreateStatus: '',
 
+        window_chose: 'create_window',
+
         jupyterURL: jupyterURL,
 
         statusChangeWindowOpen: false,
@@ -234,6 +236,11 @@ var Vue_JupyterCtrlWindow =  new Vue({
             }
             return D_return
         },
+
+
+        S_sparkName(){
+            return this.portNum + '_' + this.user_name
+        },
     },
 
     methods:{
@@ -245,7 +252,6 @@ var Vue_JupyterCtrlWindow =  new Vue({
             if (I_index >= L_projectList.length){
                 return null
             }
-
             fetch(jupyterURL+":"+this.serverPortList[L_projectList[I_index]]+"/get_docker_jupyter_service")
             .then(function(response) {
                 return response.json()
@@ -258,6 +264,32 @@ var Vue_JupyterCtrlWindow =  new Vue({
                 console.log('FetchFail')
                 Vue_JupyterCtrlWindow.updateCustomerJupyterInfos(I_index + 1)
             })
+
+
+            // for (let i in [1,12,2,3]){
+            //     this.customerJupyterUpdateing = false
+            //     Vue_JupyterCtrlWindow.customerJupyterInfos.push(
+            //         [
+            //             {
+            //                 "context":"this is a test",
+            //                 "create_time":"2021/08/26 16:36:18",
+            //                 "driver_cores":"2",
+            //                 "driver_memory":"4",
+            //                 "executor_cores":"2",
+            //                 "executor_memory":"4",
+            //                 "max_executors":"6",
+            //                 "port":"8900",
+            //                 "project_name":"common project",
+            //                 "spark_name":"master",
+            //                 "status":"enable",
+            //                 "user_depart":"i9h000",
+            //                 "user_id":"00865936",
+            //                 "user_name":"i9h000",
+            //                 "user_token":"i9h000"
+            //             }
+            //         ]
+            //     )
+            // }
         },
 
         clickSwitchCustomerJupyterButton(customerJupyterInfo){

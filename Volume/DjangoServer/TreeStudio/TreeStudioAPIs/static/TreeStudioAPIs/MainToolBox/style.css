@@ -1,4 +1,6 @@
 :root {
+    --tool-btn-green: #00b050;
+
     --blue: #007bff;
     --indigo: #6610f2;
     --purple: #6f42c1;
@@ -64,11 +66,6 @@ body::-webkit-scrollbar {
 }
 
 
-body{
-	font-family: 'Roboto', sans-serif;
-	background-color: #f5f7fa;
-    margin: 0;
-}
 
 .mouse-pointer { cursor: pointer; }
 
@@ -232,7 +229,7 @@ body{
 }
 
 .main-toolbox-label-btn-active {
-    background-color: #007bff !important;
+    background-color: var(--tool-btn-green) !important;
     color: #fff !important;
 }
 

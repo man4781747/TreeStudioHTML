@@ -144,6 +144,33 @@ var Vue_JupyterWindow =  new Vue({
                 console.log('FetchFail')
                 Vue_JupyterWindow.updateCustomerJupyterInfos(I_index + 1)
             })
+
+            // for (let i in [1,12,2,3]){
+            //     Vue_JupyterWindow.customerJupyterUpdateing = false
+            //     Vue_JupyterWindow.customerJupyterInfos.push(
+            //         [
+            //             {
+            //                 "context":"this is a test",
+            //                 "create_time":"2021/08/26 16:36:18",
+            //                 "driver_cores":"2",
+            //                 "driver_memory":"4",
+            //                 "executor_cores":"2",
+            //                 "executor_memory":"4",
+            //                 "max_executors":"6",
+            //                 "port":"8900",
+            //                 "project_name":"common project",
+            //                 "spark_name":"master",
+            //                 "status":"enable",
+            //                 "user_depart":"i9h000",
+            //                 "user_id":"00865936",
+            //                 "user_name":"i9h000",
+            //                 "user_token":"i9h000"
+            //             }
+            //         ]
+            //     )
+            // }
+
+
         },
 
         clickSwitchCustomerJupyterButton(customerJupyterInfo){

@@ -37,125 +37,123 @@ Vue.component("home-page-small-item", {
 	template:`
 	<div class="box-small-card" id ="test-view">
 		<div class="box-small-card-content">
-			<div>
-				<slot name="icon">
-					<i class="fas fa-dice-d6"></i>
-				</slot>
-			</div>
-			<div class="box-small-card-word">
-				<slot name="content">
-					<p>Default Content</p>
+			<slot name="icon">
+				<i class="fas fa-dice-d6"></i>
+			</slot>
+			<div class='box-small-card-title'>
+				<slot name="title">
+					<p>Default title</p>
 				</slot>
 			</div>
 		</div>
-		<div class='box-small-card-title'>
-			<slot name="title">
-				<p>Default title</p>
+		<div class="box-small-card-word">
+			<slot name="content">
+				<p>Default Content</p>
 			</slot>
 		</div>
 	</div>
 	`
 })
 
-var Vue_AirflowView =  new Vue({
-	el: '#teradata-info-small',
-	data: {
-		title: 'Teradata 分析型資料庫',
-		content: "1171 Tables",
-	},
-})
+// var Vue_AirflowView =  new Vue({
+// 	el: '#teradata-info-small',
+// 	data: {
+// 		title: 'Teradata 分析型資料庫',
+// 		content: "1171 Tables",
+// 	},
+// })
 
-var Vue_AirflowView =  new Vue({
-	el: '#feature-store-info-small',
-	data: {
-		title: 'Feature Store 特徵庫',
-		content: "102 Tables",
-	},
-})
+// var Vue_AirflowView =  new Vue({
+// 	el: '#feature-store-info-small',
+// 	data: {
+// 		title: 'Feature Store 特徵庫',
+// 		content: "102 Tables",
+// 	},
+// })
 
-var Vue_AirflowView =  new Vue({
-	el: '#airflow-view',
-	data: {
-		dagIDList : [],
-		isHovering: false,
-		airjobURL: airjobURL,
-	},
-	computed: {
-		dagJobNum(){
+// var Vue_AirflowView =  new Vue({
+// 	el: '#airflow-view',
+// 	data: {
+// 		dagIDList : [],
+// 		isHovering: false,
+// 		airjobURL: airjobURL,
+// 	},
+// 	computed: {
+// 		dagJobNum(){
 
-			return this.dagIDList.length
-		},
-	},
-	methods:{
-		updateDAGIDtList(){
-			fetch(this.airjobURL + 'AirFlowUploadWeb/GetAllDAGIDList/')
-			.then(function(response) {
-				return response.json()
-			})
-			.then(function(myJson) {
-				// console.log(myJson['dag_list'])
-				Vue_AirflowView.dagIDList = myJson['dag_list']
-			});
-		},
-	},
+// 			return this.dagIDList.length
+// 		},
+// 	},
+// 	methods:{
+// 		updateDAGIDtList(){
+// 			fetch(this.airjobURL + 'AirFlowUploadWeb/GetAllDAGIDList/')
+// 			.then(function(response) {
+// 				return response.json()
+// 			})
+// 			.then(function(myJson) {
+// 				// console.log(myJson['dag_list'])
+// 				Vue_AirflowView.dagIDList = myJson['dag_list']
+// 			});
+// 		},
+// 	},
 
-	mounted: function(){
-		this.updateDAGIDtList()
-	},
-})
+// 	mounted: function(){
+// 		this.updateDAGIDtList()
+// 	},
+// })
 
-var Vue_AirjobView =  new Vue({
-	el: '#airjob-view',
-	data: {
-		massage: '030',
-		dagIDList : [],
-		projectList: [],
-		airjobURL: airjobURL,
-	},
-	computed: {
-		dagJobNum(){
-			dagJobNum = 0
-			for (S_dagId of this.dagIDList){
-				for (projectName of this.projectList) {
-					if (S_dagId.indexOf(projectName+'_') == 0){
-						dagJobNum = dagJobNum + 1
-						break
-					}
-				}
-			}
+// var Vue_AirjobView =  new Vue({
+// 	el: '#airjob-view',
+// 	data: {
+// 		massage: '030',
+// 		dagIDList : [],
+// 		projectList: [],
+// 		airjobURL: airjobURL,
+// 	},
+// 	computed: {
+// 		dagJobNum(){
+// 			dagJobNum = 0
+// 			for (S_dagId of this.dagIDList){
+// 				for (projectName of this.projectList) {
+// 					if (S_dagId.indexOf(projectName+'_') == 0){
+// 						dagJobNum = dagJobNum + 1
+// 						break
+// 					}
+// 				}
+// 			}
 
-			return dagJobNum
-		},
-	},
-	methods:{
-		updateDAGIDtList(){
-			fetch(this.airjobURL + 'AirFlowUploadWeb/GetAllDAGIDList/')
-			.then(function(response) {
-				return response.json()
-			})
-			.then(function(myJson) {
-				// console.log(myJson['dag_list'])
-				Vue_AirjobView.dagIDList = myJson['dag_list']
-			});
-		},
+// 			return dagJobNum
+// 		},
+// 	},
+// 	methods:{
+// 		updateDAGIDtList(){
+// 			fetch(this.airjobURL + 'AirFlowUploadWeb/GetAllDAGIDList/')
+// 			.then(function(response) {
+// 				return response.json()
+// 			})
+// 			.then(function(myJson) {
+// 				// console.log(myJson['dag_list'])
+// 				Vue_AirjobView.dagIDList = myJson['dag_list']
+// 			});
+// 		},
 
-		updateProjectList(){
-			fetch(this.airjobURL + 'AirFlowUploadWeb/API/v1/GetAllProjectList/')
-			.then(function(response) {
-				return response.json()
-			})
-			.then(function(myJson) {
-				// console.log(myJson)
-				Vue_AirjobView.projectList = myJson['ProjectList']
-			});
-		},
-	},
+// 		updateProjectList(){
+// 			fetch(this.airjobURL + 'AirFlowUploadWeb/API/v1/GetAllProjectList/')
+// 			.then(function(response) {
+// 				return response.json()
+// 			})
+// 			.then(function(myJson) {
+// 				// console.log(myJson)
+// 				Vue_AirjobView.projectList = myJson['ProjectList']
+// 			});
+// 		},
+// 	},
 
-	mounted: function(){
-		this.updateProjectList()
-		this.updateDAGIDtList()
-	},
-})
+// 	mounted: function(){
+// 		this.updateProjectList()
+// 		this.updateDAGIDtList()
+// 	},
+// })
 
 
 var Vue_YesterdayFailList = new Vue({
@@ -177,7 +175,6 @@ var Vue_YesterdayFailList = new Vue({
 				}
 
 			}
-			// return 'Loading'
 			return failListAll
 		},
 	},
@@ -208,7 +205,6 @@ var Vue_YesterdayFailList = new Vue({
 					S_project,
 					myJson['info']
 				)
-				// Vue_YesterdayFailList.failList[S_project] = myJson['info']
 			});
 		},
 
@@ -247,7 +243,7 @@ var Vue_TableUpdate = new Vue({
 					continue
 				}
 				last50Table.push(D_tableInfo)
-				if (last50Table.length >= 51 ){
+				if (last50Table.length >= 11 ){
 					break
 				}
 			}
