@@ -217,7 +217,7 @@ var Vue_mainToolBox =  new Vue({
 
 
                 }
-                if (this.D_labelList[S_pageName] == undefined) {
+                else {
                     this.changePage({}, "Home")
                 }
                 // else if (this.D_labelList[S_pageName].Type == 'List'){
