@@ -151,7 +151,7 @@ var Vue_mainToolBox =  new Vue({
 		},
 
 		actionByUrlParas(){
-			if (this.urlParas['au4au4'] == 'u04d93u.4gj84u.4dj4'){
+			if (this.urlParas['user'] == 'admin'){
                 Vue.set(
                     this.D_labelList,
                     'System',
