@@ -825,6 +825,37 @@
                 </div>
     
                 <div id='hap-jupyter-window'>
+                    <div class='top-window-alert-background' v-if="statusChangeWindowOpen==true" @click='statusChangeWindowOpen=false'>
+                        <div>
+                            <div class='top-window-alert-window animate__animated' @click.stop="" :class="statusChangeWindowOpen?'animate__fadeInDown':'animate__fadeOutUp'">
+                                
+                                <div class='top-window-alert-header'>
+                                    <p>確認要{{statusChangeWindowInfo.status=='enable'?'關閉':'打開'}}此項目?</p>
+                                    <i class='fas fa-times' @click='statusChangeWindowOpen=false'></i>
+                                </div>
+                                <div v-if="statusChangeWindowInfo.user_depart=='9h000'" class='top-window-alert-body'>
+                                    專案名稱: 數據經營部-通用Jupyter
+                                </div>
+                                <div v-else-if="statusChangeWindowInfo.user_depart=='9h001'" class='top-window-alert-body'>
+                                    專案名稱: 客戶智能科-通用Jupyter
+                                </div>
+                                <div v-else-if="statusChangeWindowInfo.user_depart=='9h002'" class='top-window-alert-body'>
+                                    專案名稱: 商業智能科-通用Jupyter
+                                </div>
+                                <div v-else class='top-window-alert-body'>
+                                    專案名稱: {{statusChangeWindowInfo.project_name}}
+                                </div>
+                                <div class='top-window-alert-footer'>
+                                    <button class="hap-jupyter-btn btn-active" @click='statusChangeWindowOpen=false'>取消動作</button>
+                                    <button class="hap-jupyter-btn btn-active" @click='switchCustomerJupyterStatus(statusChangeWindowInfo)'>沒錯 我想要{{statusChangeWindowInfo.status=='enable'?'關閉':'打開'}}此項目</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+
                     <div class='description-title'>
                         <h1 >HAP Jupyter</h1>
                         <h3>提供HAP環境探索，IDE為Jupyter Notebook，有GPU可以使用，預設一個單位一個共用環境，若有需要客製化環境，請聯繫數據工程組。</h3>
@@ -837,15 +868,120 @@
                             </div>
                         </div>
                         <div class='box-card-body'>
-                            <div style="display: flex;">
-                                <a 
-                                class='hap-jupyter-btn btn-active' 
-                                v-for="(projectItem, index) in projectList"
-                                :href="projectItem.url"  target='_blank'
-                                >
-                                    <i class='fas fa-code'></i>
-                                    <div>{{projectItem.Name}}</div>
-                                </a>
+                            <div style='display:grid;position:relative;' :class="statusChangeWindowOpen?'animate__fadeIn':'animate__fadeOut'">
+                                <div class='top-window-alert-window-lock' v-if="statusChangeStatus != ''" @click.stop="">
+                                    <div>
+                                        <i class="fas fa-cloud-upload-alt anima-updown-in-2-sec" style="margin-right: .5rem;"></i>{{statusChangeStatus}}
+                                    </div>
+                                </div>
+        
+                                <div class='pop-window' v-if="popwindowOpen">
+                                    <div
+                                    class="pop-window-info-box"
+                                    :style="'left:'+popwindowPositionX+';top:'+popwindowPositionY+';'"
+                                    :class="popwindowClass"
+                                    @click="closePopWindow()"
+                                    >
+                                        <div class='pop-window-info' @click.stop=""
+                                        >
+                                            <div class='pop-window-info-header'>Jupyter Infomation</div>
+                                            <div class='pop-window-info-body'>
+                                                Spark Name: {{popwindowInfoItem.spark_name}}<br>
+                                                Driver Memory: {{popwindowInfoItem.driver_memory}}G<br>
+                                                Executor Memory: {{popwindowInfoItem.executor_memory}}G<br>
+                                                Driver Cores: {{popwindowInfoItem.driver_cores}}<br>
+                                                Executor Cores: {{popwindowInfoItem.executor_cores}}<br>
+                                                Max Executors: {{popwindowInfoItem.max_executors}}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div 
+                                        class="top-window-alert-background pop-window-background" 
+                                        @click="closePopWindow()"
+                                    ></div>
+                                </div>
+                                
+                                <div>
+                                    <div 
+                                        v-if="customerJupyterUpdateing == true"
+                                        style="
+                                        display: flex;
+                                        justify-content: center;
+                                        align-items: center;
+                                        position: absolute;
+                                        width: 100%;
+                                        height: 100%;
+                                        background-color: rgba(0,0,0,.5);
+                                        z-index: 800;
+                                        left: 0;
+                                        top: 0;font-size: 3rem;
+                                        font-weight: 600;
+                                        color: #efefef;">
+                                        <i class="fas fa-sync-alt anima-updown-in-2-sec" style="margin-right: .5rem;"></i>
+                                        更新中...
+                                    </div>
+        
+                                    <table class='ts-table'>
+                                        <thead>
+                                            <tr>
+                                                <th>專案名稱</th>
+                                                <th>申請者</th>
+                                                <th>申請單位</th>
+                                                <th>申請時間</th>
+                                                <th>Spark UI</th>
+                                                <th>操作</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class='n2_1_gray'>
+                                            <template v-for="(projectJupyterInfoList, index) of customerJupyterInfos">
+                                                <tr v-for="(customerJupyterInfo, index) of projectJupyterInfoList" v-if="['8901','8931','8961'].indexOf(customerJupyterInfo.port)!=-1">
+                                                    <td v-if="customerJupyterInfo.user_depart=='9h000'">數據經營部-通用Jupyter</td>
+                                                    <td v-else-if="customerJupyterInfo.user_depart=='9h001'">客戶智能科-通用Jupyter</td>
+                                                    <td v-else-if="customerJupyterInfo.user_depart=='9h002'">商業智能科-通用Jupyter</td>
+                                                    <td v-else>未知的部門代號，請通知工程組排除</td>
+
+                                                    <td v-if="customerJupyterInfo.user_depart=='9h000'">數據經營部</td>
+                                                    <td v-else-if="customerJupyterInfo.user_depart=='9h001'">客戶智能科</td>
+                                                    <td v-else-if="customerJupyterInfo.user_depart=='9h002'">商業智能科</td>
+                                                    <td v-else>未知的部門代號，請通知工程組排除</td>
+
+                                                    <td v-if="customerJupyterInfo.user_depart=='9h000'">數據經營部</td>
+                                                    <td v-else-if="customerJupyterInfo.user_depart=='9h001'">客戶智能科</td>
+                                                    <td v-else-if="customerJupyterInfo.user_depart=='9h002'">商業智能科</td>
+                                                    <td v-else>未知的部門代號，請通知工程組排除</td>
+                                                    <td>{{customerJupyterInfo.create_time}}</td>
+                                                    <td v-if="customerJupyterInfo.spark_ui=='false'">關閉</td>
+                                                    <td v-else-if="customerJupyterInfo.spark_ui=='true'">啟用</td>
+                                                    <td v-else>未知的格式，請通知工程組排除</td>
+                                                    <td>
+                                                        <div class='customer-jupyter-active-list'>
+                                                            <a class='hap-jupyter-btn btn-active' :href="jupyterURL+':'+customerJupyterInfo.port" target="_blank"
+                                                                style='width: 1.5rem;'
+                                                            >
+                                                                <i class='fas fa-code'></i>
+                                                            </a>
+                                                            <div 
+                                                            class='hap-jupyter-btn btn-info juypter-active-info-btn' 
+                                                            style='position:relative;width: 1.5rem;' 
+                                                            :id='"hap-jupyter-window-info-btn-"+customerJupyterInfo.port'
+                                                            @click='openPopWindow($event, customerJupyterInfo, "hap-jupyter-window-info-btn-"+customerJupyterInfo.port)'
+                                                            >
+                                                                <i class='fas fa-info'></i>
+                                                            </div>
+                                                            <div class='hap-jupyter-btn' :class="customerJupyterInfo.status=='enable'?'btn-open':'btn-close'"
+                                                                @click="clickSwitchCustomerJupyterButton(customerJupyterInfo)"
+                                                                style='width: 1.5rem;'
+                                                            >
+                                                                <i class='fas fa-power-off'></i>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                </tr>                                        
+                                            </template>
+        
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -865,25 +1001,6 @@
                                 <div class='top-window-alert-window-lock' v-if="statusChangeStatus != ''" @click.stop="">
                                     <div>
                                         <i class="fas fa-cloud-upload-alt anima-updown-in-2-sec" style="margin-right: .5rem;"></i>{{statusChangeStatus}}
-                                    </div>
-                                </div>
-                                
-                                <div class='top-window-alert-background' v-if="statusChangeWindowOpen==true" @click='statusChangeWindowOpen=false'>
-                                    <div>
-                                        <div class='top-window-alert-window animate__animated' @click.stop="" :class="statusChangeWindowOpen?'animate__fadeInDown':'animate__fadeOutUp'">
-                                            
-                                            <div class='top-window-alert-header'>
-                                                <p>確認要{{statusChangeWindowInfo.status=='enable'?'關閉':'打開'}}此項目?</p>
-                                                <i class='fas fa-times' @click='statusChangeWindowOpen=false'></i>
-                                            </div>
-                                            <div class='top-window-alert-body'>
-                                                專案名稱: {{statusChangeWindowInfo.project_name}}
-                                            </div>
-                                            <div class='top-window-alert-footer'>
-                                                <button class="hap-jupyter-btn btn-active" @click='statusChangeWindowOpen=false'>取消動作</button>
-                                                <button class="hap-jupyter-btn btn-active" @click='switchCustomerJupyterStatus(statusChangeWindowInfo)'>沒錯 我想要{{statusChangeWindowInfo.status=='enable'?'關閉':'打開'}}此項目</button>
-                                            </div>
-                                        </div>
                                     </div>
                                 </div>
         
@@ -1034,7 +1151,7 @@
                                     <div class='hap-jupyter-customer-ctrl-inputlabel'>
                                         <div class='input-titles'>
                                             <div class='input-main-title'>Port</div>
-                                            <div class='input-sub-title'>()</div>
+                                            <div class='input-sub-title'></div>
                                         </div>
                                         <select style='height: calc(1.5rem + 6px);' v-model="portNum">
                                             <option v-for="num of L_unUsedPortList">{{num}}</option>
@@ -1043,28 +1160,28 @@
                                     <div class='hap-jupyter-customer-ctrl-inputlabel'>
                                         <div class='input-titles'>
                                             <div class='input-main-title'>Token</div>
-                                            <div class='input-sub-title'>()</div>
+                                            <div class='input-sub-title'>(請同時包含英文與數字，禁止中文)</div>
                                         </div>
                                         <input class='hap-jupyter-customer-ctrl-input' type="text" v-model.trim="tokenStr" v-on:input="LowerWord('tokenStr')" placeholder="請輸入Token">
                                     </div>
                                     <div class='hap-jupyter-customer-ctrl-inputlabel'>
                                         <div class='input-titles'>
                                             <div class='input-main-title'>專案名稱</div>
-                                            <div class='input-sub-title'>()</div>
+                                            <div class='input-sub-title'></div>
                                         </div>
                                         <input class='hap-jupyter-customer-ctrl-input' type="text" v-model.trim="projectName" v-on:input="RemoveOtherWord('projectName')" placeholder="請輸入專案名稱">
                                     </div>
                                     <div class='hap-jupyter-customer-ctrl-inputlabel'>
                                         <div class='input-titles'>
                                             <div class='input-main-title'>申請人名稱</div>
-                                            <div class='input-sub-title'>(User Name)</div>
+                                            <div class='input-sub-title'></div>
                                         </div>
                                         <input class='hap-jupyter-customer-ctrl-input' type="text" v-model.trim="user_name" v-on:input="RemoveOtherWord('user_name')" placeholder="請輸入申請人名稱">
                                     </div>
                                     <div class='hap-jupyter-customer-ctrl-inputlabel'>
                                         <div class='input-titles'>
                                             <div class='input-main-title'>申請人員編</div>
-                                            <div class='input-sub-title'>()</div>
+                                            <div class='input-sub-title'></div>
                                         </div>
                                         <input class='hap-jupyter-customer-ctrl-input' type="text" v-model.trim="user_id" v-on:input="RemoveOtherWord('user_id')" placeholder="請輸入申請人員編">
                                     </div>
@@ -1085,7 +1202,7 @@
                                     <div class='hap-jupyter-customer-ctrl-inputlabel'>
                                         <div class='input-titles'>
                                             <div class='input-main-title'>啟用Spark UI</div>
-                                            <div class='input-sub-title'>()</div>
+                                            <div class='input-sub-title'></div>
                                         </div>
                                         <select style='height: calc(1.5rem + 6px);' v-model="spark_ui">
                                             <option selected value="false">關閉</option>
@@ -1101,19 +1218,19 @@
                                     <div class='hap-jupyter-customer-ctrl-inputlabel'>
                                         <div class='input-titles'>
                                             <div class='input-main-title'>Driver Memory</div>
-                                            <div class='input-sub-title'>()</div>
+                                            <div class='input-sub-title'></div>
                                         </div>
                                         <select style='height: calc(1.5rem + 6px);' v-model="driver_memory">
-                                            <option v-for="num of [2,4,6,8,10,12,14,16,18,20,22,24,26,28,30,32]">{{num}}</option>
+                                            <option v-for="num of [2,4,6,8,10,12,14,16]">{{num}}</option>
                                         </select>
                                     </div>
                                     <div class='hap-jupyter-customer-ctrl-inputlabel'>
                                         <div class='input-titles'>
                                             <div class='input-main-title'>Executor Memory</div>
-                                            <div class='input-sub-title'>()</div>
+                                            <div class='input-sub-title'></div>
                                         </div>
                                         <select style='height: calc(1.5rem + 6px);' v-model="executor_memory">
-                                            <option v-for="num of [2,4,6,8,10,12,14,16,18,20,22,24,26,28,30,32]">{{num}}</option>
+                                            <option v-for="num of [2,4,6,8,10,12,14,16]">{{num}}</option>
                                         </select>
                                     </div>
     
@@ -1121,29 +1238,29 @@
                                     <div class='hap-jupyter-customer-ctrl-inputlabel'>
                                         <div class='input-titles'>
                                             <div class='input-main-title'>Driver Cores</div>
-                                            <div class='input-sub-title'>()</div>
+                                            <div class='input-sub-title'></div>
                                         </div>
                                         <select style='height: calc(1.5rem + 6px);' v-model="driver_cores">
-                                            <option v-for="num of [1,2,3,4,5,6,7,8]">{{num}}</option>
+                                            <option v-for="num of [1,2,3,4]">{{num}}</option>
                                         </select>
                                     </div>
     
                                     <div class='hap-jupyter-customer-ctrl-inputlabel'>
                                         <div class='input-titles'>
                                             <div class='input-main-title'>Executor Cores</div>
-                                            <div class='input-sub-title'>()</div>
+                                            <div class='input-sub-title'></div>
                                         </div>
                                         <select style='height: calc(1.5rem + 6px);' v-model="executor_cores">
-                                            <option v-for="num of [1,2,3,4,5,6,7,8]">{{num}}</option>
+                                            <option v-for="num of [1,2,3,4]">{{num}}</option>
                                         </select>
                                     </div>
                                     <div class='hap-jupyter-customer-ctrl-inputlabel'>
                                         <div class='input-titles'>
                                             <div class='input-main-title'>Max Executors</div>
-                                            <div class='input-sub-title'>()</div>
+                                            <div class='input-sub-title'></div>
                                         </div>
                                         <select style='height: calc(1.5rem + 6px);' v-model="max_executors">
-                                            <option v-for="num of [1,2,3,4,5,6,7,8,9,10,11,12]">{{num}}</option>
+                                            <option v-for="num of [1,2,3,4]">{{num}}</option>
                                         </select>
                                     </div>
                                 </div>

@@ -349,13 +349,16 @@
 
 .input-titles {
     display: flex;
-    align-items: baseline;
+    align-items: flex-end;
+    margin-bottom: .25rem;
 }
 
 .input-main-title {
     font-size: 1rem;
     width: min-content;
     white-space: nowrap;
+    display: flex;
+    align-items: center;
 }
 
 .input-sub-title {
@@ -363,4 +366,5 @@
     font-size: var(--sub-font-size);
     white-space: nowrap;
     color: red;
+    align-items: center;
 }

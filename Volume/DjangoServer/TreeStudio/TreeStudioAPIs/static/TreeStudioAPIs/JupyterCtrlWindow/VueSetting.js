@@ -292,6 +292,23 @@ var Vue_JupyterCtrlWindow =  new Vue({
             // }
         },
 
+        initValues(){
+            this.portNum = 8900
+            this.tokenStr = ''
+            this.projectName = ''
+            this.user_id = ''
+            this.user_name = ''
+            this.user_depart = '9h000'
+            this.driver_cores = 2
+            this.executor_cores = 2
+            this.driver_memory = 2
+            this.executor_memory = 2
+            this.context = ''
+            this.spark_name = ''
+            this.max_executors = 2
+            this.spark_ui = false
+        },
+
         clickSwitchCustomerJupyterButton(customerJupyterInfo){
             this.statusChangeWindowOpen = true
             //console.log(customerJupyterInfo)
@@ -355,7 +372,7 @@ var Vue_JupyterCtrlWindow =  new Vue({
                 "project_name": this.projectName,
                 "context": this.context,
                 "status": "enable",
-                "spark_name": this.spark_name,
+                "spark_name": this.S_sparkName,
                 "driver_memory": this.driver_memory.toString(),
                 "executor_memory": this.executor_memory.toString(),
                 "driver_cores": this.driver_cores.toString(),
@@ -379,6 +396,7 @@ var Vue_JupyterCtrlWindow =  new Vue({
                 Vue_JupyterCtrlWindow.checkCreateNewCustomerJupyterWindowOpen = false
                 Vue_JupyterCtrlWindow.statusCreateStatus = ''
                 Vue_JupyterCtrlWindow.updateCustomerJupyterInfos()
+                Vue_JupyterCtrlWindow.initValues()
             })
         },
 
