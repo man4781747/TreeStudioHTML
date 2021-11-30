@@ -319,7 +319,7 @@
                                 <div class='box-card-title'>
                                     已更新的Hive資料表
                                 </div>
-                                <i class="fas fa-sync-alt hap-jupyter-btn btn-update" style="margin: 0;"
+                                <i class="fas fa-sync-alt ts-btn btn-update" style="margin: 0;"
                                     @click="updateTableInfoList()"
                                 ></i>
                             </div>
@@ -394,7 +394,7 @@
                                 <div class='box-card-title'>
                                     AIRJOB近七天異常通知
                                 </div>
-                                <i class="fas fa-sync-alt hap-jupyter-btn btn-update" style="margin: 0;"
+                                <i class="fas fa-sync-alt ts-btn btn-update" style="margin: 0;"
                                     @click="updateProjectList()"
                                 ></i>
                             </div>
@@ -594,13 +594,16 @@
 
                             <div style='display: flex;place-content: space-between;align-items: center;'>
                                 <div style='display: flex;align-items: center;'>
-                                    <i class="fas fa-sync-alt hap-jupyter-btn btn-update" @click="updateTableInfoList()" style="line-height: 1;"></i>
+                                    <i class="fas fa-sync-alt ts-btn btn-update" @click="updateTableInfoList()" style="line-height: 1;"></i>
                                     最大顯示筆數: 
                                     <select v-model="pageMaxNum" style='font-size: 1.1rem;'>
-                                        <option value=10 selected>10</option>
+                                        <option value=10>10</option>
                                         <option value=20>20</option>
                                         <option value=50>50</option>
-                                        <option value=100>100</option>
+                                        <option value=100 selected>100</option>
+                                        <option value=150 >150</option>
+                                        <option value=200 >200</option>
+                                        <option value=300 >300</option>
                                         <option value=9999999>-</option>
                                     </select>
                                 </div>
@@ -618,6 +621,7 @@
                                             <div class='hive-table-header-item mouse-pointer' @click="sortByBtmChose(filter_name)">
                                                 <div class='hive-table-title-and-filter'>
                                                     <i 
+                                                        v-if="filter_name != 'index'"
                                                         class="fas fa-filter" 
                                                         @click.stop="filter_info.open=!filter_info.open"
                                                         :style="filter_info.filter_str.trim()!=''?'color:var(--loading-green);':''"
@@ -783,43 +787,6 @@
                                     
                                 </div>
                             </div>
-
-                            <!-- <div style='display: flex;justify-content: center;'>
-                                <div class='search-bar'>
-                                    <input v-model.lazy="filterStr_" @keyup.enter="runFilter(filterStr_)">
-                                    <i class="fas fa-search " @click="runFilter(filterStr_)"></i>
-                                </div>
-                            </div>
-                            <hr>
-                            <div id='hive-table'>
-                                <div id='hive-table-header'>
-                                    <div style='display: flex;'>
-                                        <label style="font-size: 2rem;font-weight: 600;">Page: {{parseInt(pageChose) + 1}}</label>
-                                        <i class="fas fa-sync-alt hap-jupyter-btn btn-update" @click="updateTableInfoList()" style="margin-left: 0.5rem;line-height: 1.5;"></i>
-                                    </div>
-                                    <div class='page-choser'>
-                                        <div v-if="pageListChose==0" class='page-chose-btn page-chose-btn-noactive'>
-                                            <i class="fas fa-angle-double-left"></i>
-                                        </div>
-                                        <div v-else class='page-chose-btn' @click="pageListChose = pageListChose -1">
-                                            <i class="fas fa-angle-double-left"></i>
-                                        </div>
-                                        <div class='page-chose-btn' v-for="pageIndex of pageList[pageListChose]"
-                                            :class="pageIndex == pageChose?'page-chose-btn-chosed':''"
-                                            @click="pageChose = pageIndex"
-                                        >
-                                            {{parseInt(pageIndex) + 1}}
-                                        </div>
-                                        <div v-if="pageListChose==pageList.length-1" class='page-chose-btn page-chose-btn-noactive'>
-                                            <i class="fas fa-angle-double-right"></i>
-                                        </div>
-                                        <div v-else class='page-chose-btn' @click="pageListChose = pageListChose +1">
-                                            <i class="fas fa-angle-double-right"></i>
-                                        </div>
-                                        
-                                    </div>
-                                </div>
-                            </div> -->
                         </div>
                     </div>
                 </div>
@@ -833,32 +800,29 @@
                                     <p>確認要{{statusChangeWindowInfo.status=='enable'?'關閉':'打開'}}此項目?</p>
                                     <i class='fas fa-times' @click='statusChangeWindowOpen=false'></i>
                                 </div>
-                                <div v-if="statusChangeWindowInfo.user_depart=='9h000'" class='top-window-alert-body'>
+                                <div v-if="statusChangeWindowInfo.port=='8961'" class='top-window-alert-body'>
                                     專案名稱: 數據經營部-通用Jupyter
                                 </div>
-                                <div v-else-if="statusChangeWindowInfo.user_depart=='9h001'" class='top-window-alert-body'>
+                                <div v-else-if="statusChangeWindowInfo.port=='8901'" class='top-window-alert-body'>
                                     專案名稱: 客戶智能科-通用Jupyter
                                 </div>
-                                <div v-else-if="statusChangeWindowInfo.user_depart=='9h002'" class='top-window-alert-body'>
+                                <div v-else-if="statusChangeWindowInfo.port=='8931'" class='top-window-alert-body'>
                                     專案名稱: 商業智能科-通用Jupyter
                                 </div>
                                 <div v-else class='top-window-alert-body'>
                                     專案名稱: {{statusChangeWindowInfo.project_name}}
                                 </div>
                                 <div class='top-window-alert-footer'>
-                                    <button class="hap-jupyter-btn btn-active" @click='statusChangeWindowOpen=false'>取消動作</button>
-                                    <button class="hap-jupyter-btn btn-active" @click='switchCustomerJupyterStatus(statusChangeWindowInfo)'>沒錯 我想要{{statusChangeWindowInfo.status=='enable'?'關閉':'打開'}}此項目</button>
+                                    <button class="ts-btn btn-active" @click='statusChangeWindowOpen=false'>取消動作</button>
+                                    <button class="ts-btn btn-active" @click='switchCustomerJupyterStatus(statusChangeWindowInfo)'>沒錯 我想要{{statusChangeWindowInfo.status=='enable'?'關閉':'打開'}}此項目</button>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-
-
-
                     <div class='description-title'>
                         <h1 >HAP Jupyter</h1>
-                        <h3>提供HAP環境探索，IDE為Jupyter Notebook，有GPU可以使用，預設一個單位一個共用環境，若有需要客製化環境，請聯繫數據工程組。</h3>
+                        <h3>提供HAP環境探索，IDE為Jupyter Notebook，預設一個單位一個共用環境，若有需要客製化環境，請聯繫數據工程組。</h3>
                     </div>
                     <!-- 通用 Jupyter Lab視窗 -->
                     <div class="box-card">
@@ -873,32 +837,6 @@
                                     <div>
                                         <i class="fas fa-cloud-upload-alt anima-updown-in-2-sec" style="margin-right: .5rem;"></i>{{statusChangeStatus}}
                                     </div>
-                                </div>
-        
-                                <div class='pop-window' v-if="popwindowOpen">
-                                    <div
-                                    class="pop-window-info-box"
-                                    :style="'left:'+popwindowPositionX+';top:'+popwindowPositionY+';'"
-                                    :class="popwindowClass"
-                                    @click="closePopWindow()"
-                                    >
-                                        <div class='pop-window-info' @click.stop=""
-                                        >
-                                            <div class='pop-window-info-header'>Jupyter Infomation</div>
-                                            <div class='pop-window-info-body'>
-                                                Spark Name: {{popwindowInfoItem.spark_name}}<br>
-                                                Driver Memory: {{popwindowInfoItem.driver_memory}}G<br>
-                                                Executor Memory: {{popwindowInfoItem.executor_memory}}G<br>
-                                                Driver Cores: {{popwindowInfoItem.driver_cores}}<br>
-                                                Executor Cores: {{popwindowInfoItem.executor_cores}}<br>
-                                                Max Executors: {{popwindowInfoItem.max_executors}}
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div 
-                                        class="top-window-alert-background pop-window-background" 
-                                        @click="closePopWindow()"
-                                    ></div>
                                 </div>
                                 
                                 <div>
@@ -955,20 +893,20 @@
                                                     <td v-else>未知的格式，請通知工程組排除</td>
                                                     <td>
                                                         <div class='customer-jupyter-active-list'>
-                                                            <a class='hap-jupyter-btn btn-active' :href="jupyterURL+':'+customerJupyterInfo.port" target="_blank"
+                                                            <a class='ts-btn  btn-active' :href="jupyterURL+':'+customerJupyterInfo.port" target="_blank"
                                                                 style='width: 1.5rem;'
                                                             >
                                                                 <i class='fas fa-code'></i>
                                                             </a>
                                                             <div 
-                                                            class='hap-jupyter-btn btn-info juypter-active-info-btn' 
+                                                            class='ts-btn  btn-info juypter-active-info-btn' 
                                                             style='position:relative;width: 1.5rem;' 
                                                             :id='"hap-jupyter-window-info-btn-"+customerJupyterInfo.port'
                                                             @click='openPopWindow($event, customerJupyterInfo, "hap-jupyter-window-info-btn-"+customerJupyterInfo.port)'
                                                             >
                                                                 <i class='fas fa-info'></i>
                                                             </div>
-                                                            <div class='hap-jupyter-btn' :class="customerJupyterInfo.status=='enable'?'btn-open':'btn-close'"
+                                                            <div class='ts-btn ' :class="customerJupyterInfo.status=='enable'?'btn-open':'btn-close'"
                                                                 @click="clickSwitchCustomerJupyterButton(customerJupyterInfo)"
                                                                 style='width: 1.5rem;'
                                                             >
@@ -992,7 +930,7 @@
                             <div class='box-card-title'>
                                 客製化環境
                             </div>
-                            <i class="fas fa-sync-alt hap-jupyter-btn btn-update" style="margin: 0;"
+                            <i class="fas fa-sync-alt ts-btn btn-update" style="margin: 0;"
                             @click="updateCustomerJupyterInfos()"
                             ></i>
                         </div>
@@ -1011,16 +949,126 @@
                                     :class="popwindowClass"
                                     @click="closePopWindow()"
                                     >
-                                        <div class='pop-window-info' @click.stop=""
-                                        >
-                                            <div class='pop-window-info-header'>Jupyter Infomation</div>
-                                            <div class='pop-window-info-body'>
-                                                Spark Name: {{popwindowInfoItem.spark_name}}<br>
-                                                Driver Memory: {{popwindowInfoItem.driver_memory}}G<br>
-                                                Executor Memory: {{popwindowInfoItem.executor_memory}}G<br>
-                                                Driver Cores: {{popwindowInfoItem.driver_cores}}<br>
-                                                Executor Cores: {{popwindowInfoItem.executor_cores}}<br>
-                                                Max Executors: {{popwindowInfoItem.max_executors}}
+                                        <div class='pop-window-info' @click.stop="">
+                                            <!-- {{popwindowInfoItem}} -->
+                                            <div class="box-card">
+                                                <div class='box-card-body'>
+                                                    <div style='margin-bottom: .5rem;'>
+                                                        <div class='input-group-main-title'>基礎資訊</div>
+                                                        <div class='hap-jupyter-customer-ctrl-inputlabel-list'>
+                                                            <div class='hap-jupyter-customer-ctrl-inputlabel'>
+                                                                <div class='input-titles'>
+                                                                    <div class='input-main-title'>部門</div>
+                                                                    <div class='input-sub-title'></div>
+                                                                </div>
+                                                                <input v-if="popwindowInfoItem.user_depart=='9h000'" class='hap-jupyter-customer-ctrl-input' type="text" placeholder="數據經營部" disabled>
+                                                                <input v-else-if="popwindowInfoItem.user_depart=='9h001'" class='hap-jupyter-customer-ctrl-input' type="text" placeholder="客戶智能科" disabled>
+                                                                <input v-else-if="popwindowInfoItem.user_depart=='9h002'" class='hap-jupyter-customer-ctrl-input' type="text" placeholder="商業智能科" disabled>
+                                                                <input v-else class='hap-jupyter-customer-ctrl-input' type="text" placeholder="未知的部門代號，請通知工程組排除" disabled>
+                                                            </div>
+                                                            <div class='hap-jupyter-customer-ctrl-inputlabel'>
+                                                                <div class='input-titles'>
+                                                                    <div class='input-main-title'>Token</div>
+                                                                    <div class='input-sub-title'></div>
+                                                                </div>
+                                                                <input class='hap-jupyter-customer-ctrl-input' type="text" placeholder="若有需要，請聯絡工程組" disabled>
+                                                            </div>
+                                                            <div class='hap-jupyter-customer-ctrl-inputlabel'>
+                                                                <div class='input-titles'>
+                                                                    <div class='input-main-title'>專案名稱</div>
+                                                                    <div class='input-sub-title'></div>
+                                                                </div>
+                                                                <input class='hap-jupyter-customer-ctrl-input' type="text" v-model.trim="popwindowInfoItem.project_name" disabled>
+                                                            </div>
+                                                            <div class='hap-jupyter-customer-ctrl-inputlabel'>
+                                                                <div class='input-titles'>
+                                                                    <div class='input-main-title'>申請人名稱</div>
+                                                                    <div class='input-sub-title'></div>
+                                                                </div>
+                                                                <input class='hap-jupyter-customer-ctrl-input' type="text" v-model.trim="popwindowInfoItem.user_name" disabled>
+                                                            </div>
+                                                            <div class='hap-jupyter-customer-ctrl-inputlabel'>
+                                                                <div class='input-titles'>
+                                                                    <div class='input-main-title'>申請人員編</div>
+                                                                    <div class='input-sub-title'></div>
+                                                                </div>
+                                                                <input class='hap-jupyter-customer-ctrl-input' type="text" v-model.trim="popwindowInfoItem.user_id" disabled>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                        
+                                                    <div style='margin-bottom: .5rem;'>
+                                                        <div class='input-group-main-title'>Spark UI</div>
+                                                        <div class='hap-jupyter-customer-ctrl-inputlabel-list'>
+                                                            <div class='hap-jupyter-customer-ctrl-inputlabel'>
+                                                                <div class='input-titles'>
+                                                                    <div class='input-main-title'>啟用Spark UI</div>
+                                                                    <div class='input-sub-title'></div>
+                                                                </div>
+                                                                <input v-if="popwindowInfoItem.spark_ui=='true'" class='hap-jupyter-customer-ctrl-input' type="text" placeholder="開啟" disabled>
+                                                                <input v-else-if="popwindowInfoItem.spark_ui=='false'" class='hap-jupyter-customer-ctrl-input' type="text" placeholder="關閉" disabled>
+                                                                <input v-else class='hap-jupyter-customer-ctrl-input' type="text" placeholder="未知的代碼，請通知工程組排除" disabled>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                        
+                                                    <div style='margin-bottom: .5rem;'>
+                                                        <div class='input-group-main-title'>資源分配</div>
+                                                        <div class='hap-jupyter-customer-ctrl-inputlabel-list'>
+                                                            <div class='hap-jupyter-customer-ctrl-inputlabel'>
+                                                                <div class='input-titles'>
+                                                                    <div class='input-main-title'>Driver Memory</div>
+                                                                    <div class='input-sub-title'></div>
+                                                                </div>
+                                                                <input class='hap-jupyter-customer-ctrl-input' type="text" v-model.trim="popwindowInfoItem.driver_memory" disabled>
+                                                            </div>
+                                                            <div class='hap-jupyter-customer-ctrl-inputlabel'>
+                                                                <div class='input-titles'>
+                                                                    <div class='input-main-title'>Executor Memory</div>
+                                                                    <div class='input-sub-title'></div>
+                                                                </div>
+                                                                <input class='hap-jupyter-customer-ctrl-input' type="text" v-model.trim="popwindowInfoItem.executor_memory" disabled>
+                                                            </div>
+                            
+                            
+                                                            <div class='hap-jupyter-customer-ctrl-inputlabel'>
+                                                                <div class='input-titles'>
+                                                                    <div class='input-main-title'>Driver Cores</div>
+                                                                    <div class='input-sub-title'></div>
+                                                                </div>
+                                                                <input class='hap-jupyter-customer-ctrl-input' type="text" v-model.trim="popwindowInfoItem.driver_cores" disabled>
+                                                            </div>
+                            
+                                                            <div class='hap-jupyter-customer-ctrl-inputlabel'>
+                                                                <div class='input-titles'>
+                                                                    <div class='input-main-title'>Executor Cores</div>
+                                                                    <div class='input-sub-title'></div>
+                                                                </div>
+                                                                <input class='hap-jupyter-customer-ctrl-input' type="text" v-model.trim="popwindowInfoItem.executor_cores" disabled>
+                                                            </div>
+                                                            <div class='hap-jupyter-customer-ctrl-inputlabel'>
+                                                                <div class='input-titles'>
+                                                                    <div class='input-main-title'>Max Executors</div>
+                                                                    <div class='input-sub-title'></div>
+                                                                </div>
+                                                                <input class='hap-jupyter-customer-ctrl-input' type="text" v-model.trim="popwindowInfoItem.max_executors" disabled>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                        
+                                                    <div style='margin-bottom: .5rem;'>
+                                                        <div class='input-group-main-title'>其他</div>
+                                                        <div class='hap-jupyter-customer-ctrl-inputlabel-list'>
+                                                            <div class='hap-jupyter-customer-ctrl-inputlabel-big'>
+                                                                <div class='input-titles'>
+                                                                    <div class='input-main-title'>註記</div>
+                                                                    <div class='input-sub-title'></div>
+                                                                </div>
+                                                                <textarea style="width: calc( 100% - 6px);resize: vertical;min-height: 5rem;" v-model="popwindowInfoItem.context" readonly></textarea>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -1076,20 +1124,20 @@
                                                     <td v-else>未知的格式，請通知工程組排除</td>
                                                     <td>
                                                         <div class='customer-jupyter-active-list'>
-                                                            <a class='hap-jupyter-btn btn-active' :href="jupyterURL+':'+customerJupyterInfo.port" target="_blank"
+                                                            <a class='ts-btn  btn-active' :href="jupyterURL+':'+customerJupyterInfo.port" target="_blank"
                                                                 style='width: 1.5rem;'
                                                             >
                                                                 <i class='fas fa-code'></i>
                                                             </a>
                                                             <div 
-                                                            class='hap-jupyter-btn btn-info juypter-active-info-btn' 
+                                                            class='ts-btn  btn-info juypter-active-info-btn' 
                                                             style='position:relative;width: 1.5rem;' 
                                                             :id='"hap-jupyter-window-info-btn-"+customerJupyterInfo.port'
                                                             @click='openPopWindow($event, customerJupyterInfo, "hap-jupyter-window-info-btn-"+customerJupyterInfo.port)'
                                                             >
                                                                 <i class='fas fa-info'></i>
                                                             </div>
-                                                            <div class='hap-jupyter-btn' :class="customerJupyterInfo.status=='enable'?'btn-open':'btn-close'"
+                                                            <div class='ts-btn' :class="customerJupyterInfo.status=='enable'?'btn-open':'btn-close'"
                                                                 @click="clickSwitchCustomerJupyterButton(customerJupyterInfo)"
                                                                 style='width: 1.5rem;'
                                                             >
@@ -1128,7 +1176,7 @@
                                     Jupyter環境列表
                                 </div>
                             </div>
-                            <i class="fas fa-sync-alt hap-jupyter-btn btn-update" style="margin: 0;"
+                            <i class="fas fa-sync-alt ts-btn btn-update" style="margin: 0;"
                                 v-show='window_chose=="list_window"'
                                 @click="updateCustomerJupyterInfos()"
                             ></i>
@@ -1279,15 +1327,12 @@
                                 </div>
                             </div>
 
-
-
-
                             <div class='hap-jupyter-customer-ctrl-inputlabel-list'>
                                 <div class='hap-jupyter-customer-ctrl-inputlabel-big'>
                                     <button 
                                     v-if="checkCreateNewCustomerJupyterSetting.length==0"
                                     id='hap-jupyter-customer-ctrl-submit-btn'
-                                    class='hap-jupyter-btn btn-active'
+                                    class='ts-btn btn-active'
                                     @click="checkCreateNewCustomerJupyterWindowOpen = true"
                                     >SUBMIT</button>
 
@@ -1295,7 +1340,7 @@
                                         <button
                                         id='hap-jupyter-customer-ctrl-submit-btn'
                                         style="position:relative;z-index: 2;"
-                                        class='hap-jupyter-btn btn-notwork'
+                                        class='ts-btn btn-notwork'
                                         >
                                             SUBMIT
                                         </button>
@@ -1359,23 +1404,23 @@
                                             <td v-else>未知的格式，請通知工程組排除</td>
                                             <td>
                                                 <div class='customer-jupyter-active-list'>
-                                                    <a class='hap-jupyter-btn btn-active' 
+                                                    <a class='ts-btn btn-active' 
                                                         style='width: 1.5rem;'
                                                         :href="jupyterURL+':'+customerJupyterInfo.port+'/login?token='+customerJupyterInfo.user_token" target="_blank">
                                                         <i class='fas fa-code'></i>
                                                     </a>
-                                                    <div class='hap-jupyter-btn btn-info juypter-active-info-btn' style='position:relative;width: 1.5rem;' 
+                                                    <div class='ts-btn btn-info juypter-active-info-btn' style='position:relative;width: 1.5rem;' 
                                                     :id="'hap-jupyter-ctrl-window-info-btn-'+customerJupyterInfo.port"
                                                     @click="openPopWindow($event, customerJupyterInfo, 'hap-jupyter-ctrl-window-info-btn-'+customerJupyterInfo.port)">
                                                         <i class='fas fa-info'></i>
                                                     </div>
-                                                    <div class='hap-jupyter-btn' :class="customerJupyterInfo.status=='enable'?'btn-open':'btn-close'"
+                                                    <div class='ts-btn' :class="customerJupyterInfo.status=='enable'?'btn-open':'btn-close'"
                                                         style='width: 1.5rem;'
                                                         @click="clickSwitchCustomerJupyterButton(customerJupyterInfo)"
                                                     >
                                                         <i class='fas fa-power-off'></i>
                                                     </div>
-                                                    <div class='hap-jupyter-btn btn-close' @click="clickDeleteJupyterBtn(customerJupyterInfo)"
+                                                    <div class='ts-btn btn-close' @click="clickDeleteJupyterBtn(customerJupyterInfo)"
                                                         style='width: 1.5rem;'
                                                     >
                                                         <i class="fas fa-trash-alt"></i>
@@ -1419,11 +1464,138 @@
                                         <i class='fas fa-times' @click='statusChangeWindowOpen=false'></i>
                                     </div>
                                     <div class='top-window-alert-body'>
-                                        專案名稱: {{statusChangeWindowInfo.project_name}}
+                                        <div class="box-card">
+                                            <div class='box-card-body'>
+                                                <div style='margin-bottom: .5rem;'>
+                                                    <div class='input-group-main-title'>基礎資訊</div>
+                                                    <div class='hap-jupyter-customer-ctrl-inputlabel-list'>
+                                                        <div class='hap-jupyter-customer-ctrl-inputlabel'>
+                                                            <div class='input-titles'>
+                                                                <div class='input-main-title'>部門</div>
+                                                                <div class='input-sub-title'>(與Jupyter權限有關，慎選)</div>
+                                                            </div>
+                                                            <input class='hap-jupyter-customer-ctrl-input' type="text" v-model.trim="statusChangeWindowInfo.user_depart" disabled>
+                                                        </div>
+                                                        <div class='hap-jupyter-customer-ctrl-inputlabel'>
+                                                            <div class='input-titles'>
+                                                                <div class='input-main-title'>Port</div>
+                                                                <div class='input-sub-title'></div>
+                                                            </div>
+                                                            <input class='hap-jupyter-customer-ctrl-input' type="text" v-model.trim="statusChangeWindowInfo.port" disabled>
+                                                        </div>
+                                                        <div class='hap-jupyter-customer-ctrl-inputlabel'>
+                                                            <div class='input-titles'>
+                                                                <div class='input-main-title'>Token</div>
+                                                                <div class='input-sub-title'>(請同時包含英文與數字，禁止中文)</div>
+                                                            </div>
+                                                            <input class='hap-jupyter-customer-ctrl-input' type="text" v-model.trim="statusChangeWindowInfo.user_token" disabled>
+                                                        </div>
+                                                        <div class='hap-jupyter-customer-ctrl-inputlabel'>
+                                                            <div class='input-titles'>
+                                                                <div class='input-main-title'>專案名稱</div>
+                                                                <div class='input-sub-title'></div>
+                                                            </div>
+                                                            <input class='hap-jupyter-customer-ctrl-input' type="text" v-model.trim="statusChangeWindowInfo.project_name" disabled>
+                                                        </div>
+                                                        <div class='hap-jupyter-customer-ctrl-inputlabel'>
+                                                            <div class='input-titles'>
+                                                                <div class='input-main-title'>申請人名稱</div>
+                                                                <div class='input-sub-title'></div>
+                                                            </div>
+                                                            <input class='hap-jupyter-customer-ctrl-input' type="text" v-model.trim="statusChangeWindowInfo.user_name" disabled>
+                                                        </div>
+                                                        <div class='hap-jupyter-customer-ctrl-inputlabel'>
+                                                            <div class='input-titles'>
+                                                                <div class='input-main-title'>申請人員編</div>
+                                                                <div class='input-sub-title'></div>
+                                                            </div>
+                                                            <input class='hap-jupyter-customer-ctrl-input' type="text" v-model.trim="statusChangeWindowInfo.user_id" disabled>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                    
+                                                <div style='margin-bottom: .5rem;'>
+                                                    <div class='input-group-main-title'>Spark UI</div>
+                                                    <div class='hap-jupyter-customer-ctrl-inputlabel-list'>
+                                                        <div class='hap-jupyter-customer-ctrl-inputlabel'>
+                                                            <div class='input-titles'>
+                                                                <div class='input-main-title'>Spark Name</div>
+                                                                <div class='input-sub-title'></div>
+                                                            </div>
+                                                            <input class='hap-jupyter-customer-ctrl-input' type="text" v-model.trim="statusChangeWindowInfo.spark_name" disabled>
+                                                        </div>
+                                                        <div class='hap-jupyter-customer-ctrl-inputlabel'>
+                                                            <div class='input-titles'>
+                                                                <div class='input-main-title'>啟用Spark UI</div>
+                                                                <div class='input-sub-title'></div>
+                                                            </div>
+                                                            <input class='hap-jupyter-customer-ctrl-input' type="text" v-model.trim="statusChangeWindowInfo.spark_ui" disabled>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                    
+                                                <div style='margin-bottom: .5rem;'>
+                                                    <div class='input-group-main-title'>資源分配</div>
+                                                    <div class='hap-jupyter-customer-ctrl-inputlabel-list'>
+                                                        <div class='hap-jupyter-customer-ctrl-inputlabel'>
+                                                            <div class='input-titles'>
+                                                                <div class='input-main-title'>Driver Memory</div>
+                                                                <div class='input-sub-title'></div>
+                                                            </div>
+                                                            <input class='hap-jupyter-customer-ctrl-input' type="text" v-model.trim="statusChangeWindowInfo.driver_memory" disabled>
+                                                        </div>
+                                                        <div class='hap-jupyter-customer-ctrl-inputlabel'>
+                                                            <div class='input-titles'>
+                                                                <div class='input-main-title'>Executor Memory</div>
+                                                                <div class='input-sub-title'></div>
+                                                            </div>
+                                                            <input class='hap-jupyter-customer-ctrl-input' type="text" v-model.trim="statusChangeWindowInfo.executor_memory" disabled>
+                                                        </div>
+                        
+                        
+                                                        <div class='hap-jupyter-customer-ctrl-inputlabel'>
+                                                            <div class='input-titles'>
+                                                                <div class='input-main-title'>Driver Cores</div>
+                                                                <div class='input-sub-title'></div>
+                                                            </div>
+                                                            <input class='hap-jupyter-customer-ctrl-input' type="text" v-model.trim="statusChangeWindowInfo.driver_cores" disabled>
+                                                        </div>
+                        
+                                                        <div class='hap-jupyter-customer-ctrl-inputlabel'>
+                                                            <div class='input-titles'>
+                                                                <div class='input-main-title'>Executor Cores</div>
+                                                                <div class='input-sub-title'></div>
+                                                            </div>
+                                                            <input class='hap-jupyter-customer-ctrl-input' type="text" v-model.trim="statusChangeWindowInfo.executor_cores" disabled>
+                                                        </div>
+                                                        <div class='hap-jupyter-customer-ctrl-inputlabel'>
+                                                            <div class='input-titles'>
+                                                                <div class='input-main-title'>Max Executors</div>
+                                                                <div class='input-sub-title'></div>
+                                                            </div>
+                                                            <input class='hap-jupyter-customer-ctrl-input' type="text" v-model.trim="statusChangeWindowInfo.max_executors" disabled>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                    
+                                                <div style='margin-bottom: .5rem;'>
+                                                    <div class='input-group-main-title'>其他</div>
+                                                    <div class='hap-jupyter-customer-ctrl-inputlabel-list'>
+                                                        <div class='hap-jupyter-customer-ctrl-inputlabel-big'>
+                                                            <div class='input-titles'>
+                                                                <div class='input-main-title'>註記</div>
+                                                                <div class='input-sub-title'></div>
+                                                            </div>
+                                                            <textarea style="width: calc( 100% - 6px);resize: vertical;min-height: 5rem;" v-model="statusChangeWindowInfo.context" readonly></textarea>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                     <div class='top-window-alert-footer'>
-                                        <button class="hap-jupyter-btn btn-active" @click='statusChangeWindowOpen=false'>取消動作</button>
-                                        <button class="hap-jupyter-btn btn-active" @click='switchCustomerJupyterStatus(statusChangeWindowInfo)'>沒錯 我想要{{statusChangeWindowInfo.status=='enable'?'關閉':'打開'}}此項目</button>
+                                        <button class="ts-btn btn-active" @click='statusChangeWindowOpen=false'>取消動作</button>
+                                        <button class="ts-btn btn-active" @click='switchCustomerJupyterStatus(statusChangeWindowInfo)'>沒錯 我想要{{statusChangeWindowInfo.status=='enable'?'關閉':'打開'}}此項目</button>
                                     </div>
                                 </div>
                             </div>
@@ -1438,19 +1610,138 @@
                                         <i class='fas fa-times' @click='checkCreateNewCustomerJupyterWindowOpen=false'></i>
                                     </div>
                                     <div class='top-window-alert-body'>
-                                        Port: {{portNum}}<br>
-                                        專案名稱: {{projectName}} <br>
-                                        申請人ID: {{user_id}} <br>
-                                        申請人名稱: {{user_name}} <br>
-                                        部門: {{user_depart}} <br>
-                                        Token: {{tokenStr}} <br>
-                                        Spark UI啟用: {{spark_ui}} <br>
-                                        Core數: {{driver_cores}} <br>
-                                        Ram大小: {{driver_memory}} GB
+                                        <div class="box-card">
+                                            <div class='box-card-body'>
+                                                <div style='margin-bottom: .5rem;'>
+                                                    <div class='input-group-main-title'>基礎資訊</div>
+                                                    <div class='hap-jupyter-customer-ctrl-inputlabel-list'>
+                                                        <div class='hap-jupyter-customer-ctrl-inputlabel'>
+                                                            <div class='input-titles'>
+                                                                <div class='input-main-title'>部門</div>
+                                                                <div class='input-sub-title'>(與Jupyter權限有關，慎選)</div>
+                                                            </div>
+                                                            <input class='hap-jupyter-customer-ctrl-input' type="text" v-model.trim="user_depart" disabled>
+                                                        </div>
+                                                        <div class='hap-jupyter-customer-ctrl-inputlabel'>
+                                                            <div class='input-titles'>
+                                                                <div class='input-main-title'>Port</div>
+                                                                <div class='input-sub-title'></div>
+                                                            </div>
+                                                            <input class='hap-jupyter-customer-ctrl-input' type="text" v-model.trim="portNum" disabled>
+                                                        </div>
+                                                        <div class='hap-jupyter-customer-ctrl-inputlabel'>
+                                                            <div class='input-titles'>
+                                                                <div class='input-main-title'>Token</div>
+                                                                <div class='input-sub-title'>(請同時包含英文與數字，禁止中文)</div>
+                                                            </div>
+                                                            <input class='hap-jupyter-customer-ctrl-input' type="text" v-model.trim="tokenStr" disabled>
+                                                        </div>
+                                                        <div class='hap-jupyter-customer-ctrl-inputlabel'>
+                                                            <div class='input-titles'>
+                                                                <div class='input-main-title'>專案名稱</div>
+                                                                <div class='input-sub-title'></div>
+                                                            </div>
+                                                            <input class='hap-jupyter-customer-ctrl-input' type="text" v-model.trim="projectName" disabled>
+                                                        </div>
+                                                        <div class='hap-jupyter-customer-ctrl-inputlabel'>
+                                                            <div class='input-titles'>
+                                                                <div class='input-main-title'>申請人名稱</div>
+                                                                <div class='input-sub-title'></div>
+                                                            </div>
+                                                            <input class='hap-jupyter-customer-ctrl-input' type="text" v-model.trim="user_name" disabled>
+                                                        </div>
+                                                        <div class='hap-jupyter-customer-ctrl-inputlabel'>
+                                                            <div class='input-titles'>
+                                                                <div class='input-main-title'>申請人員編</div>
+                                                                <div class='input-sub-title'></div>
+                                                            </div>
+                                                            <input class='hap-jupyter-customer-ctrl-input' type="text" v-model.trim="user_id" disabled>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                    
+                                                <div style='margin-bottom: .5rem;'>
+                                                    <div class='input-group-main-title'>Spark UI</div>
+                                                    <div class='hap-jupyter-customer-ctrl-inputlabel-list'>
+                                                        <div class='hap-jupyter-customer-ctrl-inputlabel'>
+                                                            <div class='input-titles'>
+                                                                <div class='input-main-title'>Spark Name</div>
+                                                                <div class='input-sub-title'></div>
+                                                            </div>
+                                                            <input class='hap-jupyter-customer-ctrl-input' type="text" v-model.trim="S_sparkName" disabled>
+                                                        </div>
+                                                        <div class='hap-jupyter-customer-ctrl-inputlabel'>
+                                                            <div class='input-titles'>
+                                                                <div class='input-main-title'>啟用Spark UI</div>
+                                                                <div class='input-sub-title'></div>
+                                                            </div>
+                                                            <input class='hap-jupyter-customer-ctrl-input' type="text" v-model.trim="spark_ui" disabled>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                    
+                                                <div style='margin-bottom: .5rem;'>
+                                                    <div class='input-group-main-title'>資源分配</div>
+                                                    <div class='hap-jupyter-customer-ctrl-inputlabel-list'>
+                                                        <div class='hap-jupyter-customer-ctrl-inputlabel'>
+                                                            <div class='input-titles'>
+                                                                <div class='input-main-title'>Driver Memory</div>
+                                                                <div class='input-sub-title'></div>
+                                                            </div>
+                                                            <input class='hap-jupyter-customer-ctrl-input' type="text" v-model.trim="driver_memory" disabled>
+                                                        </div>
+                                                        <div class='hap-jupyter-customer-ctrl-inputlabel'>
+                                                            <div class='input-titles'>
+                                                                <div class='input-main-title'>Executor Memory</div>
+                                                                <div class='input-sub-title'></div>
+                                                            </div>
+                                                            <input class='hap-jupyter-customer-ctrl-input' type="text" v-model.trim="executor_memory" disabled>
+                                                        </div>
+                        
+                        
+                                                        <div class='hap-jupyter-customer-ctrl-inputlabel'>
+                                                            <div class='input-titles'>
+                                                                <div class='input-main-title'>Driver Cores</div>
+                                                                <div class='input-sub-title'></div>
+                                                            </div>
+                                                            <input class='hap-jupyter-customer-ctrl-input' type="text" v-model.trim="driver_cores" disabled>
+                                                        </div>
+                        
+                                                        <div class='hap-jupyter-customer-ctrl-inputlabel'>
+                                                            <div class='input-titles'>
+                                                                <div class='input-main-title'>Executor Cores</div>
+                                                                <div class='input-sub-title'></div>
+                                                            </div>
+                                                            <input class='hap-jupyter-customer-ctrl-input' type="text" v-model.trim="executor_cores" disabled>
+                                                        </div>
+                                                        <div class='hap-jupyter-customer-ctrl-inputlabel'>
+                                                            <div class='input-titles'>
+                                                                <div class='input-main-title'>Max Executors</div>
+                                                                <div class='input-sub-title'></div>
+                                                            </div>
+                                                            <input class='hap-jupyter-customer-ctrl-input' type="text" v-model.trim="max_executors" disabled>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                    
+                                                <div style='margin-bottom: .5rem;'>
+                                                    <div class='input-group-main-title'>其他</div>
+                                                    <div class='hap-jupyter-customer-ctrl-inputlabel-list'>
+                                                        <div class='hap-jupyter-customer-ctrl-inputlabel-big'>
+                                                            <div class='input-titles'>
+                                                                <div class='input-main-title'>註記</div>
+                                                                <div class='input-sub-title'></div>
+                                                            </div>
+                                                            <textarea style="width: calc( 100% - 6px);resize: vertical;min-height: 5rem;" v-model="context" readonly></textarea>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                     <div class='top-window-alert-footer'>
-                                        <button class="hap-jupyter-btn btn-active" @click='checkCreateNewCustomerJupyterWindowOpen=false'>取消動作</button>
-                                        <button class="hap-jupyter-btn btn-active" @click="createNewCustomerJupyter()">SUBMIT</button>
+                                        <button class="ts-btn btn-active" @click='checkCreateNewCustomerJupyterWindowOpen=false'>取消動作</button>
+                                        <button class="ts-btn btn-active" @click="createNewCustomerJupyter()">SUBMIT</button>
                                     </div>
                                 </div>
                             </div>
@@ -1465,16 +1756,138 @@
                                         <i class='fas fa-times' @click='deleteJupyterWindowOpen=false'></i>
                                     </div>
                                     <div class='top-window-alert-body'>
-                                        專案名稱: {{deleteJupyterWindowInfo.project_name}} <br>
-                                        Port: {{deleteJupyterWindowInfo.port}} <br>
-                                        申請人: {{deleteJupyterWindowInfo.user_id}} <br>
-                                        部門: {{deleteJupyterWindowInfo.user_depart}} <br>
-                                        Core數: {{deleteJupyterWindowInfo.driver_cores}} <br>
-                                        Ram大小: {{deleteJupyterWindowInfo.driver_memory}} GB
+                                        <div class="box-card">
+                                            <div class='box-card-body'>
+                                                <div style='margin-bottom: .5rem;'>
+                                                    <div class='input-group-main-title'>基礎資訊</div>
+                                                    <div class='hap-jupyter-customer-ctrl-inputlabel-list'>
+                                                        <div class='hap-jupyter-customer-ctrl-inputlabel'>
+                                                            <div class='input-titles'>
+                                                                <div class='input-main-title'>部門</div>
+                                                                <div class='input-sub-title'>(與Jupyter權限有關，慎選)</div>
+                                                            </div>
+                                                            <input class='hap-jupyter-customer-ctrl-input' type="text" v-model.trim="deleteJupyterWindowInfo.user_depart" disabled>
+                                                        </div>
+                                                        <div class='hap-jupyter-customer-ctrl-inputlabel'>
+                                                            <div class='input-titles'>
+                                                                <div class='input-main-title'>Port</div>
+                                                                <div class='input-sub-title'></div>
+                                                            </div>
+                                                            <input class='hap-jupyter-customer-ctrl-input' type="text" v-model.trim="deleteJupyterWindowInfo.port" disabled>
+                                                        </div>
+                                                        <div class='hap-jupyter-customer-ctrl-inputlabel'>
+                                                            <div class='input-titles'>
+                                                                <div class='input-main-title'>Token</div>
+                                                                <div class='input-sub-title'>(請同時包含英文與數字，禁止中文)</div>
+                                                            </div>
+                                                            <input class='hap-jupyter-customer-ctrl-input' type="text" v-model.trim="deleteJupyterWindowInfo.user_token" disabled>
+                                                        </div>
+                                                        <div class='hap-jupyter-customer-ctrl-inputlabel'>
+                                                            <div class='input-titles'>
+                                                                <div class='input-main-title'>專案名稱</div>
+                                                                <div class='input-sub-title'></div>
+                                                            </div>
+                                                            <input class='hap-jupyter-customer-ctrl-input' type="text" v-model.trim="deleteJupyterWindowInfo.project_name" disabled>
+                                                        </div>
+                                                        <div class='hap-jupyter-customer-ctrl-inputlabel'>
+                                                            <div class='input-titles'>
+                                                                <div class='input-main-title'>申請人名稱</div>
+                                                                <div class='input-sub-title'></div>
+                                                            </div>
+                                                            <input class='hap-jupyter-customer-ctrl-input' type="text" v-model.trim="deleteJupyterWindowInfo.user_name" disabled>
+                                                        </div>
+                                                        <div class='hap-jupyter-customer-ctrl-inputlabel'>
+                                                            <div class='input-titles'>
+                                                                <div class='input-main-title'>申請人員編</div>
+                                                                <div class='input-sub-title'></div>
+                                                            </div>
+                                                            <input class='hap-jupyter-customer-ctrl-input' type="text" v-model.trim="deleteJupyterWindowInfo.user_id" disabled>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                    
+                                                <div style='margin-bottom: .5rem;'>
+                                                    <div class='input-group-main-title'>Spark UI</div>
+                                                    <div class='hap-jupyter-customer-ctrl-inputlabel-list'>
+                                                        <div class='hap-jupyter-customer-ctrl-inputlabel'>
+                                                            <div class='input-titles'>
+                                                                <div class='input-main-title'>Spark Name</div>
+                                                                <div class='input-sub-title'></div>
+                                                            </div>
+                                                            <input class='hap-jupyter-customer-ctrl-input' type="text" v-model.trim="deleteJupyterWindowInfo.spark_name" disabled>
+                                                        </div>
+                                                        <div class='hap-jupyter-customer-ctrl-inputlabel'>
+                                                            <div class='input-titles'>
+                                                                <div class='input-main-title'>啟用Spark UI</div>
+                                                                <div class='input-sub-title'></div>
+                                                            </div>
+                                                            <input class='hap-jupyter-customer-ctrl-input' type="text" v-model.trim="deleteJupyterWindowInfo.spark_ui" disabled>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                    
+                                                <div style='margin-bottom: .5rem;'>
+                                                    <div class='input-group-main-title'>資源分配</div>
+                                                    <div class='hap-jupyter-customer-ctrl-inputlabel-list'>
+                                                        <div class='hap-jupyter-customer-ctrl-inputlabel'>
+                                                            <div class='input-titles'>
+                                                                <div class='input-main-title'>Driver Memory</div>
+                                                                <div class='input-sub-title'></div>
+                                                            </div>
+                                                            <input class='hap-jupyter-customer-ctrl-input' type="text" v-model.trim="deleteJupyterWindowInfo.driver_memory" disabled>
+                                                        </div>
+                                                        <div class='hap-jupyter-customer-ctrl-inputlabel'>
+                                                            <div class='input-titles'>
+                                                                <div class='input-main-title'>Executor Memory</div>
+                                                                <div class='input-sub-title'></div>
+                                                            </div>
+                                                            <input class='hap-jupyter-customer-ctrl-input' type="text" v-model.trim="deleteJupyterWindowInfo.executor_memory" disabled>
+                                                        </div>
+                        
+                        
+                                                        <div class='hap-jupyter-customer-ctrl-inputlabel'>
+                                                            <div class='input-titles'>
+                                                                <div class='input-main-title'>Driver Cores</div>
+                                                                <div class='input-sub-title'></div>
+                                                            </div>
+                                                            <input class='hap-jupyter-customer-ctrl-input' type="text" v-model.trim="deleteJupyterWindowInfo.driver_cores" disabled>
+                                                        </div>
+                        
+                                                        <div class='hap-jupyter-customer-ctrl-inputlabel'>
+                                                            <div class='input-titles'>
+                                                                <div class='input-main-title'>Executor Cores</div>
+                                                                <div class='input-sub-title'></div>
+                                                            </div>
+                                                            <input class='hap-jupyter-customer-ctrl-input' type="text" v-model.trim="deleteJupyterWindowInfo.executor_cores" disabled>
+                                                        </div>
+                                                        <div class='hap-jupyter-customer-ctrl-inputlabel'>
+                                                            <div class='input-titles'>
+                                                                <div class='input-main-title'>Max Executors</div>
+                                                                <div class='input-sub-title'></div>
+                                                            </div>
+                                                            <input class='hap-jupyter-customer-ctrl-input' type="text" v-model.trim="deleteJupyterWindowInfo.max_executors" disabled>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                    
+                                                <div style='margin-bottom: .5rem;'>
+                                                    <div class='input-group-main-title'>其他</div>
+                                                    <div class='hap-jupyter-customer-ctrl-inputlabel-list'>
+                                                        <div class='hap-jupyter-customer-ctrl-inputlabel-big'>
+                                                            <div class='input-titles'>
+                                                                <div class='input-main-title'>註記</div>
+                                                                <div class='input-sub-title'></div>
+                                                            </div>
+                                                            <textarea style="width: calc( 100% - 6px);resize: vertical;min-height: 5rem;" v-model="deleteJupyterWindowInfo.context" readonly></textarea>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                     <div class='top-window-alert-footer'>
-                                        <button class="hap-jupyter-btn btn-active" @click='deleteJupyterWindowOpen=false'>取消動作</button>
-                                        <button class="hap-jupyter-btn btn-active" @click="deleteJupyter()">確認刪除</button>
+                                        <button class="ts-btn btn-active" @click='deleteJupyterWindowOpen=false'>取消動作</button>
+                                        <button class="ts-btn btn-active" @click="deleteJupyter()">確認刪除</button>
                                     </div>
                                 </div>
                             </div>
@@ -1489,15 +1902,137 @@
                             >
                                 <div class='pop-window-info' @click.stop=""
                                 >
-                                    <div class='pop-window-info-header'>Jupyter Infomation</div>
-                                    <div class='pop-window-info-body'>
-                                        Spark Name: {{popwindowInfoItem.spark_name}}<br>
-                                        Driver Memory: {{popwindowInfoItem.driver_memory}}G<br>
-                                        Executor Memory: {{popwindowInfoItem.executor_memory}}G<br>
-                                        Driver Cores: {{popwindowInfoItem.driver_cores}}<br>
-                                        Executor Cores: {{popwindowInfoItem.executor_cores}}<br>
-                                        Max Executors: {{popwindowInfoItem.max_executors}}
+                                    <div class="box-card">
+                                        <div class='box-card-body'>
+                                            <div style='margin-bottom: .5rem;'>
+                                                <div class='input-group-main-title'>基礎資訊</div>
+                                                <div class='hap-jupyter-customer-ctrl-inputlabel-list'>
+                                                    <div class='hap-jupyter-customer-ctrl-inputlabel'>
+                                                        <div class='input-titles'>
+                                                            <div class='input-main-title'>部門</div>
+                                                            <div class='input-sub-title'>(與Jupyter權限有關，慎選)</div>
+                                                        </div>
+                                                        <input class='hap-jupyter-customer-ctrl-input' type="text" v-model.trim="popwindowInfoItem.user_depart" disabled>
+                                                    </div>
+                                                    <div class='hap-jupyter-customer-ctrl-inputlabel'>
+                                                        <div class='input-titles'>
+                                                            <div class='input-main-title'>Port</div>
+                                                            <div class='input-sub-title'></div>
+                                                        </div>
+                                                        <input class='hap-jupyter-customer-ctrl-input' type="text" v-model.trim="popwindowInfoItem.port" disabled>
+                                                    </div>
+                                                    <div class='hap-jupyter-customer-ctrl-inputlabel'>
+                                                        <div class='input-titles'>
+                                                            <div class='input-main-title'>Token</div>
+                                                            <div class='input-sub-title'>(請同時包含英文與數字，禁止中文)</div>
+                                                        </div>
+                                                        <input class='hap-jupyter-customer-ctrl-input' type="text" v-model.trim="popwindowInfoItem.user_token" disabled>
+                                                    </div>
+                                                    <div class='hap-jupyter-customer-ctrl-inputlabel'>
+                                                        <div class='input-titles'>
+                                                            <div class='input-main-title'>專案名稱</div>
+                                                            <div class='input-sub-title'></div>
+                                                        </div>
+                                                        <input class='hap-jupyter-customer-ctrl-input' type="text" v-model.trim="popwindowInfoItem.project_name" disabled>
+                                                    </div>
+                                                    <div class='hap-jupyter-customer-ctrl-inputlabel'>
+                                                        <div class='input-titles'>
+                                                            <div class='input-main-title'>申請人名稱</div>
+                                                            <div class='input-sub-title'></div>
+                                                        </div>
+                                                        <input class='hap-jupyter-customer-ctrl-input' type="text" v-model.trim="popwindowInfoItem.user_name" disabled>
+                                                    </div>
+                                                    <div class='hap-jupyter-customer-ctrl-inputlabel'>
+                                                        <div class='input-titles'>
+                                                            <div class='input-main-title'>申請人員編</div>
+                                                            <div class='input-sub-title'></div>
+                                                        </div>
+                                                        <input class='hap-jupyter-customer-ctrl-input' type="text" v-model.trim="popwindowInfoItem.user_id" disabled>
+                                                    </div>
+                                                </div>
+                                            </div>
+                
+                                            <div style='margin-bottom: .5rem;'>
+                                                <div class='input-group-main-title'>Spark UI</div>
+                                                <div class='hap-jupyter-customer-ctrl-inputlabel-list'>
+                                                    <div class='hap-jupyter-customer-ctrl-inputlabel'>
+                                                        <div class='input-titles'>
+                                                            <div class='input-main-title'>Spark Name</div>
+                                                            <div class='input-sub-title'></div>
+                                                        </div>
+                                                        <input class='hap-jupyter-customer-ctrl-input' type="text" v-model.trim="popwindowInfoItem.spark_name" disabled>
+                                                    </div>
+                                                    <div class='hap-jupyter-customer-ctrl-inputlabel'>
+                                                        <div class='input-titles'>
+                                                            <div class='input-main-title'>啟用Spark UI</div>
+                                                            <div class='input-sub-title'></div>
+                                                        </div>
+                                                        <input class='hap-jupyter-customer-ctrl-input' type="text" v-model.trim="popwindowInfoItem.spark_ui" disabled>
+                                                    </div>
+                                                </div>
+                                            </div>
+                
+                                            <div style='margin-bottom: .5rem;'>
+                                                <div class='input-group-main-title'>資源分配</div>
+                                                <div class='hap-jupyter-customer-ctrl-inputlabel-list'>
+                                                    <div class='hap-jupyter-customer-ctrl-inputlabel'>
+                                                        <div class='input-titles'>
+                                                            <div class='input-main-title'>Driver Memory</div>
+                                                            <div class='input-sub-title'></div>
+                                                        </div>
+                                                        <input class='hap-jupyter-customer-ctrl-input' type="text" v-model.trim="popwindowInfoItem.driver_memory" disabled>
+                                                    </div>
+                                                    <div class='hap-jupyter-customer-ctrl-inputlabel'>
+                                                        <div class='input-titles'>
+                                                            <div class='input-main-title'>Executor Memory</div>
+                                                            <div class='input-sub-title'></div>
+                                                        </div>
+                                                        <input class='hap-jupyter-customer-ctrl-input' type="text" v-model.trim="popwindowInfoItem.executor_memory" disabled>
+                                                    </div>
+                    
+                    
+                                                    <div class='hap-jupyter-customer-ctrl-inputlabel'>
+                                                        <div class='input-titles'>
+                                                            <div class='input-main-title'>Driver Cores</div>
+                                                            <div class='input-sub-title'></div>
+                                                        </div>
+                                                        <input class='hap-jupyter-customer-ctrl-input' type="text" v-model.trim="popwindowInfoItem.driver_cores" disabled>
+                                                    </div>
+                    
+                                                    <div class='hap-jupyter-customer-ctrl-inputlabel'>
+                                                        <div class='input-titles'>
+                                                            <div class='input-main-title'>Executor Cores</div>
+                                                            <div class='input-sub-title'></div>
+                                                        </div>
+                                                        <input class='hap-jupyter-customer-ctrl-input' type="text" v-model.trim="popwindowInfoItem.executor_cores" disabled>
+                                                    </div>
+                                                    <div class='hap-jupyter-customer-ctrl-inputlabel'>
+                                                        <div class='input-titles'>
+                                                            <div class='input-main-title'>Max Executors</div>
+                                                            <div class='input-sub-title'></div>
+                                                        </div>
+                                                        <input class='hap-jupyter-customer-ctrl-input' type="text" v-model.trim="popwindowInfoItem.max_executors" disabled>
+                                                    </div>
+                                                </div>
+                                            </div>
+                
+                                            <div style='margin-bottom: .5rem;'>
+                                                <div class='input-group-main-title'>其他</div>
+                                                <div class='hap-jupyter-customer-ctrl-inputlabel-list'>
+                                                    <div class='hap-jupyter-customer-ctrl-inputlabel-big'>
+                                                        <div class='input-titles'>
+                                                            <div class='input-main-title'>註記</div>
+                                                            <div class='input-sub-title'></div>
+                                                        </div>
+                                                        <textarea style="width: calc( 100% - 6px);resize: vertical;min-height: 5rem;" v-model="popwindowInfoItem.context" readonly></textarea>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
+
+
+
                                 </div>
                             </div>
                             <div 
@@ -1505,260 +2040,6 @@
                                 @click="closePopWindow()"
                             ></div>
                         </div>
-
-                        <!-- <div class='box-card' style='max-height:unset;'>
-                            <div class='box-card-header'>Create Jupyter</div>
-                            <div class='box-card-body' style='max-height:unset;'>
-                                <div class='hap-jupyter-customer-ctrl-inputlabel-list'>
-                                    <div class='hap-jupyter-customer-ctrl-inputlabel'>
-                                        <div>部門(與Jupyter權限有關，慎選)</div>
-                                        <select style='height: calc( 2rem + 4px);' v-model="user_depart">
-                                            <option selected value="9h000">數據經營部</option>
-                                            <option value="9h001">客戶智能科</option>
-                                            <option value="9h002">商業智能科</option>
-                                        </select>
-                                    </div>
-                                    <div class='hap-jupyter-customer-ctrl-inputlabel'>
-                                        <div>Port</div>
-                                        <select style='height: calc( 2rem + 4px);' v-model="portNum">
-                                            <option v-for="num of L_unUsedPortList">{{num}}</option>
-                                        </select>
-                                    </div>
-                                    <div class='hap-jupyter-customer-ctrl-inputlabel'>
-                                        <div>Token</div>
-                                        <input class='hap-jupyter-customer-ctrl-input' type="text" v-model.trim="tokenStr" v-on:input="LowerWord('tokenStr')" placeholder="請輸入Token">
-                                    </div>
-                                    <div class='hap-jupyter-customer-ctrl-inputlabel'>
-                                        <div>專案名稱</div>
-                                        <input class='hap-jupyter-customer-ctrl-input' type="text" v-model.trim="projectName" v-on:input="RemoveOtherWord('projectName')" placeholder="請輸入專案名稱">
-                                    </div>
-                                    <div class='hap-jupyter-customer-ctrl-inputlabel'>
-                                        <div>申請人名稱(User Name)</div>
-                                        <input class='hap-jupyter-customer-ctrl-input' type="text" v-model.trim="user_name" v-on:input="RemoveOtherWord('user_name')" placeholder="請輸入申請人名稱">
-                                    </div>
-                                    <div class='hap-jupyter-customer-ctrl-inputlabel'>
-                                        <div>申請人ID(User ID: 8位數)</div>
-                                        <input class='hap-jupyter-customer-ctrl-input' type="text" v-model.trim="user_id" v-on:input="RemoveOtherWord('user_id')" placeholder="請輸入申請人員編">
-                                    </div>
-                                    <div class='hap-jupyter-customer-ctrl-inputlabel'>
-                                        <div>Spark Name</div>
-                                        <input class='hap-jupyter-customer-ctrl-input' type="text" v-model.trim="spark_name" v-on:input="RemoveOtherWord('spark_name')" placeholder="請輸入Spark Name">
-                                    </div>
-                                    <div class='hap-jupyter-customer-ctrl-inputlabel'>
-                                        <div>啟用Spark UI</div>
-                                        <select style='height: calc( 2rem + 4px);' v-model="spark_ui">
-                                            <option selected value="false">關閉</option>
-                                            <option value="true">啟用</option>
-                                        </select>
-                                    </div>
-                                    <div class='hap-jupyter-customer-ctrl-inputlabel'>
-                                        <div>Driver Memory</div>
-                                        <select style='height: calc( 2rem + 4px);' v-model="driver_memory">
-                                            <option v-for="num of [2,4,6,8,10,12,14,16,18,20,22,24,26,28,30,32]">{{num}}</option>
-                                        </select>
-                                    </div>
-                                    <div class='hap-jupyter-customer-ctrl-inputlabel'>
-                                        <div>Executor Memory</div>
-                                        <select style='height: calc( 2rem + 4px);' v-model="executor_memory">
-                                            <option v-for="num of [2,4,6,8,10,12,14,16,18,20,22,24,26,28,30,32]">{{num}}</option>
-                                        </select>
-                                    </div>
-
-
-                                    <div class='hap-jupyter-customer-ctrl-inputlabel'>
-                                        <div>Driver Cores</div>
-                                        <select style='height: calc( 2rem + 4px);' v-model="driver_cores">
-                                            <option v-for="num of [1,2,3,4,5,6,7,8]">{{num}}</option>
-                                        </select>
-                                    </div>
-
-                                    <div class='hap-jupyter-customer-ctrl-inputlabel'>
-                                        <div>Executor Cores</div>
-                                        <select style='height: calc( 2rem + 4px);' v-model="executor_cores">
-                                            <option v-for="num of [1,2,3,4,5,6,7,8]">{{num}}</option>
-                                        </select>
-                                    </div>
-                                    <div class='hap-jupyter-customer-ctrl-inputlabel'>
-                                        <div>Max Executors</div>
-                                        <select style='height: calc( 2rem + 4px);' v-model="max_executors">
-                                            <option v-for="num of [1,2,3,4,5,6,7,8,9,10,11,12]">{{num}}</option>
-                                        </select>
-                                    </div>
-                                    
-                                    <div class='hap-jupyter-customer-ctrl-inputlabel-big'>
-                                        <div>其他註記</div>
-                                        <textarea style="width: calc( 100% - 6px);" v-model="context"></textarea>
-                                    </div>
-                                    <div class='hap-jupyter-customer-ctrl-inputlabel-big'>
-                                        <button 
-                                        v-if="checkCreateNewCustomerJupyterSetting.length==0"
-                                        id='hap-jupyter-customer-ctrl-submit-btn'
-                                        class='hap-jupyter-btn btn-active'
-                                        @click="checkCreateNewCustomerJupyterWindowOpen = true"
-                                        >SUBMIT</button>
-
-                                        <div v-else>
-                                            <button
-                                            id='hap-jupyter-customer-ctrl-submit-btn'
-                                            style="position:relative;z-index: 2;"
-                                            class='hap-jupyter-btn btn-notwork'
-                                            >
-                                                SUBMIT
-                                            </button>
-                                            <div id="hap-jupyter-customer-ctrl-submit-btn-warning-window">
-                                                <ul>
-                                                    <li v-for="waringString of checkCreateNewCustomerJupyterSetting">
-                                                        {{waringString}}
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                        </div>
-
-                                    </div>
-
-                                </div>
-                            </div>
-                            <div class='box-card-body'>
-                                <table style="width: 100%;text-align: center;border-spacing: unset;">
-                                    <thead>
-                                        <tr>
-                                            <th style="padding: .5rem;font-size: 1.25rem;">專案名稱</th>
-                                            <th style="padding: .5rem;font-size: 1.25rem;">PORT</th>
-                                            <th style="padding: .5rem;font-size: 1.25rem;">申請者</th>
-                                            <th style="padding: .5rem;font-size: 1.25rem;">申請單位</th>
-                                            <th style="padding: .5rem;font-size: 1.25rem;">申請時間</th>
-                                            <th style="padding: .5rem;font-size: 1.25rem;">Spark UI</th>
-                                            <th style="padding: .5rem;font-size: 1.25rem;">操作</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <template v-for="(L_projectInfo, index) of customerJupyterInfos">
-                                            <tr v-for="(customerJupyterInfo, index) of L_projectInfo">
-                                                <td style="padding: .25rem;border-top: 1px #aaa solid;">{{customerJupyterInfo.project_name}}</td>
-                                                <td style="padding: .25rem;border-top: 1px #aaa solid;">{{customerJupyterInfo.port}}</td>
-                                                <td style="padding: .25rem;border-top: 1px #aaa solid;">{{customerJupyterInfo.user_name}}</td>
-                                                <td v-if="customerJupyterInfo.user_depart=='9h000'" style="padding: .25rem;border-top: 1px #aaa solid;">數據經營部</td>
-                                                <td v-else-if="customerJupyterInfo.user_depart=='9h001'" style="padding: .25rem;border-top: 1px #aaa solid;">客戶智能科</td>
-                                                <td v-else-if="customerJupyterInfo.user_depart=='9h002'" style="padding: .25rem;border-top: 1px #aaa solid;">商業智能科</td>
-                                                <td v-else style="padding: .25rem;border-top: 1px #aaa solid;">未知的部門代號，請通知工程組排除</td>
-                                                <td style="padding: .25rem;border-top: 1px #aaa solid;">{{customerJupyterInfo.create_time}}</td>
-                                                <td v-if="customerJupyterInfo.spark_ui=='false'" style="padding: .25rem;border-top: 1px #aaa solid;">關閉</td>
-                                                <td v-else-if="customerJupyterInfo.spark_ui=='true'" style="padding: .25rem;border-top: 1px #aaa solid;">啟用</td>
-                                                <td v-else style="padding: .25rem;border-top: 1px #aaa solid;">未知的格式，請通知工程組排除</td>
-                                                <td style="padding: .25rem;border-top: 1px #aaa solid;">
-                                                    <div class='customer-jupyter-active-list'>
-                                                        <a class='hap-jupyter-btn btn-active' :href="jupyterURL+':'+customerJupyterInfo.port+'/login?token='+customerJupyterInfo.user_token" target="_blank">
-                                                            <i class='fas fa-code'></i>
-                                                        </a>
-                                                        <div class='hap-jupyter-btn btn-info juypter-active-info-btn' style='position:relative;' 
-                                                        :id="'hap-jupyter-ctrl-window-info-btn-'+customerJupyterInfo.port"
-                                                        @click="openPopWindow($event, customerJupyterInfo, 'hap-jupyter-ctrl-window-info-btn-'+customerJupyterInfo.port)">
-                                                            <i class='fas fa-info'></i>
-                                                        </div>
-                                                        <div class='hap-jupyter-btn' :class="customerJupyterInfo.status=='enable'?'btn-open':'btn-close'"
-                                                            @click="clickSwitchCustomerJupyterButton(customerJupyterInfo)"
-                                                        >
-                                                            <i class='fas fa-power-off'></i>
-                                                        </div>
-                                                        <div class='hap-jupyter-btn btn-close' @click="clickDeleteJupyterBtn(customerJupyterInfo)">
-                                                            <i class="fas fa-trash-alt"></i>
-                                                        </div>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                        </template>
-
-                                    </tbody>
-                                </table>     
-                            </div>
-
-                        </div>
-                        <br>
-                        <div class='box-card' style='position: relative;max-height:unset;'>
-                            <div 
-                                v-if="customerJupyterUpdateing"
-                                style="
-                                display: flex;
-                                justify-content: center;
-                                align-items: center;
-                                position: absolute;
-                                width: 100%;
-                                height: 100%;
-                                background-color: rgba(0,0,0,.5);
-                                z-index: 800;
-                                left: 0;
-                                top: 0;font-size: 3rem;
-                                font-weight: 600;
-                                color: #efefef;">
-                                <i class="fas fa-sync-alt anima-updown-in-2-sec" style="margin-right: .5rem;"></i>
-                                更新中...
-                            </div>
-
-
-                            <div class='box-card-header'>
-                                <div style="display: flex;justify-content: space-between;align-items: center;"
-                                @click="updateCustomerJupyterInfos()">
-                                    <div>客製化環境列表</div>
-                                    <i class="fas fa-sync-alt hap-jupyter-btn btn-update" style="margin: 0;"
-                                    ></i>
-                                </div>
-                            </div>
-                            <div class='box-card-body'>
-                                <table style="width: 100%;text-align: center;border-spacing: unset;">
-                                    <thead>
-                                        <tr>
-                                            <th style="padding: .5rem;font-size: 1.25rem;">專案名稱</th>
-                                            <th style="padding: .5rem;font-size: 1.25rem;">PORT</th>
-                                            <th style="padding: .5rem;font-size: 1.25rem;">申請者</th>
-                                            <th style="padding: .5rem;font-size: 1.25rem;">申請單位</th>
-                                            <th style="padding: .5rem;font-size: 1.25rem;">申請時間</th>
-                                            <th style="padding: .5rem;font-size: 1.25rem;">Spark UI</th>
-                                            <th style="padding: .5rem;font-size: 1.25rem;">操作</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <template v-for="(L_projectInfo, index) of customerJupyterInfos">
-                                            <tr v-for="(customerJupyterInfo, index) of L_projectInfo">
-                                                <td style="padding: .25rem;border-top: 1px #aaa solid;">{{customerJupyterInfo.project_name}}</td>
-                                                <td style="padding: .25rem;border-top: 1px #aaa solid;">{{customerJupyterInfo.port}}</td>
-                                                <td style="padding: .25rem;border-top: 1px #aaa solid;">{{customerJupyterInfo.user_name}}</td>
-                                                <td v-if="customerJupyterInfo.user_depart=='9h000'" style="padding: .25rem;border-top: 1px #aaa solid;">數據經營部</td>
-                                                <td v-else-if="customerJupyterInfo.user_depart=='9h001'" style="padding: .25rem;border-top: 1px #aaa solid;">客戶智能科</td>
-                                                <td v-else-if="customerJupyterInfo.user_depart=='9h002'" style="padding: .25rem;border-top: 1px #aaa solid;">商業智能科</td>
-                                                <td v-else style="padding: .25rem;border-top: 1px #aaa solid;">未知的部門代號，請通知工程組排除</td>
-                                                <td style="padding: .25rem;border-top: 1px #aaa solid;">{{customerJupyterInfo.create_time}}</td>
-                                                <td v-if="customerJupyterInfo.spark_ui=='false'" style="padding: .25rem;border-top: 1px #aaa solid;">關閉</td>
-                                                <td v-else-if="customerJupyterInfo.spark_ui=='true'" style="padding: .25rem;border-top: 1px #aaa solid;">啟用</td>
-                                                <td v-else style="padding: .25rem;border-top: 1px #aaa solid;">未知的格式，請通知工程組排除</td>
-                                                <td style="padding: .25rem;border-top: 1px #aaa solid;">
-                                                    <div class='customer-jupyter-active-list'>
-                                                        <a class='hap-jupyter-btn btn-active' :href="jupyterURL+':'+customerJupyterInfo.port+'/login?token='+customerJupyterInfo.user_token" target="_blank">
-                                                            <i class='fas fa-code'></i>
-                                                        </a>
-                                                        <div class='hap-jupyter-btn btn-info juypter-active-info-btn' style='position:relative;' 
-                                                        :id="'hap-jupyter-ctrl-window-info-btn-'+customerJupyterInfo.port"
-                                                        @click="openPopWindow($event, customerJupyterInfo, 'hap-jupyter-ctrl-window-info-btn-'+customerJupyterInfo.port)">
-                                                            <i class='fas fa-info'></i>
-                                                        </div>
-                                                        <div class='hap-jupyter-btn' :class="customerJupyterInfo.status=='enable'?'btn-open':'btn-close'"
-                                                            @click="clickSwitchCustomerJupyterButton(customerJupyterInfo)"
-                                                        >
-                                                            <i class='fas fa-power-off'></i>
-                                                        </div>
-                                                        <div class='hap-jupyter-btn btn-close' @click="clickDeleteJupyterBtn(customerJupyterInfo)">
-                                                            <i class="fas fa-trash-alt"></i>
-                                                        </div>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                        </template>
-
-                                    </tbody>
-                                </table>     
-                            </div>
-                       
-                        </div>
-                        <br> -->
                     </div>
 
                 </div>

@@ -281,7 +281,7 @@ var Vue_JupyterCtrlWindow =  new Vue({
             //                 "port":"8900",
             //                 "project_name":"common project",
             //                 "spark_name":"master",
-            //                 "status":"enable",
+            //                 "status":"disable",
             //                 "user_depart":"i9h000",
             //                 "user_id":"00865936",
             //                 "user_name":"i9h000",

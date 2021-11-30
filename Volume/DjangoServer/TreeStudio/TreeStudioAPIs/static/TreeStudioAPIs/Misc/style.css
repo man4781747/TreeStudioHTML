@@ -170,6 +170,112 @@ body{
     color: var(--title-green);
 }
 
+/* 按鈕Style */
+
+.ts-btn {
+    cursor: pointer;
+    text-decoration:none;
+    margin-right: .5rem;
+    display: flex;
+    font-weight: 400;
+    color: #212529;
+    text-align: center;
+    justify-content: center;
+    vertical-align: middle;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    background-color: transparent;
+    border: 1px solid transparent;
+    padding: .375rem .75rem;
+    font-size: 1rem;
+    line-height: 1.5;
+    border-radius: .25rem;
+    transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+}
+
+.ts-btn i {
+    line-height: 1.5;
+    margin: 0 .3rem;
+}
+
+.btn-active {
+    color: #fff;
+    background-color: #007bff;
+    border-color: #007bff;
+    box-shadow: none;
+}
+
+.btn-active:hover {
+    color: #fff;
+    background-color: #0069d9;
+    border-color: #0062cc;
+    box-shadow: none;
+}
+
+.btn-info {
+    color: #fff;
+    background-color: #48a2b9;
+    border-color: #48a2b9;
+    box-shadow: none;
+}
+
+.btn-info:hover {
+    color: #fff;
+    background-color: #138496;
+    border-color: #117a8b;
+}
+
+.btn-close {
+    color: #fff;
+    background-color: #dc3545;
+    border-color: #dc3545;
+    box-shadow: none;
+}
+
+.btn-close:hover {
+    color: #fff;
+    background-color: #c21627;
+    border-color: #c21627;
+    box-shadow: none;
+}
+
+.btn-open {
+    color: #fff;
+    background-color: #28a745;
+    border-color: #28a745;
+    box-shadow: none;
+}
+
+.btn-open:hover {
+    color: #fff;
+    background-color: #1e7e35;
+    border-color: #1e7e35;
+    box-shadow: none;
+}
+
+.btn-update {
+    color: #333;
+    background-color: #eee;
+    border-color: #adb5bd;
+    box-shadow: none;
+}
+
+.btn-update:hover {
+    color: #333;
+    background-color: #aaa;
+    border-color: #adb5bd;
+    box-shadow: none;
+}
+
+.btn-notwork {
+    color: #fff;
+    background-color: #adb5bd;
+    border-color: #adb5bd;
+    box-shadow: none;
+}
+
 /* 文字垂直置中 */
 .text-v-center {
     vertical-align: top;

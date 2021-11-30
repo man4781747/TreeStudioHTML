@@ -5,7 +5,7 @@ var Vue_HiveSearcher = new Vue({
         tableInfoList : [],
         pageChose : 0,
         pageListChose : 0,
-        pageMaxNum : 10,
+        pageMaxNum : 100,
         filterStr: '',
         filterStr_: '',
         sortBy: '',
