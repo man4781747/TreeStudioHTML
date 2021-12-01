@@ -10,6 +10,11 @@ var Vue_mainToolBox =  new Vue({
                 'Type': 'Home',
                 'icon': 'fas fa-home',
             },
+            'AnnouncementList': {
+                'Name': '公告列表',
+                'Type': 'Page',
+                'icon': 'fas fa-bullhorn',
+            },
             'HAP_Hue': {
                 'Name': 'HAP Hue',
                 'Type': 'URL',
@@ -118,7 +123,13 @@ var Vue_mainToolBox =  new Vue({
                 let element = document.getElementById("hap-jupyter-ctrl-window");
                 element.style.display = 'none';
             } 
-
+            if (S_page == 'System.公告管理系統'){
+                let element = document.getElementById("hap-announcement-manage-window");
+                element.style.display = '';
+            } else {
+                let element = document.getElementById("hap-announcement-manage-window");
+                element.style.display = 'none';
+            } 
 
             if (labelItem.Type == 'URL'){
                 let element = document.getElementById("url-description-window");
@@ -168,14 +179,11 @@ var Vue_mainToolBox =  new Vue({
                                 'Type': 'Page',
                                 'icon': 'far fa-circle',
                             },
-                            // {
-                            //     'Name': 'Exp Airflow',
-                            //     'Type': 'URL',
-                            //     'URL': '123',
-                            //     'icon': 'far fa-circle',
-                            //     'title': 'Exp Airflow',
-                            //     'content': 'Exp Airflow介紹',
-                            // },
+                            {
+                                'Name': '公告管理系統',
+                                'Type': 'Page',
+                                'icon': 'far fa-circle',
+                            },
                         ],
                     }
                 )
@@ -220,19 +228,6 @@ var Vue_mainToolBox =  new Vue({
                 else {
                     this.changePage({}, "Home")
                 }
-                // else if (this.D_labelList[S_pageName].Type == 'List'){
-                //     let S_listName = this.urlParas['list']
-                //     if (this.D_labelList[S_pageName][S_listName].Type != undefined ){
-                //         this.changePage(this.D_labelList[S_pageName][S_listName], S_listName)
-                //     }
-                // }
-                // else if (["Home", "URL", "Page"].indexOf(this.D_labelList[S_pageName].Type)!=-1){
-                //     ////console.log(this.D_labelList[S_pageName])
-                //     this.changePage(this.D_labelList[S_pageName], S_pageName)
-                // }
-                // else {
-                //     this.changePage({}, "Home")
-                // }
 			}
             else {
                 this.changePage({}, "Home")

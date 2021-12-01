@@ -3,27 +3,27 @@
     border: 1px#d1d0d0 solid;
 }
 
-#hive-searcher .search-bar {
+.search-bar {
     display: flex;
     border-radius: .5rem;
     border: 2px #e3e4e5 solid;
     overflow: hidden;
 }
 
-#hive-searcher .search-bar * {
+.search-bar * {
     font-size: 1.1rem;
     height: 1.1rem;
     line-height: 1.1rem;
     padding: .5rem;
 }
 
-#hive-searcher .search-bar input {
+.search-bar input {
     width: 40vw;
     outline:none;
     border: 0;
 }
 
-#hive-searcher .search-bar i {
+.search-bar i {
     border-left: 2px #e3e4e5 solid;
 }
 
@@ -77,14 +77,14 @@
     justify-content: space-between;
 }
 
-#hive-searcher .page-choser {
+.page-choser {
     display: flex;
     border-radius: .35rem;
     overflow: hidden;
     border: 1px #d1d0d0 solid;
 }
 
-#hive-searcher .page-chose-btn {
+.page-chose-btn {
     /* margin: 0.5px; */
     cursor: pointer; 
     display: inline-block;
@@ -103,46 +103,46 @@
     transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
 }
 
-#hive-searcher .page-chose-btn:hover,
-#hive-searcher .page-chose-btn-chosed{
+.page-chose-btn:hover,
+.page-chose-btn-chosed{
     color: #0056b3 ;
     text-decoration: none ;
     background-color: #8fc7ff ;
     border-color: #0056b3;
 }
 
-#hive-searcher .page-chose-btn-noactive {
+.page-chose-btn-noactive {
     color: #dee2e6 !important;
     text-decoration: none !important;
     border-color: #dee2e6 !important;
     background-color: unset !important;
 }
 
-#hive-searcher .hive-table-header-item {
+.hive-table-header-item {
     display: flex;
     align-items: center;
     justify-content: space-between;
     position: relative;
 }
 
-#hive-searcher .hive-table-title-and-filter{
+.hive-table-title-and-filter{
     display: flex;
     align-items: center;
     position: relative;
     margin-right: 0.2rem;
 }
 
-#hive-searcher .hive-table-title-and-filter .fa-filter{
+.hive-table-title-and-filter .fa-filter{
     font-size: .9rem;
     margin-right: .2rem;
     color: rgb(153, 153, 153);
 }
 
-#hive-searcher .hive-table-title-and-filter .fa-filter:hover{
+.hive-table-title-and-filter .fa-filter:hover{
     color: var(--title-green);
 }
 
-#hive-searcher .btn-update {
+.btn-update {
     color: #333;
     background-color: #eee;
     border-color: #adb5bd;

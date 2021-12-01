@@ -84,6 +84,24 @@ body{
     position: relative;
 }
 
+/* bax-card-input-table系列 */
+
+.input-submit-btn {
+    width: 100%;
+    display: unset;
+}
+
+.input-submit-btn-warning-window {
+    position: relative;
+    top: -1.3rem;
+    padding-top: 1rem;
+    padding-bottom: .05rem;
+    border-radius: .25rem;
+    background-color: #ffc107;
+    color: #222;
+    z-index: 1;
+}
+
 /* 介紹的Title系列 */
 
 .description-title {

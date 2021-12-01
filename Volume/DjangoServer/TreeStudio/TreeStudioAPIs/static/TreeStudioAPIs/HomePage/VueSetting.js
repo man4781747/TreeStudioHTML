@@ -155,6 +155,42 @@ Vue.component("home-page-small-item", {
 // 	},
 // })
 
+var Vue_homeAnnouncementWindow = new Vue({
+	el: '#announcement-list-window',
+	data: {
+		announcementListUpdating : false,
+		tableInfoList: [],
+	},
+  
+	computed: {
+	},
+  
+	methods: {
+		updateTableInfoList(){
+            this.announcementListUpdating = true
+			fetch('/TreeStudioAPIs/Get_Last_Ten_Announcement_List/', {
+                method: 'GET'
+			}).then(function(response) {
+				return response.json();
+			})
+			.then(function(myJson) {
+				for (let item of myJson['data']){
+					item.created = (new Date(item.created)).format('Y-MM-dd hh:mm:ss')
+					item.last_modify_date = (new Date(item.last_modify_date)).format('Y-MM-dd hh:mm:ss')
+				}
+
+
+                Vue_homeAnnouncementWindow.tableInfoList = myJson['data']
+                Vue_homeAnnouncementWindow.announcementListUpdating = false
+			});
+
+		},
+	},
+
+	mounted: function(){
+		this.updateTableInfoList()
+	},
+})
 
 var Vue_YesterdayFailList = new Vue({
 	el: '#yesterday-fail-list-window',
