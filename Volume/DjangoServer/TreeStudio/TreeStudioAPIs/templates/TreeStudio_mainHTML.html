@@ -285,6 +285,9 @@
                             <div class='box-card-title'>
                                 最新消息
                             </div>
+                            <i class="fas fa-sync-alt ts-btn btn-update" style="margin: 0;"
+                                @click="updateTableInfoList()"
+                            ></i>
                         </div>
                         <div class='box-card-body' style='min-height: 100px;max-height: 200px'>
                             <!-- <p v-for="(D_info, index) in tableInfoList">
@@ -1264,14 +1267,14 @@
                                                             <div class='hap-jupyter-customer-ctrl-inputlabel'>
                                                                 <div class='input-titles'>
                                                                     <div class='input-main-title'>Driver Memory</div>
-                                                                    <div class='input-sub-title'></div>
+                                                                    <div class='input-sub-title'>(探索機記憶體)</div>
                                                                 </div>
                                                                 <input class='hap-jupyter-customer-ctrl-input' type="text" v-model.trim="popwindowInfoItem.driver_memory" disabled>
                                                             </div>
                                                             <div class='hap-jupyter-customer-ctrl-inputlabel'>
                                                                 <div class='input-titles'>
                                                                     <div class='input-main-title'>Executor Memory</div>
-                                                                    <div class='input-sub-title'></div>
+                                                                    <div class='input-sub-title'>(運算節點記憶體數)</div>
                                                                 </div>
                                                                 <input class='hap-jupyter-customer-ctrl-input' type="text" v-model.trim="popwindowInfoItem.executor_memory" disabled>
                                                             </div>
@@ -1280,7 +1283,7 @@
                                                             <div class='hap-jupyter-customer-ctrl-inputlabel'>
                                                                 <div class='input-titles'>
                                                                     <div class='input-main-title'>Driver Cores</div>
-                                                                    <div class='input-sub-title'></div>
+                                                                    <div class='input-sub-title'>(探索機核心數量)</div>
                                                                 </div>
                                                                 <input class='hap-jupyter-customer-ctrl-input' type="text" v-model.trim="popwindowInfoItem.driver_cores" disabled>
                                                             </div>
@@ -1288,14 +1291,14 @@
                                                             <div class='hap-jupyter-customer-ctrl-inputlabel'>
                                                                 <div class='input-titles'>
                                                                     <div class='input-main-title'>Executor Cores</div>
-                                                                    <div class='input-sub-title'></div>
+                                                                    <div class='input-sub-title'>(運算節點核心數量)</div>
                                                                 </div>
                                                                 <input class='hap-jupyter-customer-ctrl-input' type="text" v-model.trim="popwindowInfoItem.executor_cores" disabled>
                                                             </div>
                                                             <div class='hap-jupyter-customer-ctrl-inputlabel'>
                                                                 <div class='input-titles'>
-                                                                    <div class='input-main-title'>Max Executors</div>
-                                                                    <div class='input-sub-title'></div>
+                                                                    <div class='input-main-title'>Executor Max Quantity</div>
+                                                                    <div class='input-sub-title'>(運算節點數量)</div>
                                                                 </div>
                                                                 <input class='hap-jupyter-customer-ctrl-input' type="text" v-model.trim="popwindowInfoItem.max_executors" disabled>
                                                             </div>
@@ -1428,6 +1431,7 @@
                                 @click="updateCustomerJupyterInfos()"
                             ></i>
                         </div>
+                        <!-- Jupyter環境建立畫面 -->
                         <div class='box-card-body' v-show='window_chose=="create_window"'>
                             <div style='margin-bottom: .5rem;'>
                                 <div class='input-group-main-title'>基礎資訊</div>
@@ -1513,7 +1517,7 @@
                                     <div class='hap-jupyter-customer-ctrl-inputlabel'>
                                         <div class='input-titles'>
                                             <div class='input-main-title'>Driver Memory</div>
-                                            <div class='input-sub-title'></div>
+                                            <div class='input-sub-title'>(探索機記憶體)</div>
                                         </div>
                                         <select style='height: calc(1.5rem + 6px);' v-model="driver_memory">
                                             <option v-for="num of [2,4,6,8,10,12,14,16]">{{num}}</option>
@@ -1522,7 +1526,7 @@
                                     <div class='hap-jupyter-customer-ctrl-inputlabel'>
                                         <div class='input-titles'>
                                             <div class='input-main-title'>Executor Memory</div>
-                                            <div class='input-sub-title'></div>
+                                            <div class='input-sub-title'>(運算節點記憶體數)</div>
                                         </div>
                                         <select style='height: calc(1.5rem + 6px);' v-model="executor_memory">
                                             <option v-for="num of [2,4,6,8,10,12,14,16]">{{num}}</option>
@@ -1533,7 +1537,7 @@
                                     <div class='hap-jupyter-customer-ctrl-inputlabel'>
                                         <div class='input-titles'>
                                             <div class='input-main-title'>Driver Cores</div>
-                                            <div class='input-sub-title'></div>
+                                            <div class='input-sub-title'>(探索機核心數量)</div>
                                         </div>
                                         <select style='height: calc(1.5rem + 6px);' v-model="driver_cores">
                                             <option v-for="num of [1,2,3,4]">{{num}}</option>
@@ -1543,7 +1547,7 @@
                                     <div class='hap-jupyter-customer-ctrl-inputlabel'>
                                         <div class='input-titles'>
                                             <div class='input-main-title'>Executor Cores</div>
-                                            <div class='input-sub-title'></div>
+                                            <div class='input-sub-title'>(運算節點核心數量)</div>
                                         </div>
                                         <select style='height: calc(1.5rem + 6px);' v-model="executor_cores">
                                             <option v-for="num of [1,2,3,4]">{{num}}</option>
@@ -1551,8 +1555,8 @@
                                     </div>
                                     <div class='hap-jupyter-customer-ctrl-inputlabel'>
                                         <div class='input-titles'>
-                                            <div class='input-main-title'>Max Executors</div>
-                                            <div class='input-sub-title'></div>
+                                            <div class='input-main-title'>Executor Max Quantity</div>
+                                            <div class='input-sub-title'>(運算節點數量)</div>
                                         </div>
                                         <select style='height: calc(1.5rem + 6px);' v-model="max_executors">
                                             <option v-for="num of [1,2,3,4]">{{num}}</option>
@@ -1603,7 +1607,9 @@
                                 </div>
                             </div>
                         </div>
+                        <!-- Jupyter環境列表 -->
                         <div class='box-card-body' v-show='window_chose=="list_window"'>
+                            <!-- 更新時畫面 -->
                             <div 
                             v-if="customerJupyterUpdateing == true"
                             style="
@@ -1622,7 +1628,7 @@
                                 <i class="fas fa-sync-alt anima-updown-in-2-sec" style="margin-right: .5rem;"></i>
                                 更新中...
                             </div>
-
+                            <!-- Jupyter環境列表 -->
                             <table class='ts-table'>
                                 <thead>
                                     <tr>
@@ -1787,14 +1793,14 @@
                                                         <div class='hap-jupyter-customer-ctrl-inputlabel'>
                                                             <div class='input-titles'>
                                                                 <div class='input-main-title'>Driver Memory</div>
-                                                                <div class='input-sub-title'></div>
+                                                                <div class='input-sub-title'>(探索機記憶體)</div>
                                                             </div>
                                                             <input class='hap-jupyter-customer-ctrl-input' type="text" v-model.trim="statusChangeWindowInfo.driver_memory" disabled>
                                                         </div>
                                                         <div class='hap-jupyter-customer-ctrl-inputlabel'>
                                                             <div class='input-titles'>
                                                                 <div class='input-main-title'>Executor Memory</div>
-                                                                <div class='input-sub-title'></div>
+                                                                <div class='input-sub-title'>(運算節點記憶體數)</div>
                                                             </div>
                                                             <input class='hap-jupyter-customer-ctrl-input' type="text" v-model.trim="statusChangeWindowInfo.executor_memory" disabled>
                                                         </div>
@@ -1803,7 +1809,7 @@
                                                         <div class='hap-jupyter-customer-ctrl-inputlabel'>
                                                             <div class='input-titles'>
                                                                 <div class='input-main-title'>Driver Cores</div>
-                                                                <div class='input-sub-title'></div>
+                                                                <div class='input-sub-title'>(探索機核心數量)</div>
                                                             </div>
                                                             <input class='hap-jupyter-customer-ctrl-input' type="text" v-model.trim="statusChangeWindowInfo.driver_cores" disabled>
                                                         </div>
@@ -1811,14 +1817,14 @@
                                                         <div class='hap-jupyter-customer-ctrl-inputlabel'>
                                                             <div class='input-titles'>
                                                                 <div class='input-main-title'>Executor Cores</div>
-                                                                <div class='input-sub-title'></div>
+                                                                <div class='input-sub-title'>(運算節點核心數量)</div>
                                                             </div>
                                                             <input class='hap-jupyter-customer-ctrl-input' type="text" v-model.trim="statusChangeWindowInfo.executor_cores" disabled>
                                                         </div>
                                                         <div class='hap-jupyter-customer-ctrl-inputlabel'>
                                                             <div class='input-titles'>
-                                                                <div class='input-main-title'>Max Executors</div>
-                                                                <div class='input-sub-title'></div>
+                                                                <div class='input-main-title'>Executor Max Quantity</div>
+                                                                <div class='input-sub-title'>(運算節點數量)</div>
                                                             </div>
                                                             <input class='hap-jupyter-customer-ctrl-input' type="text" v-model.trim="statusChangeWindowInfo.max_executors" disabled>
                                                         </div>
@@ -1933,14 +1939,14 @@
                                                         <div class='hap-jupyter-customer-ctrl-inputlabel'>
                                                             <div class='input-titles'>
                                                                 <div class='input-main-title'>Driver Memory</div>
-                                                                <div class='input-sub-title'></div>
+                                                                <div class='input-sub-title'>(探索機記憶體)</div>
                                                             </div>
                                                             <input class='hap-jupyter-customer-ctrl-input' type="text" v-model.trim="driver_memory" disabled>
                                                         </div>
                                                         <div class='hap-jupyter-customer-ctrl-inputlabel'>
                                                             <div class='input-titles'>
                                                                 <div class='input-main-title'>Executor Memory</div>
-                                                                <div class='input-sub-title'></div>
+                                                                <div class='input-sub-title'>(運算節點記憶體數)</div>
                                                             </div>
                                                             <input class='hap-jupyter-customer-ctrl-input' type="text" v-model.trim="executor_memory" disabled>
                                                         </div>
@@ -1949,7 +1955,7 @@
                                                         <div class='hap-jupyter-customer-ctrl-inputlabel'>
                                                             <div class='input-titles'>
                                                                 <div class='input-main-title'>Driver Cores</div>
-                                                                <div class='input-sub-title'></div>
+                                                                <div class='input-sub-title'>(探索機核心數量)</div>
                                                             </div>
                                                             <input class='hap-jupyter-customer-ctrl-input' type="text" v-model.trim="driver_cores" disabled>
                                                         </div>
@@ -1957,14 +1963,14 @@
                                                         <div class='hap-jupyter-customer-ctrl-inputlabel'>
                                                             <div class='input-titles'>
                                                                 <div class='input-main-title'>Executor Cores</div>
-                                                                <div class='input-sub-title'></div>
+                                                                <div class='input-sub-title'>(運算節點核心數量)</div>
                                                             </div>
                                                             <input class='hap-jupyter-customer-ctrl-input' type="text" v-model.trim="executor_cores" disabled>
                                                         </div>
                                                         <div class='hap-jupyter-customer-ctrl-inputlabel'>
                                                             <div class='input-titles'>
-                                                                <div class='input-main-title'>Max Executors</div>
-                                                                <div class='input-sub-title'></div>
+                                                                <div class='input-main-title'>Executor Max Quantity</div>
+                                                                <div class='input-sub-title'>(運算節點數量)</div>
                                                             </div>
                                                             <input class='hap-jupyter-customer-ctrl-input' type="text" v-model.trim="max_executors" disabled>
                                                         </div>
@@ -2079,14 +2085,14 @@
                                                         <div class='hap-jupyter-customer-ctrl-inputlabel'>
                                                             <div class='input-titles'>
                                                                 <div class='input-main-title'>Driver Memory</div>
-                                                                <div class='input-sub-title'></div>
+                                                                <div class='input-sub-title'>(探索機記憶體)</div>
                                                             </div>
                                                             <input class='hap-jupyter-customer-ctrl-input' type="text" v-model.trim="deleteJupyterWindowInfo.driver_memory" disabled>
                                                         </div>
                                                         <div class='hap-jupyter-customer-ctrl-inputlabel'>
                                                             <div class='input-titles'>
                                                                 <div class='input-main-title'>Executor Memory</div>
-                                                                <div class='input-sub-title'></div>
+                                                                <div class='input-sub-title'>(運算節點記憶體數)</div>
                                                             </div>
                                                             <input class='hap-jupyter-customer-ctrl-input' type="text" v-model.trim="deleteJupyterWindowInfo.executor_memory" disabled>
                                                         </div>
@@ -2095,7 +2101,7 @@
                                                         <div class='hap-jupyter-customer-ctrl-inputlabel'>
                                                             <div class='input-titles'>
                                                                 <div class='input-main-title'>Driver Cores</div>
-                                                                <div class='input-sub-title'></div>
+                                                                <div class='input-sub-title'>(探索機核心數量)</div>
                                                             </div>
                                                             <input class='hap-jupyter-customer-ctrl-input' type="text" v-model.trim="deleteJupyterWindowInfo.driver_cores" disabled>
                                                         </div>
@@ -2103,14 +2109,14 @@
                                                         <div class='hap-jupyter-customer-ctrl-inputlabel'>
                                                             <div class='input-titles'>
                                                                 <div class='input-main-title'>Executor Cores</div>
-                                                                <div class='input-sub-title'></div>
+                                                                <div class='input-sub-title'>(運算節點核心數量)</div>
                                                             </div>
                                                             <input class='hap-jupyter-customer-ctrl-input' type="text" v-model.trim="deleteJupyterWindowInfo.executor_cores" disabled>
                                                         </div>
                                                         <div class='hap-jupyter-customer-ctrl-inputlabel'>
                                                             <div class='input-titles'>
-                                                                <div class='input-main-title'>Max Executors</div>
-                                                                <div class='input-sub-title'></div>
+                                                                <div class='input-main-title'>Executor Max Quantity</div>
+                                                                <div class='input-sub-title'>(運算節點數量)</div>
                                                             </div>
                                                             <input class='hap-jupyter-customer-ctrl-input' type="text" v-model.trim="deleteJupyterWindowInfo.max_executors" disabled>
                                                         </div>
@@ -2225,14 +2231,14 @@
                                                     <div class='hap-jupyter-customer-ctrl-inputlabel'>
                                                         <div class='input-titles'>
                                                             <div class='input-main-title'>Driver Memory</div>
-                                                            <div class='input-sub-title'></div>
+                                                            <div class='input-sub-title'>(探索機記憶體)</div>
                                                         </div>
                                                         <input class='hap-jupyter-customer-ctrl-input' type="text" v-model.trim="popwindowInfoItem.driver_memory" disabled>
                                                     </div>
                                                     <div class='hap-jupyter-customer-ctrl-inputlabel'>
                                                         <div class='input-titles'>
                                                             <div class='input-main-title'>Executor Memory</div>
-                                                            <div class='input-sub-title'></div>
+                                                            <div class='input-sub-title'>(運算節點記憶體數)</div>
                                                         </div>
                                                         <input class='hap-jupyter-customer-ctrl-input' type="text" v-model.trim="popwindowInfoItem.executor_memory" disabled>
                                                     </div>
@@ -2241,7 +2247,7 @@
                                                     <div class='hap-jupyter-customer-ctrl-inputlabel'>
                                                         <div class='input-titles'>
                                                             <div class='input-main-title'>Driver Cores</div>
-                                                            <div class='input-sub-title'></div>
+                                                            <div class='input-sub-title'>(探索機核心數量)</div>
                                                         </div>
                                                         <input class='hap-jupyter-customer-ctrl-input' type="text" v-model.trim="popwindowInfoItem.driver_cores" disabled>
                                                     </div>
@@ -2249,14 +2255,14 @@
                                                     <div class='hap-jupyter-customer-ctrl-inputlabel'>
                                                         <div class='input-titles'>
                                                             <div class='input-main-title'>Executor Cores</div>
-                                                            <div class='input-sub-title'></div>
+                                                            <div class='input-sub-title'>(運算節點核心數量)</div>
                                                         </div>
                                                         <input class='hap-jupyter-customer-ctrl-input' type="text" v-model.trim="popwindowInfoItem.executor_cores" disabled>
                                                     </div>
                                                     <div class='hap-jupyter-customer-ctrl-inputlabel'>
                                                         <div class='input-titles'>
-                                                            <div class='input-main-title'>Max Executors</div>
-                                                            <div class='input-sub-title'></div>
+                                                            <div class='input-main-title'>Executor Max Quantity</div>
+                                                            <div class='input-sub-title'>(運算節點數量)</div>
                                                         </div>
                                                         <input class='hap-jupyter-customer-ctrl-input' type="text" v-model.trim="popwindowInfoItem.max_executors" disabled>
                                                     </div>

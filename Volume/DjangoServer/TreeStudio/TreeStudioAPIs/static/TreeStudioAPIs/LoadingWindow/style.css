@@ -82,7 +82,7 @@
     color: #fff;
     padding: 10px 0;
     font-weight: 400;
-    font-size: 1em;
+    font-size: 1rem;
     letter-spacing: 0.3em;
     overflow: hidden;
     z-index: 2;
@@ -93,7 +93,7 @@
     display: inline-block;
     line-height: .5em;
     z-index: 2;
-    margin: 0 1vw;
+    margin: 0 .5rem;
 }
 
 #vue-loading-window {

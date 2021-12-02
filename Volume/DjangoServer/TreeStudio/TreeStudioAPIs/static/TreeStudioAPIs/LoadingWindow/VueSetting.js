@@ -7,7 +7,7 @@ function welcomeWindowBuild(){
         textWrapper_2.innerHTML = "All You Need In Here".replace(/\S/g, "<span class='letter-2'>$&</span>");
 
         var textWrapper_3 = document.querySelector('.vue-load-success-content-3');
-        textWrapper_3.innerHTML = "HAP".replace(/\S/g, "<span class='letter-3'>$&</span>");
+        textWrapper_3.innerHTML = "HADOOP  ANALYSIS  PLATFORM".replace(/[\S ]/g, "<span class='letter-3'>$&</span>");
 
 
         anime.timeline({loop: false})

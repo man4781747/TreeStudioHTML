@@ -124,11 +124,11 @@ def Announcement_Manager(request, id=None):
 def Get_Last_Ten_Announcement_List(request):
     try:
         if request.method == 'GET':
-            data=AnnouncementList.objects.order_by('-created')
+            data=AnnouncementList.objects.order_by('-created').values('id','created','title')
             if len(data) > 10:
                 data = data[:10]
 
-            returnList = [data[i].to_dict() for i in range(len(data))]
+            returnList = [data[i]for i in range(len(data))]
             return JsonResponse({'result': 'success', 'data':returnList})
         else:
             return JsonResponse({'result': 'fail', 'date': {'message': '不正確的HTTP請求method'}})
