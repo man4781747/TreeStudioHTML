@@ -37,126 +37,168 @@ Vue.component("home-page-small-item", {
 	template:`
 	<div class="box-small-card" id ="test-view">
 		<div class="box-small-card-content">
-			<div>
-				<slot name="icon">
-					<i class="fas fa-dice-d6"></i>
-				</slot>
-			</div>
-			<div class="box-small-card-word">
-				<slot name="content">
-					<p>Default Content</p>
+			<slot name="icon">
+				<i class="fas fa-dice-d6"></i>
+			</slot>
+			<div class='box-small-card-title'>
+				<slot name="title">
+					<p>Default title</p>
 				</slot>
 			</div>
 		</div>
-		<div class='box-small-card-title'>
-			<slot name="title">
-				<p>Default title</p>
+		<div class="box-small-card-word">
+			<slot name="content">
+				<p>Default Content</p>
 			</slot>
 		</div>
 	</div>
 	`
 })
 
-var Vue_AirflowView =  new Vue({
-	el: '#teradata-info-small',
-	data: {
-		title: 'Teradata 分析型資料庫',
-		content: "1171 Tables",
-	},
-})
+// var Vue_AirflowView =  new Vue({
+// 	el: '#teradata-info-small',
+// 	data: {
+// 		title: 'Teradata 分析型資料庫',
+// 		content: "1171 Tables",
+// 	},
+// })
 
-var Vue_AirflowView =  new Vue({
-	el: '#feature-store-info-small',
-	data: {
-		title: 'Feature Store 特徵庫',
-		content: "102 Tables",
-	},
-})
+// var Vue_AirflowView =  new Vue({
+// 	el: '#feature-store-info-small',
+// 	data: {
+// 		title: 'Feature Store 特徵庫',
+// 		content: "102 Tables",
+// 	},
+// })
 
-var Vue_AirflowView =  new Vue({
-	el: '#airflow-view',
+// var Vue_AirflowView =  new Vue({
+// 	el: '#airflow-view',
+// 	data: {
+// 		dagIDList : [],
+// 		isHovering: false,
+// 		airjobURL: airjobURL,
+// 	},
+// 	computed: {
+// 		dagJobNum(){
+
+// 			return this.dagIDList.length
+// 		},
+// 	},
+// 	methods:{
+// 		updateDAGIDtList(){
+// 			fetch(this.airjobURL + 'AirFlowUploadWeb/GetAllDAGIDList/')
+// 			.then(function(response) {
+// 				return response.json()
+// 			})
+// 			.then(function(myJson) {
+// 				// console.log(myJson['dag_list'])
+// 				Vue_AirflowView.dagIDList = myJson['dag_list']
+// 			});
+// 		},
+// 	},
+
+// 	mounted: function(){
+// 		this.updateDAGIDtList()
+// 	},
+// })
+
+// var Vue_AirjobView =  new Vue({
+// 	el: '#airjob-view',
+// 	data: {
+// 		massage: '030',
+// 		dagIDList : [],
+// 		projectList: [],
+// 		airjobURL: airjobURL,
+// 	},
+// 	computed: {
+// 		dagJobNum(){
+// 			dagJobNum = 0
+// 			for (S_dagId of this.dagIDList){
+// 				for (projectName of this.projectList) {
+// 					if (S_dagId.indexOf(projectName+'_') == 0){
+// 						dagJobNum = dagJobNum + 1
+// 						break
+// 					}
+// 				}
+// 			}
+
+// 			return dagJobNum
+// 		},
+// 	},
+// 	methods:{
+// 		updateDAGIDtList(){
+// 			fetch(this.airjobURL + 'AirFlowUploadWeb/GetAllDAGIDList/')
+// 			.then(function(response) {
+// 				return response.json()
+// 			})
+// 			.then(function(myJson) {
+// 				// console.log(myJson['dag_list'])
+// 				Vue_AirjobView.dagIDList = myJson['dag_list']
+// 			});
+// 		},
+
+// 		updateProjectList(){
+// 			fetch(this.airjobURL + 'AirFlowUploadWeb/API/v1/GetAllProjectList/')
+// 			.then(function(response) {
+// 				return response.json()
+// 			})
+// 			.then(function(myJson) {
+// 				// console.log(myJson)
+// 				Vue_AirjobView.projectList = myJson['ProjectList']
+// 			});
+// 		},
+// 	},
+
+// 	mounted: function(){
+// 		this.updateProjectList()
+// 		this.updateDAGIDtList()
+// 	},
+// })
+
+var Vue_homeAnnouncementWindow = new Vue({
+	el: '#announcement-list-window',
 	data: {
-		dagIDList : [],
-		isHovering: false,
-		airjobURL: airjobURL,
+		announcementListUpdating : false,
+		tableInfoList: [],
 	},
+  
 	computed: {
-		dagJobNum(){
-
-			return this.dagIDList.length
-		},
 	},
-	methods:{
-		updateDAGIDtList(){
-			fetch(this.airjobURL + 'AirFlowUploadWeb/GetAllDAGIDList/')
-			.then(function(response) {
-				return response.json()
+  
+	methods: {
+		updateTableInfoList(){
+            this.announcementListUpdating = true
+			fetch('/TreeStudioAPIs/Get_Last_Ten_Announcement_List/', {
+                method: 'GET'
+			}).then(function(response) {
+				return response.json();
 			})
 			.then(function(myJson) {
-				// console.log(myJson['dag_list'])
-				Vue_AirflowView.dagIDList = myJson['dag_list']
-			});
-		},
-	},
-
-	mounted: function(){
-		this.updateDAGIDtList()
-	},
-})
-
-var Vue_AirjobView =  new Vue({
-	el: '#airjob-view',
-	data: {
-		massage: '030',
-		dagIDList : [],
-		projectList: [],
-		airjobURL: airjobURL,
-	},
-	computed: {
-		dagJobNum(){
-			dagJobNum = 0
-			for (S_dagId of this.dagIDList){
-				for (projectName of this.projectList) {
-					if (S_dagId.indexOf(projectName+'_') == 0){
-						dagJobNum = dagJobNum + 1
-						break
-					}
+				for (let item of myJson['data']){
+					item.created = (new Date(item.created)).format('Y-MM-dd hh:mm:ss')
+					item.last_modify_date = (new Date(item.last_modify_date)).format('Y-MM-dd hh:mm:ss')
 				}
-			}
 
-			return dagJobNum
-		},
-	},
-	methods:{
-		updateDAGIDtList(){
-			fetch(this.airjobURL + 'AirFlowUploadWeb/GetAllDAGIDList/')
-			.then(function(response) {
-				return response.json()
-			})
-			.then(function(myJson) {
-				// console.log(myJson['dag_list'])
-				Vue_AirjobView.dagIDList = myJson['dag_list']
+
+                Vue_homeAnnouncementWindow.tableInfoList = myJson['data']
+                Vue_homeAnnouncementWindow.announcementListUpdating = false
 			});
 		},
 
-		updateProjectList(){
-			fetch(this.airjobURL + 'AirFlowUploadWeb/API/v1/GetAllProjectList/')
-			.then(function(response) {
-				return response.json()
-			})
-			.then(function(myJson) {
-				// console.log(myJson)
-				Vue_AirjobView.projectList = myJson['ProjectList']
-			});
+		OpenAnnouncementDetailWindow(S_id){
+			Vue_mainToolBox.changePage({},'AnnouncementList')
+			Vue_announcementListManager.openInfoWindow(S_id)
+		},
+
+		OpenAnnouncementListWindow(){
+			Vue_mainToolBox.changePage({},'AnnouncementList')
 		},
 	},
 
 	mounted: function(){
-		this.updateProjectList()
-		this.updateDAGIDtList()
+		this.updateTableInfoList()
 	},
 })
-
 
 var Vue_YesterdayFailList = new Vue({
 	el: '#yesterday-fail-list-window',
@@ -165,9 +207,44 @@ var Vue_YesterdayFailList = new Vue({
 		projectChosed: '',
 		projectList: [],
 		airjobURL: airjobURL,
+        title_filter: {
+            DAG_ID : {
+                'filter_str': '',
+                'open': false,
+                'show_name': '排程ID',
+            },
+            owner : {
+                'filter_str': '',
+                'open': false,
+                'show_name': 'Owner',
+            },
+            scheduleString : {
+                'filter_str': '',
+                'open': false,
+                'show_name': '排程時間',
+            },
+            failTime : {
+                'filter_str': '',
+                'open': false,
+                'show_name': '最後失敗執行時間',
+            },
+        },
+		sortBy : '',
+		sortValue: 1,
 	},
   
 	computed: {
+		allFailCount(){
+			var failListAll = {}
+			for (let S_projectKey of Object.keys(this.failList)){
+				Object.assign(failListAll, this.failList[S_projectKey])
+				if (this.failList[S_projectKey]=='Loading'){
+					return 0
+				}
+			}
+			return Object.keys(failListAll).length
+		},
+
 		failListAll(){
 			var failListAll = {}
 			for (let S_projectKey of Object.keys(this.failList)){
@@ -175,9 +252,75 @@ var Vue_YesterdayFailList = new Vue({
 				if (this.failList[S_projectKey]=='Loading'){
 					return 'Loading'
 				}
-
 			}
-			// return 'Loading'
+
+            if (this.sortBy != ""){
+				if (this.sortBy != 'failTime'){
+					var sortedList = {}
+					var sortByList = []
+					for (let S_dagId of Object.keys(failListAll)){
+						sortByList.push([failListAll[S_dagId][this.sortBy],failListAll[S_dagId]])
+					}
+					
+					sortByList.sort()
+	
+					if (this.sortValue == -1){
+						sortByList.reverse()
+					}
+					
+					for (let itemInfo_after of sortByList){
+						sortedList[itemInfo_after[1]['DAG_ID']] = itemInfo_after[1]
+					}
+					failListAll = sortedList
+				}
+				else {
+					var sortedList = {}
+					var sortByList = []
+					for (let S_dagId of Object.keys(failListAll)){
+						sortByList.push([failListAll[S_dagId].LastFail.start_date,failListAll[S_dagId]])
+					}
+					
+					sortByList.sort()
+	
+					if (this.sortValue == -1){
+						sortByList.reverse()
+					}
+					
+					for (let itemInfo_after of sortByList){
+						sortedList[itemInfo_after[1]['DAG_ID']] = itemInfo_after[1]
+					}
+					failListAll = sortedList
+				}
+            } 
+
+
+
+
+            for (let S_titleChose of Object.keys(this.title_filter)){
+                if (this.title_filter[S_titleChose].filter_str.trim()==""){
+                    continue
+                }
+                else {
+					if (S_titleChose != 'failTime'){
+						afterTitleFilterList_chose = {}
+						for (let S_datID of Object.keys(failListAll)){
+							if (failListAll[S_datID][S_titleChose].indexOf(this.title_filter[S_titleChose].filter_str.trim())!= -1){
+								afterTitleFilterList_chose[S_datID] = failListAll[S_datID]
+							}
+						}
+						failListAll = afterTitleFilterList_chose
+					} else {
+						afterTitleFilterList_chose = {}
+						for (let S_datID of Object.keys(failListAll)){
+							S_dateStr = new Date(failListAll[S_datID].LastFail.start_date).format('(w) yyyy-MM-dd hh:mm:ss')
+							if (S_dateStr.indexOf(this.title_filter[S_titleChose].filter_str.trim())!= -1){
+								afterTitleFilterList_chose[S_datID] = failListAll[S_datID]
+							}
+						}
+						failListAll = afterTitleFilterList_chose
+					}
+                }
+            }
 			return failListAll
 		},
 	},
@@ -185,10 +328,19 @@ var Vue_YesterdayFailList = new Vue({
 	methods: {
 		updateAllFailList(L_projectList){
 			for (S_project of L_projectList){
-				console.log(S_project)
+				//console.log(S_project)
 				this.updateFailListByProjectID(S_project)
 			}
 		},
+
+        sortByBtmChose(sortByStr){
+            if (this.sortBy == sortByStr){
+                this.sortValue = this.sortValue * -1
+            } else {
+                this.sortValue = 1
+            }
+            this.sortBy = sortByStr
+        },
 
 		updateFailListByProjectID(S_project){
 			Vue.set(
@@ -197,18 +349,17 @@ var Vue_YesterdayFailList = new Vue({
 				'Loading'
 			)
 
-			fetch(this.airjobURL + 'AirFlowUploadWeb/API/v1/'+S_project+'/GetYesterdayFailTaskList_v1/')
+			fetch(this.airjobURL + 'AirFlowUploadWeb/API/v1/'+S_project+'/Get7DayFailTaskList/')
 			.then(function(response) {
 				return response.json()
 			})
 			.then(function(myJson) {
-				console.log(myJson)
+				//console.log(myJson)
 				Vue.set(
 					Vue_YesterdayFailList.failList,
 					S_project,
 					myJson['info']
 				)
-				// Vue_YesterdayFailList.failList[S_project] = myJson['info']
 			});
 		},
 
@@ -240,60 +391,56 @@ var Vue_TableUpdate = new Vue({
 	},
   
 	computed: {
-		
+		last50TableInfoList(){
+			var last50Table = []
+			for (D_tableInfo of this.tableInfoList){
+				if (D_tableInfo.latest_updatetime == ""){
+					continue
+				}
+				last50Table.push(D_tableInfo)
+				if (last50Table.length >= 11 ){
+					break
+				}
+			}
+			return last50Table
+		},
+
+		updateOn2WeekNumber(){
+			var targetDate = new Date(new Date().getTime() - (14 * 24 * 60 * 60 * 1000));
+			var returnNum = 0
+			for (D_tableInfo of this.tableInfoList){
+				if (targetDate <= Date.parse(D_tableInfo.latest_updatetime)){
+					returnNum = returnNum + 1
+				}
+			}
+			return returnNum
+		},
 	},
   
 	methods: {
 		updateTableInfoList(){
-			var newData = []
-			// for (test in [...Array(6)).keys()]){
-			// 	newData.push(
-			// 		{
-			// 			'Name': 'TableName文字_'+test,
-			// 			'UpdateDateTime': "時間文字_"+test,
-			// 			'UpdateFrequency' : '雙週',
-			// 		}
-			// 	)
-			// }
-			newData.push(
-				{
-					'Name': 'DTAAB001',
-					'UpdateDateTime': "2021-09-28 14:00:00",
-					'UpdateFrequency' : '雙週',
-				}
-			)
-			newData.push(
-				{
-					'Name': 'DTAAB002',
-					'UpdateDateTime': "2021-09-28 14:00:00",
-					'UpdateFrequency' : '雙週',
-				}
-			)
-			newData.push(
-				{
-					'Name': 'DTAAB110',
-					'UpdateDateTime': "2021-09-28 14:00:00",
-					'UpdateFrequency' : '雙週',
-				}
-			)
-			newData.push(
-				{
-					'Name': 'DTAAB222',
-					'UpdateDateTime': "2021-09-28 14:00:00",
-					'UpdateFrequency' : '雙週',
-				}
-			)
-			newData.push(
-				{
-					'Name': 'DTAAB330',
-					'UpdateDateTime': "2021-09-29 14:00:00",
-					'UpdateFrequency' : '雙週',
-				}
-			)
+			fetch(hive_table_status_URL)
+			.then(function(response) {
+				return response.json()
+			})
+			.then(function(myJson) {
+				myJson.sort(function(a, b) {
+					var datetimeA = a.latest_updatetime
+					var datetimeB = b.latest_updatetime
+					if (datetimeA < datetimeB) {
+					  return 1;
+					}
+					if (datetimeA > datetimeB) {
+					  return -1;
+					}
+					return 0;
+				  });
+                Vue_TableUpdate.tableInfoList = myJson
+			});
+		},
 
-
-
-			this.tableInfoList = newData
+		openHiveSearchPage(){
+			Vue_mainToolBox.changePage({},'HAP_Table')
 		},
 	},
 

@@ -1,14 +1,10 @@
-#hap-jupyter-window {
-    margin: .5rem 2.5rem;
-}
-
 #hap-jupyter-project-list-window, 
 #hap-jupyter-customer-list-window{
-    box-shadow: 0 0 1px rgb(0 0 0 / 13%), 0 1px 3px rgb(0 0 0 / 20%);
+    /* box-shadow: 0 0 1px rgb(0 0 0 / 13%), 0 1px 3px rgb(0 0 0 / 20%);
     padding: .75rem 1.25rem;
     background-color: #fff;
     display: flex;
-    margin-bottom: 1.75rem;
+    margin-bottom: 1.75rem; */
 }
 
 .customer-jupyter-active-list {
@@ -24,6 +20,7 @@
     font-weight: 400;
     color: #212529;
     text-align: center;
+    justify-content: center;
     vertical-align: middle;
     -webkit-user-select: none;
     -moz-user-select: none;
@@ -44,74 +41,6 @@
     
 }
 
-#hap-jupyter-window .btn-active {
-    color: #fff;
-    background-color: #007bff;
-    border-color: #007bff;
-    box-shadow: none;
-}
-
-#hap-jupyter-window .btn-active:hover {
-    color: #fff;
-    background-color: #0069d9;
-    border-color: #0062cc;
-    box-shadow: none;
-}
-
-#hap-jupyter-window .btn-info {
-    color: #fff;
-    background-color: #48a2b9;
-    border-color: #48a2b9;
-    box-shadow: none;
-}
-
-#hap-jupyter-window .btn-info:hover {
-    color: #fff;
-    background-color: #138496;
-    border-color: #117a8b;
-}
-
-#hap-jupyter-window .btn-close {
-    color: #fff;
-    background-color: #dc3545;
-    border-color: #dc3545;
-    box-shadow: none;
-}
-
-#hap-jupyter-window .btn-close:hover {
-    color: #fff;
-    background-color: #e87b86;
-    border-color: #e87b86;
-    box-shadow: none;
-}
-
-#hap-jupyter-window .btn-open {
-    color: #fff;
-    background-color: #28a745;
-    border-color: #28a745;
-    box-shadow: none;
-}
-
-#hap-jupyter-window .btn-open:hover {
-    color: #fff;
-    background-color: #73c686;
-    border-color: #73c686;
-    box-shadow: none;
-}
-
-#hap-jupyter-window .btn-update {
-    color: #333;
-    background-color: #eee;
-    border-color: #adb5bd;
-    box-shadow: none;
-}
-
-#hap-jupyter-window .btn-update:hover {
-    color: #333;
-    background-color: #aaa;
-    border-color: #adb5bd;
-    box-shadow: none;
-}
 
 .juypter-infomation{
     display: none;

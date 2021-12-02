@@ -1,8 +1,3 @@
-#hap-jupyter-ctrl-window {
-    margin: .5rem 2.5rem;
-}
-
-
 .customer-jupyter-active-list {
     display: flex;
     justify-content: center;
@@ -10,6 +5,7 @@
 
 .hap-jupyter-btn {
     cursor: pointer;
+    justify-content: center;
     text-decoration:none;
     margin-right: .5rem;
     display: flex;
@@ -30,88 +26,6 @@
     transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
 }
 
-#hap-jupyter-ctrl-window .hap-jupyter-btn i {
-    line-height: 1.5;
-    margin: 0 .3rem;
-    
-}
-
-#hap-jupyter-ctrl-window .btn-active {
-    color: #fff;
-    background-color: #007bff;
-    border-color: #007bff;
-    box-shadow: none;
-}
-
-#hap-jupyter-ctrl-window .btn-active:hover {
-    color: #fff;
-    background-color: #0069d9;
-    border-color: #0062cc;
-    box-shadow: none;
-}
-
-#hap-jupyter-ctrl-window .btn-update {
-    color: #333;
-    background-color: #eee;
-    border-color: #adb5bd;
-    box-shadow: none;
-}
-
-#hap-jupyter-ctrl-window .btn-update:hover {
-    color: #333;
-    background-color: #7b8186;
-    border-color: #7b8186;
-    box-shadow: none;
-}
-
-#hap-jupyter-ctrl-window .btn-notwork {
-    color: #fff;
-    background-color: #adb5bd;
-    border-color: #adb5bd;
-    box-shadow: none;
-}
-
-
-#hap-jupyter-ctrl-window .btn-info {
-    color: #fff;
-    background-color: #48a2b9;
-    border-color: #48a2b9;
-    box-shadow: none;
-}
-
-#hap-jupyter-ctrl-window .btn-info:hover {
-    color: #fff;
-    background-color: #138496;
-    border-color: #117a8b;
-}
-
-#hap-jupyter-ctrl-window .btn-close {
-    color: #fff;
-    background-color: #dc3545;
-    border-color: #dc3545;
-    box-shadow: none;
-}
-
-#hap-jupyter-ctrl-window .btn-close:hover {
-    color: #fff;
-    background-color: #e87b86;
-    border-color: #e87b86;
-    box-shadow: none;
-}
-
-#hap-jupyter-ctrl-window .btn-open {
-    color: #fff;
-    background-color: #28a745;
-    border-color: #28a745;
-    box-shadow: none;
-}
-
-#hap-jupyter-ctrl-window .btn-open:hover {
-    color: #fff;
-    background-color: #73c686;
-    border-color: #73c686;
-    box-shadow: none;
-}
 
 .juypter-infomation{
     display: none;
@@ -242,19 +156,15 @@
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     grid-column-gap: 10px;
-    grid-row-gap: 1em;
-    margin-right: -7.5px;
-    margin-left: -7.5px;
 }
 
 .hap-jupyter-customer-ctrl-inputlabel {
-    font-size: 1.25rem;
     position: relative;
     margin-bottom: .5rem;
 }
 
 .hap-jupyter-customer-ctrl-inputlabel * {
-    height: 2rem;
+    height: 1.5rem;
     width: 100%;
 }
 
@@ -266,7 +176,8 @@
 
 .hap-jupyter-customer-ctrl-input {
     margin: 0;
-    width: calc( 100% - 4px);
+    width: calc( 100% - 8px);
+    height: 1.5rem;
 }
 
 #hap-jupyter-customer-ctrl-submit-btn {
@@ -346,3 +257,4 @@
 .pop-window-info-box-open ~.pop-window-background {
     opacity: 1;
 }
+

@@ -10,13 +10,18 @@ var Vue_mainToolBox =  new Vue({
                 'Type': 'Home',
                 'icon': 'fas fa-home',
             },
+            'AnnouncementList': {
+                'Name': '公告列表',
+                'Type': 'Page',
+                'icon': 'fas fa-bullhorn',
+            },
             'HAP_Hue': {
                 'Name': 'HAP Hue',
                 'Type': 'URL',
-                'URL': '123',
+                'URL': HueURL,
                 'icon': 'fas fa-poll',
                 'title': 'HAP Hue',
-                'content': 'HAP Hue介紹',
+                'content': 'Hue為Hadoop的HAP環境中，進行資料探索的工具，若想獲得詳細資訊，請至Wiki搜尋 "Hue"',
             },
             'HAP_Jupyter': {
                 'Name': 'HAP Jupyter',
@@ -33,28 +38,28 @@ var Vue_mainToolBox =  new Vue({
                 // 'svg': 'http://34.135.113.78:9000/static/dist/img/AirflowIcon-white-30-rotate-new.svg',
                 'List': [
                     {
-                        'Name': '9h000',
+                        'Name': '數據經營部',
                         'Type': 'URL',
-                        'URL': airjobURL + 'AirFlowUploadWeb/testHTML/9h000/',
+                        'URL': airjobURL + 'AIRJOB/9h000/',
                         'icon': 'far fa-circle',
-                        'title': 'AIRJOB: 9h000',
-                        'content': '自主排程系統',
+                        'title': 'AIRJOB: 數據經營部',
+                        'content': 'AIRJOB為以Airflow為底層延伸設計的自主排程系統。',
                     },
                     {
-                        'Name': '9h001',
+                        'Name': '客戶智能科',
                         'Type': 'URL',
-                        'URL': airjobURL + 'AirFlowUploadWeb/testHTML/9h001/',
+                        'URL': airjobURL + 'AIRJOB/9h001/',
                         'icon': 'far fa-circle',
-                        'title': 'AIRJOB: 9h001',
-                        'content': '自主排程系統',
+                        'title': 'AIRJOB: 客戶智能科',
+                        'content': 'AIRJOB為以Airflow為底層延伸設計的自主排程系統。',
                     },
                     {
-                        'Name': '9h002',
+                        'Name': '商業智能科',
                         'Type': 'URL',
-                        'URL': airjobURL + 'AirFlowUploadWeb/testHTML/9h002/',
+                        'URL': airjobURL + 'AIRJOB/9h002/',
                         'icon': 'far fa-circle',
-                        'title': 'AIRJOB: 9h002',
-                        'content': '自主排程系統',
+                        'title': 'AIRJOB: 商業智能科',
+                        'content': 'AIRJOB為以Airflow為底層延伸設計的自主排程系統。',
                     },
                 ]
             },
@@ -66,10 +71,10 @@ var Vue_mainToolBox =  new Vue({
             'HAP_Yarn': {
                 'Name': 'HAP Yarn 系統',
                 'Type': 'URL',
-                'URL': '123',
+                'URL': YarnURL,
                 'icon': 'fas fa-tachometer-alt',
                 'title': 'HAP Yarn 系統',
-                'content': 'HAP Yarn 系統介紹',
+                'content': 'HAP Yarn 系統',
             },
             
         },
@@ -118,7 +123,20 @@ var Vue_mainToolBox =  new Vue({
                 let element = document.getElementById("hap-jupyter-ctrl-window");
                 element.style.display = 'none';
             } 
-
+            if (S_page == 'System.公告管理系統'){
+                let element = document.getElementById("hap-announcement-manage-window");
+                element.style.display = '';
+            } else {
+                let element = document.getElementById("hap-announcement-manage-window");
+                element.style.display = 'none';
+            } 
+            if (S_page == 'AnnouncementList'){
+                let element = document.getElementById("hap-announcement-list-window");
+                element.style.display = '';
+            } else {
+                let element = document.getElementById("hap-announcement-list-window");
+                element.style.display = 'none';
+            } 
 
             if (labelItem.Type == 'URL'){
                 let element = document.getElementById("url-description-window");
@@ -146,12 +164,12 @@ var Vue_mainToolBox =  new Vue({
 				D_paras[pair[0]] = pair[1]
 			}
 			this.urlParas = D_paras
-			console.log(this.urlParas)
+			//console.log(this.urlParas)
 			this.actionByUrlParas()
 		},
 
 		actionByUrlParas(){
-			if (this.urlParas['au4au4'] == 'u04d93u.4gj84u.4dj4'){
+			if (this.urlParas['user'] == 'admin'){
                 Vue.set(
                     this.D_labelList,
                     'System',
@@ -168,14 +186,11 @@ var Vue_mainToolBox =  new Vue({
                                 'Type': 'Page',
                                 'icon': 'far fa-circle',
                             },
-                            // {
-                            //     'Name': 'Exp Airflow',
-                            //     'Type': 'URL',
-                            //     'URL': '123',
-                            //     'icon': 'far fa-circle',
-                            //     'title': 'Exp Airflow',
-                            //     'content': 'Exp Airflow介紹',
-                            // },
+                            {
+                                'Name': '公告管理系統',
+                                'Type': 'Page',
+                                'icon': 'far fa-circle',
+                            },
                         ],
                     }
                 )
@@ -189,7 +204,7 @@ var Vue_mainToolBox =  new Vue({
                         this.changePage({}, "Home")
                     }
                     else {
-                        console.log(this.D_labelList[S_pageName])
+                        ////console.log(this.D_labelList[S_pageName])
                         this.changePage(this.D_labelList[S_pageName], S_pageName)
                     }
 
@@ -205,7 +220,7 @@ var Vue_mainToolBox =  new Vue({
                             this.changePage({}, "Home")
                         }
                         else {
-                            console.log(S_pageName,'->',S_listName)
+                            ////console.log(S_pageName,'->',S_listName)
                             this.D_labelList[S_pageName].opened = true
                             for (listItem of this.D_labelList[S_pageName].List){
                                 if (listItem.Name == S_listName){
@@ -217,26 +232,14 @@ var Vue_mainToolBox =  new Vue({
 
 
                 }
-
-
-                // if (this.D_labelList[S_pageName] == undefined) {
-                //     this.changePage({}, "Home")
-                // }
-
-                // else if (this.D_labelList[S_pageName].Type == 'List'){
-                //     let S_listName = this.urlParas['list']
-                //     if (this.D_labelList[S_pageName][S_listName].Type != undefined ){
-                //         this.changePage(this.D_labelList[S_pageName][S_listName], S_listName)
-                //     }
-                // }
-                // else if (["Home", "URL", "Page"].indexOf(this.D_labelList[S_pageName].Type)!=-1){
-                //     console.log(this.D_labelList[S_pageName])
-                //     this.changePage(this.D_labelList[S_pageName], S_pageName)
-                // }
-                // else {
-                //     this.changePage({}, "Home")
-                // }
+                else {
+                    this.changePage({}, "Home")
+                }
 			}
+            else {
+                this.changePage({}, "Home")
+            }
+
 		},
 
         calcListItemHeight(){

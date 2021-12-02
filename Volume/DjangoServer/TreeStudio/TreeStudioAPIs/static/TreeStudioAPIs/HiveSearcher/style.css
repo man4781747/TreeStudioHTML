@@ -1,35 +1,29 @@
-#hive-searcher {
-    background-color: #f5f7fa;
-    padding: 0rem 4rem;
-    margin-bottom: 26px;
-}
-
 #hive-table-body{
     overflow: auto;
     border: 1px#d1d0d0 solid;
 }
 
-#hive-searcher .search-bar {
+.search-bar {
     display: flex;
     border-radius: .5rem;
     border: 2px #e3e4e5 solid;
     overflow: hidden;
 }
 
-#hive-searcher .search-bar * {
-    font-size: 2rem;
-    height: 2rem;
-    line-height: 2rem;
+.search-bar * {
+    font-size: 1.1rem;
+    height: 1.1rem;
+    line-height: 1.1rem;
     padding: .5rem;
 }
 
-#hive-searcher .search-bar input {
-    width: 85vw;
+.search-bar input {
+    width: 40vw;
     outline:none;
     border: 0;
 }
 
-#hive-searcher .search-bar i {
+.search-bar i {
     border-left: 2px #e3e4e5 solid;
 }
 
@@ -53,7 +47,7 @@
     transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
 }
 
-#hive-table-view {
+/* #hive-table-view {
     border-collapse: collapse;
     width: 100%;
 }
@@ -72,7 +66,7 @@
 #hive-table-view tbody td{
     padding: .4rem .75rem;
     border: 1px #d1d0d0 solid;
-}
+} */
 
 #hive-table-header {
     padding: .4rem .75rem;
@@ -83,15 +77,15 @@
     justify-content: space-between;
 }
 
-#hive-searcher .page-choser {
+.page-choser {
     display: flex;
     border-radius: .35rem;
     overflow: hidden;
     border: 1px #d1d0d0 solid;
 }
 
-#hive-searcher .page-chose-btn {
-    margin: 0.5px;
+.page-chose-btn {
+    /* margin: 0.5px; */
     cursor: pointer; 
     display: inline-block;
     font-weight: 400;
@@ -109,32 +103,55 @@
     transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
 }
 
-#hive-searcher .page-chose-btn:hover,
-#hive-searcher .page-chose-btn-chosed{
+.page-chose-btn:hover,
+.page-chose-btn-chosed{
     color: #0056b3 ;
     text-decoration: none ;
     background-color: #8fc7ff ;
-    border-color: #dee2e6 ;
+    border-color: #0056b3;
 }
 
-#hive-searcher .page-chose-btn-noactive {
+.page-chose-btn-noactive {
     color: #dee2e6 !important;
     text-decoration: none !important;
-    background-color: #e9ecef !important;
     border-color: #dee2e6 !important;
+    background-color: unset !important;
 }
 
-#hive-searcher .hive-table-header-item {
+.hive-table-header-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     position: relative;
-    padding-left: 1rem;
-    padding-right: 1rem;
-    white-space: nowrap;
-    height: 1.2rem;
-    line-height: 1.2rem;
 }
 
-#hive-searcher .hive-table-header-item i{
-    position: absolute;
-    left: 0px;
-    line-height: 1.2rem;
+.hive-table-title-and-filter{
+    display: flex;
+    align-items: center;
+    position: relative;
+    margin-right: 0.2rem;
+}
+
+.hive-table-title-and-filter .fa-filter{
+    font-size: .9rem;
+    margin-right: .2rem;
+    color: rgb(153, 153, 153);
+}
+
+.hive-table-title-and-filter .fa-filter:hover{
+    color: var(--title-green);
+}
+
+.btn-update {
+    color: #333;
+    background-color: #eee;
+    border-color: #adb5bd;
+    box-shadow: none;
+}
+
+#hive-searcher .btn-update:hover {
+    color: #333;
+    background-color: #7b8186;
+    border-color: #7b8186;
+    box-shadow: none;
 }

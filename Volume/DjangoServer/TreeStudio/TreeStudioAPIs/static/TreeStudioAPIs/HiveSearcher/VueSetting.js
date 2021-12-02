@@ -5,11 +5,53 @@ var Vue_HiveSearcher = new Vue({
         tableInfoList : [],
         pageChose : 0,
         pageListChose : 0,
-        pageMaxNum : 20,
+        pageMaxNum : 100,
         filterStr: '',
         filterStr_: '',
         sortBy: '',
         sortValue: 1,
+        title_filter: {
+            index : {
+                'filter_str': '',
+                'open': false,
+                'show_name': '#',
+            },
+            table_name : {
+                'filter_str': '',
+                'open': false,
+                'show_name': 'Table Name',
+            },
+            table_name_ch : {
+                'filter_str': '',
+                'open': false,
+                'show_name': '中文名稱',
+            },
+            resource_database : {
+                'filter_str': '',
+                'open': false,
+                'show_name': '資料庫',
+            },
+            latest_updatetime : {
+                'filter_str': '',
+                'open': false,
+                'show_name': '最後更新時間',
+            },
+            table_status : {
+                'filter_str': '',
+                'open': false,
+                'show_name': '更新狀況',
+            },
+            etl_freq : {
+                'filter_str': '',
+                'open': false,
+                'show_name': '更新頻率',
+            },
+            init_updatetime : {
+                'filter_str': '',
+                'open': false,
+                'show_name': '上架時間',
+            },
+        },
 	},
   
 	computed: {
@@ -37,8 +79,15 @@ var Vue_HiveSearcher = new Vue({
                 for (let itemInfo of this.tableInfoList){
                     sortByList.push([itemInfo[this.sortBy],itemInfo])
                 }
+                
+                if (this.sortBy == 'index'){
+                    sortByList.sort(function(a, b) {
+                        return a - b;
+                      });
+                } else {
+                    sortByList.sort()
+                }
 
-                sortByList.sort()
                 if (this.sortValue == -1){
                     sortByList.reverse()
                 }
@@ -49,14 +98,32 @@ var Vue_HiveSearcher = new Vue({
                 afterSortList = this.tableInfoList
             }
 
+            var afterTitleFilterList = afterSortList
+            for (let S_titleChose of Object.keys(this.title_filter)){
+                if (this.title_filter[S_titleChose].filter_str.trim()==""){
+                    continue
+                }
+                else {
+                    afterTitleFilterList_chose = []
+                    for (let itemInfo of afterTitleFilterList){
+                        if (itemInfo[S_titleChose].indexOf(this.title_filter[S_titleChose].filter_str.trim())!= -1){
+                            afterTitleFilterList_chose.push(itemInfo)
+                        }
+                    }
+                    afterTitleFilterList = afterTitleFilterList_chose
+                }
+            }
+
+
+
 
             var afterFilterList = []
             if (this.filterStr.trim()==""){
-                afterFilterList = afterSortList
+                afterFilterList = afterTitleFilterList
             } else {
-                for (let itemInfo of afterSortList){
+                for (let itemInfo of afterTitleFilterList){
                     for (key of Object.keys(itemInfo)){
-                        if (itemInfo[key].indexOf(this.filterStr.trim())!= -1){
+                        if ((''+itemInfo[key]).indexOf(this.filterStr.trim())!= -1){
                             afterFilterList.push(itemInfo)
                             break
                         }
@@ -77,6 +144,21 @@ var Vue_HiveSearcher = new Vue({
             return tableData
         },
 
+        tableRawNum(){
+            let totalCount = 0
+            for (L_pageList of this.tableData){
+                totalCount = totalCount + L_pageList.length
+            }
+            return totalCount
+        },
+
+        tablePageNum(){
+            let totalCount = 0
+            for (L_pageList of this.pageList){
+                totalCount = totalCount + L_pageList.length
+            }
+            return totalCount
+        },
 	},
   
 	methods: {
@@ -85,33 +167,21 @@ var Vue_HiveSearcher = new Vue({
         },
 
         updateTableInfoList(){
-
-            
 			fetch(hive_table_status_URL)
 			.then(function(response) {
 				return response.json()
 			})
 			.then(function(myJson) {
+                I_index = 1
+                for (let item of myJson){
+                    item.table_name = item.table_name.toLowerCase()
+                    item.resource_database = item.resource_database.toLowerCase()
+                    item.latest_updatetime = item.latest_updatetime.replaceAll('/','-')
+                    item.index = I_index
+                    I_index = I_index +1
+                }
                 Vue_HiveSearcher.tableInfoList = myJson
 			});
-
-            // this.pageChose = 0
-            // this.pageListChose = 0
-            // var newList = []
-
-            // for (testIndex in [...Array(532).keys()]){
-            //     newList.push({
-            //         'tableName': 'TableName_' + testIndex,
-            //         'tableName_Chinese': '中文名稱_' + testIndex,
-            //         'DBNanme': 'DBNanme_' + testIndex,
-            //         'lastUpdate': 'lastUpdate_' + testIndex,
-            //         'status': (Math.random()>0.5)?'正常':'異常',
-            //         'updateFrequency': '頻率_' + testIndex,
-            //         'buildDate': '上架時間_' + testIndex,
-            //     })
-            // }
-
-            // this.tableInfoList = newList
         },
 
         sortByBtmChose(sortByStr){

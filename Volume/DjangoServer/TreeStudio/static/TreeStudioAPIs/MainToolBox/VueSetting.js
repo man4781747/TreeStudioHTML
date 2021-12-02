@@ -13,7 +13,7 @@ var Vue_mainToolBox =  new Vue({
             'HAP_Hue': {
                 'Name': 'HAP Hue',
                 'Type': 'URL',
-                'URL': '123',
+                'URL': HueURL,
                 'icon': 'fas fa-poll',
                 'title': 'HAP Hue',
                 'content': 'HAP Hue介紹',
@@ -217,12 +217,9 @@ var Vue_mainToolBox =  new Vue({
 
 
                 }
-
-
-                // if (this.D_labelList[S_pageName] == undefined) {
-                //     this.changePage({}, "Home")
-                // }
-
+                if (this.D_labelList[S_pageName] == undefined) {
+                    this.changePage({}, "Home")
+                }
                 // else if (this.D_labelList[S_pageName].Type == 'List'){
                 //     let S_listName = this.urlParas['list']
                 //     if (this.D_labelList[S_pageName][S_listName].Type != undefined ){
@@ -237,6 +234,10 @@ var Vue_mainToolBox =  new Vue({
                 //     this.changePage({}, "Home")
                 // }
 			}
+            else {
+                this.changePage({}, "Home")
+            }
+
 		},
 
         calcListItemHeight(){
