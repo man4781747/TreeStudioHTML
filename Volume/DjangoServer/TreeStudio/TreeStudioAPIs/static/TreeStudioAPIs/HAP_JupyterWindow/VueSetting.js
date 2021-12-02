@@ -131,43 +131,43 @@ var Vue_JupyterWindow =  new Vue({
                 return null
             }
 
-            // fetch(jupyterURL+":"+this.serverPortList[L_projectList[I_index]]+"/get_docker_jupyter_service")
-            // .then(function(response) {
-            //     return response.json()
-            // })
-            // .then(function(myJson) {
-            //     Vue_JupyterWindow.customerJupyterUpdateing = false
-            //     Vue_JupyterWindow.customerJupyterInfos.push(myJson)
-            // })
-            // .catch(function(){
-            //     //console.log('FetchFail')
-            //     Vue_JupyterWindow.updateCustomerJupyterInfos(I_index + 1)
-            // })
+            fetch(jupyterURL+":"+this.serverPortList[L_projectList[I_index]]+"/get_docker_jupyter_service")
+            .then(function(response) {
+                return response.json()
+            })
+            .then(function(myJson) {
+                Vue_JupyterWindow.customerJupyterUpdateing = false
+                Vue_JupyterWindow.customerJupyterInfos.push(myJson)
+            })
+            .catch(function(){
+                //console.log('FetchFail')
+                Vue_JupyterWindow.updateCustomerJupyterInfos(I_index + 1)
+            })
 
-            for (let i of [8901,8931, 8961, 111,1112,231]){
+            // for (let i of [8901,8931, 8961, 111,1112,231]){
                 
-                this.customerJupyterInfos.push(
-                    [
-                        {
-                            "context":"this is a test",
-                            "create_time":"2021/08/26 16:36:18",
-                            "driver_cores":"2",
-                            "driver_memory":"4",
-                            "executor_cores":"2",
-                            "executor_memory":"4",
-                            "max_executors":"6",
-                            "port":""+i,
-                            "project_name":"common project",
-                            "spark_name":"master",
-                            "status":"enable",
-                            "user_depart":"9h000",
-                            "user_id":"00865936",
-                            "user_name":"i9h000",
-                            "user_token":"i9h000"
-                        }
-                    ]
-                )
-            }
+            //     this.customerJupyterInfos.push(
+            //         [
+            //             {
+            //                 "context":"this is a test",
+            //                 "create_time":"2021/08/26 16:36:18",
+            //                 "driver_cores":"2",
+            //                 "driver_memory":"4",
+            //                 "executor_cores":"2",
+            //                 "executor_memory":"4",
+            //                 "max_executors":"6",
+            //                 "port":""+i,
+            //                 "project_name":"common project",
+            //                 "spark_name":"master",
+            //                 "status":"enable",
+            //                 "user_depart":"9h000",
+            //                 "user_id":"00865936",
+            //                 "user_name":"i9h000",
+            //                 "user_token":"i9h000"
+            //             }
+            //         ]
+            //     )
+            // }
             Vue_JupyterWindow.customerJupyterUpdateing = false
 
         },

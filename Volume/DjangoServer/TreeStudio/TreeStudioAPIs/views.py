@@ -98,11 +98,17 @@ def Announcement_Manager(request, id=None):
             )
             return JsonResponse({'result': 'success', 'data': {}})
         elif request.method == 'GET':
-            data=AnnouncementList.objects.order_by('-created')
-            if len(data) > 300:
-                data = data[:300]
-            returnList = [data[i].to_dict() for i in range(len(data))]
-            return JsonResponse({'result': 'success', 'data':returnList})
+            if id != None:
+                data=AnnouncementList.objects.get(id=id)
+                return JsonResponse({'result': 'success', 'data':data.to_dict()})
+            else:
+                data=AnnouncementList.objects.order_by('-created').values('id','created','who','title','last_modify_date')
+                if len(data) > 300:
+                    data = data[:300]
+                returnList = [data[i] for i in range(len(data))]
+                return JsonResponse({'result': 'success', 'data':returnList})
+
+
         elif request.method == 'DELETE':
             if id != None:
                 instance = AnnouncementList.objects.get(id=id)

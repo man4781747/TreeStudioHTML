@@ -6,7 +6,7 @@ var Vue_announcementListManager =  new Vue({
         createAnnouncement: {},
         tableInfoList: [],
         announcementListUpdating: false,
-
+        announcementInfoUpdating: false,
         infoWindowInfo: {},
 
         pageChose : 0,
@@ -138,6 +138,12 @@ var Vue_announcementListManager =  new Vue({
             return totalCount
         },
 
+        editable(){
+			if (Vue_mainToolBox.urlParas['user'] == 'admin'){
+                return true
+			}
+            return false
+        },
     },
 
     methods:{
@@ -168,11 +174,28 @@ var Vue_announcementListManager =  new Vue({
 			});
         },
 
-        openInfoWindow(infoWindowInfo){
-            this.infoWindowInfo = JSON.parse(JSON.stringify(infoWindowInfo))
+        openInfoWindow(S_idChose){
+            this.announcementInfoUpdating = true
+			fetch('/TreeStudioAPIs/Announcement_Manager/'+S_idChose+'/', {
+                method: 'GET'
+			}).then(function(response) {
+				return response.json();
+			})
+			.then(function(myJson) {
+                // console.log(myJson['data'])
+                Vue_announcementListManager.announcementInfoUpdating = false
+                myJson['data'].created = (new Date(myJson['data'].created)).format('Y-MM-dd hh:mm:ss')
+                myJson['data'].last_modify_date = (new Date(myJson['data'].last_modify_date)).format('Y-MM-dd hh:mm:ss')
+                Vue_announcementListManager.infoWindowInfo = myJson['data']
+                $("#summernote-announcement-shower").summernote('code',Vue_announcementListManager.infoWindowInfo.content);
+			});
             this.window_chose="info_window"
         },
 
+        openEditWindow(S_idChose){
+            Vue_mainToolBox.changePage(Vue_mainToolBox.D_labelList["System"], "System.公告管理系統")
+            Vue_announcementManager.openEditWindow(S_idChose)
+        },
     },
 
     created: function () {
@@ -180,6 +203,17 @@ var Vue_announcementListManager =  new Vue({
 
     mounted(){
         this.updateAnnouncementList()
+        $(document).ready(function() {
+            $("#summernote-announcement-shower").summernote({
+                placeholder: '請輸入公告內容',
+                height: 500,
+                lang: 'zh-TW',
+                toolbar: [],
+            });
+            $("#summernote-announcement-shower").summernote('disable');
+            // $("#summernote-announcement-manager-editer").summernote('code',editWindowInfo.content)
+        });
+
     },
 
     updated: function () {

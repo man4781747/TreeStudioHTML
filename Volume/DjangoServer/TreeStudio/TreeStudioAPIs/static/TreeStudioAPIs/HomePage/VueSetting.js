@@ -183,7 +183,15 @@ var Vue_homeAnnouncementWindow = new Vue({
                 Vue_homeAnnouncementWindow.tableInfoList = myJson['data']
                 Vue_homeAnnouncementWindow.announcementListUpdating = false
 			});
+		},
 
+		OpenAnnouncementDetailWindow(S_id){
+			Vue_mainToolBox.changePage({},'AnnouncementList')
+			Vue_announcementListManager.openInfoWindow(S_id)
+		},
+
+		OpenAnnouncementListWindow(){
+			Vue_mainToolBox.changePage({},'AnnouncementList')
 		},
 	},
 

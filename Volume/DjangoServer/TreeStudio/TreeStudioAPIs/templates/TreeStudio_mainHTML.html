@@ -18,6 +18,7 @@
 
     <link rel="stylesheet" href="/static/TreeStudioAPIs/Misc/style.css">
     <link rel="stylesheet" href="/static/TreeStudioAPIs/MainToolBox/style.css">
+    <link rel="stylesheet" href="/static/TreeStudioAPIs/AnnouncementListWindow/style.css">
     <link rel="stylesheet" href="/static/TreeStudioAPIs/HomePage/style.css">
     <link rel="stylesheet" href="/static/TreeStudioAPIs/HiveSearcher/style.css">
     <link rel="stylesheet" href="/static/TreeStudioAPIs/HAP_JupyterWindow/style.css">
@@ -282,19 +283,40 @@
                     <div id='announcement-list-window' class="box-card" style="height: 100%;grid-column-start: 1;grid-column-end: 3;">
                         <div class='box-card-header'>
                             <div class='box-card-title'>
-                                系統公告
+                                最新消息
                             </div>
                         </div>
                         <div class='box-card-body' style='min-height: 100px;max-height: 200px'>
-                            <p v-for="(D_info, index) in tableInfoList">
+                            <!-- <p v-for="(D_info, index) in tableInfoList">
                                 <b style='padding-right: 20px;'>{{D_info.created}}</b> 
                                 {{D_info.title}}
-                            </p>
+                            </p> -->
                             
+                            <table class="ts-table" style='width: 100%;'>
+                                <colgroup>
+                                    <col style="width: 1px;">
+                                    <col style="">
+                                </colgroup>
+                                <tbody class='n2_1_gray'>
+                                    <tr v-for="(D_info, index) in tableInfoList">
+                                        <td><div class='nowrap'>
+                                            {{(new Date(D_info.created)).format('(w) MM/dd')}}
+                                        </div></td>
+                                        <td>
+                                            <a
+                                                class='home-a-link'
+                                                @click="OpenAnnouncementDetailWindow(D_info.id)"
+                                                style='white-space: nowrap;'
+                                            >{{D_info.title}}</a>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
                         </div>
                         <div class='box-card-footer'>
                             <div></div>
-                            <a class='moreButton' @click="">More..</a>
+                            <a class='moreButton' @click="OpenAnnouncementListWindow()">More..</a>
                         </div>
                     </div>
 
@@ -616,6 +638,15 @@
                                     公告內容
                                 </div>
                             </div>
+                            <div v-if="window_chose=='info_window'" style='display: flex;'>
+                                <i class="fas fa-edit ts-btn btn-active" 
+                                    v-if="editable"
+                                    @click="openEditWindow(infoWindowInfo.id)"
+                                style="margin:0 ;margin-left: 5px;"></i>
+                                <i class="fas fa-sync-alt ts-btn btn-update" 
+                                    @click="openInfoWindow(infoWindowInfo.id)"
+                                style="margin:0 ;margin-left: 5px;"></i>
+                            </div>
                         </div>
 
                         <!-- 公告列表視窗 -->
@@ -661,6 +692,11 @@
                             </div>
                             
                             <table class='ts-table'>
+                                <colgroup>
+                                    <col style="width: 1px;white-space: nowrap;">
+                                    <col style="width: 1px;white-space: nowrap;">
+                                    <col style="">
+                                </colgroup>
                                 <thead>
                                     <tr>
                                         <th v-for='(filter_info, filter_name, filter_index) in title_filter'>
@@ -689,12 +725,15 @@
                                         </th>
                                     </tr>
                                 </thead>
-                                <tbody>
+                                <tbody class='n2_1_gray'>
                                     <tr v-for="(data, index) in tableData[pageChose]" 
                                     >
-                                        <template v-for="(info, title, index) in title_filter">
+                                        <td style='white-space: nowrap;'>{{data.created}}</td>   
+                                        <td style='white-space: nowrap;'>{{data.who}}</td>   
+                                        <td @click="openInfoWindow(data.id)" class="home-a-link">{{data.title}}</td>   
+                                        <!-- <template v-for="(info, title, index) in title_filter">
                                             <td @click="openInfoWindow(data)">{{data[title]}}</td>    
-                                        </template>
+                                        </template> -->
                                     </tr>
                                 </tbody>
                             </table>
@@ -725,34 +764,60 @@
                             </div>
                         </div>
 
-                        <!-- 公告編輯視窗 -->
+                        <!-- 公告資訊視窗 -->
                         <div class='box-card-body' v-show='window_chose=="info_window"'>
+                            <div 
+                            v-if="announcementInfoUpdating == true"
+                            style="
+                            display: flex;
+                            justify-content: center;
+                            align-items: center;
+                            position: absolute;
+                            width: 100%;
+                            height: 100%;
+                            background-color: rgba(0,0,0,.5);
+                            z-index: 800;
+                            left: 0;
+                            top: 0;font-size: 3rem;
+                            font-weight: 600;
+                            color: #efefef;">
+                                <i class="fas fa-sync-alt anima-updown-in-2-sec" style="margin-right: .5rem;"></i>
+                                更新中...
+                            </div>
+
                             <div style='margin-bottom: .5rem;'>
-                                <div class='input-group-main-title'>公告資訊</div>
+                                <div class='input-group-main-title'>公告內容 
+                                    <div class='input-group-main-sub-title'>({{infoWindowInfo.created}})</div>
+                                </div>
                                 <div class='hap-jupyter-customer-ctrl-inputlabel-list'>
                                     <div class='hap-jupyter-customer-ctrl-inputlabel'>
                                         <div class='input-titles'>
-                                            <div class='input-main-title'>你是誰</div>
+                                            <div class='input-main-title'>公告者</div>
                                             <div class='input-sub-title'></div>
                                         </div>
-                                        <input class='hap-jupyter-customer-ctrl-input' type="text" v-model.trim="infoWindowInfo.who" placeholder="你是誰?">
+                                        <input class='hap-jupyter-customer-ctrl-input disabled-input' type="text" v-model.trim="infoWindowInfo.who" placeholder="公告者" disabled>
                                     </div>
                                     <div class='hap-jupyter-customer-ctrl-inputlabel-big' style='margin-bottom: 0.5rem;'>
                                         <div class='input-titles'>
                                             <div class='input-main-title'>公告標題</div>
                                             <div class='input-sub-title'></div>
                                         </div>
-                                        <input class='hap-jupyter-customer-ctrl-input' type="text" v-model.trim="infoWindowInfo.title" placeholder="請輸入標題">
+                                        <input class='hap-jupyter-customer-ctrl-input disabled-input' type="text" v-model.trim="infoWindowInfo.title" placeholder="請輸入標題" disabled>
                                     </div>
                                     <div class='hap-jupyter-customer-ctrl-inputlabel-big'>
                                         <div class='input-titles'>
                                             <div class='input-main-title'>公告內容</div>
                                             <div class='input-sub-title'></div>
                                         </div>
-                                        <div class='hap-jupyter-customer-ctrl-input'>
-                                            <div v-html="infoWindowInfo.content"></div>
+                                        <div class='hap-jupyter-customer-ctrl-input' id="summernote-announcement-shower-up" style='height: unset;width: auto;'>
+                                            <form method="post">
+                                                <textarea id="summernote-announcement-shower" name="editordata"></textarea>
+                                            </form>
                                         </div>
                                     </div>
+                                </div>
+                                <div style='font-size: var(--sub-font-size);float:right;margin-top: 0.25rem;color: gray;'>
+                                    最後編輯於: {{infoWindowInfo.last_modify_date}}
                                 </div>
                             </div>
 
@@ -2234,87 +2299,6 @@
                     </div>
     
                     <div class="box-card">
-                        <!-- 跳出式公告編輯視窗 -->
-                        <div class='pop-window' v-if="popwindowOpen_editer">
-                            <div
-                            class="pop-window-info-box"
-                            :style="'left:'+popwindowPositionX_editer+';top:'+popwindowPositionY_editer+';'"
-                            :class="popwindowClass_editer"
-                            @click="closePopWindow()"
-                            >
-                                <div class='pop-window-info' @click.stop=""
-                                >
-                                    <div class="box-card">
-                                        <div class='box-card-body'>
-                                            <div style='margin-bottom: .5rem;'>
-                                                <div class='input-group-main-title'>公告資訊</div>
-                                                <div class='hap-jupyter-customer-ctrl-inputlabel-list'>
-                                                    <div class='hap-jupyter-customer-ctrl-inputlabel'>
-                                                        <div class='input-titles'>
-                                                            <div class='input-main-title'>你是誰</div>
-                                                            <div class='input-sub-title'></div>
-                                                        </div>
-                                                        <input class='hap-jupyter-customer-ctrl-input' type="text" v-model.trim="popwindowInfoItem_editer.who" placeholder="你是誰?">
-                                                    </div>
-                                                    <div class='hap-jupyter-customer-ctrl-inputlabel-big' style='margin-bottom: 0.5rem;'>
-                                                        <div class='input-titles'>
-                                                            <div class='input-main-title'>公告標題</div>
-                                                            <div class='input-sub-title'></div>
-                                                        </div>
-                                                        <input class='hap-jupyter-customer-ctrl-input' type="text" v-model.trim="popwindowInfoItem_editer.title" placeholder="請輸入標題">
-                                                    </div>
-                                                    <div class='hap-jupyter-customer-ctrl-inputlabel-big'>
-                                                        <div class='input-titles'>
-                                                            <div class='input-main-title'>公告內容</div>
-                                                            <div class='input-sub-title'></div>
-                                                        </div>
-                                                        <form method="post">
-                                                            <textarea :id="'summernote-announcement-manager-'+popwindowInfoItem_editer.id" name="editordata"></textarea>
-                                                        </form>
-                                                        <!-- <textarea style="width: calc( 100% - 6px);resize: vertical;min-height: 5rem;" v-model="createAnnouncement.content"></textarea> -->
-                                                    </div>
-                                                </div>
-                                            </div>
-                
-                                            <div class='hap-jupyter-customer-ctrl-inputlabel-list'>
-                                                <div class='hap-jupyter-customer-ctrl-inputlabel-big'>
-                                                    <button 
-                                                    v-if="checkCreateAnnouncementInfo.length==0"
-                                                    class='ts-btn btn-active input-submit-btn'
-                                                    @click="createNewAnnouncement()"
-                                                    >SUBMIT</button>
-                
-                                                    <div v-else>
-                                                        <button
-                                                        style="position:relative;z-index: 2;"
-                                                        class='ts-btn btn-notwork input-submit-btn'
-                                                        >
-                                                            SUBMIT
-                                                        </button>
-                                                        <div class='input-submit-btn-warning-window'>
-                                                            <ul>
-                                                                <li v-for="waringString of checkCreateAnnouncementInfo">
-                                                                    {{waringString}}
-                                                                </li>
-                                                            </ul>
-                                                        </div>
-                                                    </div>
-                
-                                                </div>
-                                            </div>
-
-
-
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div 
-                                class="top-window-alert-background pop-window-background" 
-                                @click="closePopWindow()"
-                            ></div>
-                        </div>
-
                         <!-- 公告視窗分業選擇 -->
                         <div class='box-card-header'>
                             <div style='display: flex;'>
@@ -2476,7 +2460,7 @@
                                         </template>
                                         <td>
                                             <div class='customer-jupyter-active-list'>
-                                                <div class='ts-btn btn-active' @click="openEditWindow(data)"
+                                                <div class='ts-btn btn-active' @click="openEditWindow(data.id)"
                                                     style='width: 1.5rem;'
                                                 >
                                                     <i class="fas fa-edit"></i>
@@ -2520,8 +2504,29 @@
 
                         <!-- 公告編輯視窗 -->
                         <div class='box-card-body' v-show='window_chose=="edit_window"'>
+                            <div 
+                            v-if="announcementEditUpdating == true"
+                            style="
+                            display: flex;
+                            justify-content: center;
+                            align-items: center;
+                            position: absolute;
+                            width: 100%;
+                            height: 100%;
+                            background-color: rgba(0,0,0,.5);
+                            z-index: 800;
+                            left: 0;
+                            top: 0;font-size: 3rem;
+                            font-weight: 600;
+                            color: #efefef;">
+                                <i class="fas fa-sync-alt anima-updown-in-2-sec" style="margin-right: .5rem;"></i>
+                                更新中...
+                            </div>
+
                             <div style='margin-bottom: .5rem;'>
-                                <div class='input-group-main-title'>公告資訊</div>
+                                <div class='input-group-main-title'>公告資訊
+                                    <div class='input-group-main-sub-title'>({{editWindowInfo.created}})</div>
+                                </div>
                                 <div class='hap-jupyter-customer-ctrl-inputlabel-list'>
                                     <div class='hap-jupyter-customer-ctrl-inputlabel'>
                                         <div class='input-titles'>
@@ -2574,6 +2579,10 @@
                                     </div>
 
                                 </div>
+                            </div>
+
+                            <div style='font-size: var(--sub-font-size);float:right;margin-top: 0.25rem;color: gray;'>
+                                最後編輯於: {{editWindowInfo.last_modify_date}}
                             </div>
                         </div>
 

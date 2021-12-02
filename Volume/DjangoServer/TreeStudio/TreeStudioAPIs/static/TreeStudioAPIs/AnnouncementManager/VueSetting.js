@@ -6,6 +6,7 @@ var Vue_announcementManager =  new Vue({
         createAnnouncement: {},
         tableInfoList: [],
         announcementListUpdating: false,
+        announcementEditUpdating: false,
 
         popwindowBtnKey_editer: '',
         popwindowInfoItem_editer: {},
@@ -234,30 +235,42 @@ var Vue_announcementManager =  new Vue({
 			});
         },
 
-        openEditWindow(editWindowInfo){
-            this.editWindowInfo = JSON.parse( JSON.stringify(editWindowInfo) )
-            this.window_chose="edit_window"
-            $(document).ready(function() {
-                $("#summernote-announcement-manager-editer").summernote({
-                    placeholder: '請輸入公告內容',
-                    height: 500,
-                    lang: 'zh-TW',
-                    toolbar: [
-                        ['style', ['style']],
-                        ['font', ['bold', 'underline', 'clear']],
-                        ['fontname', ['fontname']],
-                        ['color', ['color']],
-                        ['para', ['ul', 'ol', 'paragraph']],
-                        ['table', ['table']],
-                        ['insert', ['link', 'picture', 'video']],
-                        ['height', ['height']],
-                        ['view', ['codeview', 'help']],
-                    ],
+        openEditWindow(S_id){
+            this.announcementEditUpdating = true
+			fetch('/TreeStudioAPIs/Announcement_Manager/'+S_id+'/', {
+                method: 'GET'
+			}).then(function(response) {
+				return response.json();
+			})
+			.then(function(myJson) {
+                Vue_announcementManager.announcementEditUpdating = false
+                myJson['data'].created = (new Date(myJson['data'].created)).format('Y-MM-dd hh:mm:ss')
+                myJson['data'].last_modify_date = (new Date(myJson['data'].last_modify_date)).format('Y-MM-dd hh:mm:ss')
+
+                Vue_announcementManager.editWindowInfo = myJson['data']
+                Vue_announcementManager.window_chose="edit_window"
+                $(document).ready(function() {
+                    $("#summernote-announcement-manager-editer").summernote({
+                        placeholder: '請輸入公告內容',
+                        height: 500,
+                        lang: 'zh-TW',
+                        toolbar: [
+                            ['style', ['style']],
+                            ['font', ['bold', 'underline', 'clear']],
+                            ['fontname', ['fontname']],
+                            ['color', ['color']],
+                            ['para', ['ul', 'ol', 'paragraph']],
+                            ['table', ['table']],
+                            ['insert', ['link', 'picture', 'video']],
+                            ['height', ['height']],
+                            ['view', ['codeview', 'help']],
+                        ],
+                    });
+    
+    
+                    $("#summernote-announcement-manager-editer").summernote('code',Vue_announcementManager.editWindowInfo.content)
                 });
-
-
-                $("#summernote-announcement-manager-editer").summernote('code',editWindowInfo.content)
-            });
+			});
         },
 
         closePopWindow(){

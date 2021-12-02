@@ -130,6 +130,13 @@ var Vue_mainToolBox =  new Vue({
                 let element = document.getElementById("hap-announcement-manage-window");
                 element.style.display = 'none';
             } 
+            if (S_page == 'AnnouncementList'){
+                let element = document.getElementById("hap-announcement-list-window");
+                element.style.display = '';
+            } else {
+                let element = document.getElementById("hap-announcement-list-window");
+                element.style.display = 'none';
+            } 
 
             if (labelItem.Type == 'URL'){
                 let element = document.getElementById("url-description-window");
