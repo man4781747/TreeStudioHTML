@@ -212,6 +212,7 @@ var Vue_announcementManager =  new Vue({
 			})
 			.then(function(myJson) {
 				console.log(myJson);
+                v_console.success("公告新增完成")
                 Vue_announcementManager.initAnnouncementInfo()
                 Vue_announcementManager.updateAnnouncementList()
 			});
@@ -332,7 +333,8 @@ var Vue_announcementManager =  new Vue({
 				return response.json();
 			})
 			.then(function(myJson) {
-				console.log(myJson);
+				// console.log(myJson);
+                v_console.success("公告編輯成功")
                 Vue_announcementManager.window_chose = 'list_window'
                 Vue_announcementManager.updateAnnouncementList()
 			});
@@ -347,7 +349,7 @@ var Vue_announcementManager =  new Vue({
 				return response.json();
 			})
 			.then(function(myJson) {
-				console.log(myJson);
+				v_console.success("公告刪除成功")
                 Vue_announcementManager.window_chose = 'list_window'
                 Vue_announcementManager.updateAnnouncementList()
 			});

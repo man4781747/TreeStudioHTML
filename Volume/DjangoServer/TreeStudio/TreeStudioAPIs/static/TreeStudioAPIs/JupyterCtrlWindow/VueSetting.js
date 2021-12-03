@@ -146,6 +146,8 @@ var Vue_JupyterCtrlWindow =  new Vue({
         max_executors: 2,
         spark_ui: false,
 
+        delDobuleCheck: false,
+
         popwindowOpen: false,
         popwindowBtnKey: '',
         popwindowPositionX: 0,
@@ -253,44 +255,44 @@ var Vue_JupyterCtrlWindow =  new Vue({
             if (I_index >= L_projectList.length){
                 return null
             }
-            // fetch(jupyterURL+":"+this.serverPortList[L_projectList[I_index]]+"/get_docker_jupyter_service")
-            // .then(function(response) {
-            //     return response.json()
-            // })
-            // .then(function(myJson) {
-            //     Vue_JupyterCtrlWindow.customerJupyterUpdateing = false
-            //     Vue_JupyterCtrlWindow.customerJupyterInfos.push(myJson)
-            // })
-            // .catch(function(){
-            //     //console.log('FetchFail')
-            //     Vue_JupyterCtrlWindow.updateCustomerJupyterInfos(I_index + 1)
-            // })
+            fetch(jupyterURL+":"+this.serverPortList[L_projectList[I_index]]+"/get_docker_jupyter_service")
+            .then(function(response) {
+                return response.json()
+            })
+            .then(function(myJson) {
+                Vue_JupyterCtrlWindow.customerJupyterUpdateing = false
+                Vue_JupyterCtrlWindow.customerJupyterInfos.push(myJson)
+            })
+            .catch(function(){
+                //console.log('FetchFail')
+                Vue_JupyterCtrlWindow.updateCustomerJupyterInfos(I_index + 1)
+            })
 
 
-            for (let i in [1,12,2,3]){
-                this.customerJupyterUpdateing = false
-                Vue_JupyterCtrlWindow.customerJupyterInfos.push(
-                    [
-                        {
-                            "context":"this is a test",
-                            "create_time":"2021/08/26 16:36:18",
-                            "driver_cores":"2",
-                            "driver_memory":"4",
-                            "executor_cores":"2",
-                            "executor_memory":"4",
-                            "max_executors":"6",
-                            "port":"8900",
-                            "project_name":"common project",
-                            "spark_name":"master",
-                            "status":"disable",
-                            "user_depart":"i9h000",
-                            "user_id":"00865936",
-                            "user_name":"i9h000",
-                            "user_token":"i9h000"
-                        }
-                    ]
-                )
-            }
+            // for (let i in [1,12,2,3]){
+            //     this.customerJupyterUpdateing = false
+            //     Vue_JupyterCtrlWindow.customerJupyterInfos.push(
+            //         [
+            //             {
+            //                 "context":"this is a test",
+            //                 "create_time":"2021/08/26 16:36:18",
+            //                 "driver_cores":"2",
+            //                 "driver_memory":"4",
+            //                 "executor_cores":"2",
+            //                 "executor_memory":"4",
+            //                 "max_executors":"6",
+            //                 "port":"8900",
+            //                 "project_name":"common project",
+            //                 "spark_name":"master",
+            //                 "status":"disable",
+            //                 "user_depart":"i9h000",
+            //                 "user_id":"00865936",
+            //                 "user_name":"i9h000",
+            //                 "user_token":"i9h000"
+            //             }
+            //         ]
+            //     )
+            // }
         },
 
         initValues(){
@@ -412,11 +414,11 @@ var Vue_JupyterCtrlWindow =  new Vue({
         clickDeleteJupyterBtn(customerJupyterInfo){
             //console.log(customerJupyterInfo)
             this.deleteJupyterWindowOpen= true
+            this.delDobuleCheck= false
             Vue.set(
                 this,
                 'deleteJupyterWindowInfo',
                 customerJupyterInfo
-            
             )
         },
 
@@ -428,7 +430,6 @@ var Vue_JupyterCtrlWindow =  new Vue({
                 "user_id": this.deleteJupyterWindowInfo.user_id,
             }
            
-           
             fetch(url, {
                 method: 'POST',
                 body: JSON.stringify(D_postData),
@@ -438,6 +439,32 @@ var Vue_JupyterCtrlWindow =  new Vue({
             })
             .then(function(response) {
                 //console.log(response)
+                test = response
+                Vue_JupyterCtrlWindow.updateCustomerJupyterInfos()
+                Vue_JupyterCtrlWindow.deleteJupyterWindowOpen = false
+                Vue_JupyterCtrlWindow.statusDeleteStatus = ''
+                return null;
+            })
+        },
+
+        deleteJupyter_fileDel(){
+            url = jupyterURL+":"+this.serverPortList[this.deleteJupyterWindowInfo.user_depart]+"/remove_docker_jupyter_service"
+            this.statusDeleteStatus = '刪除中...'
+            D_postData = {
+                "port": this.deleteJupyterWindowInfo.port,
+                "user_id": this.deleteJupyterWindowInfo.user_id,
+                "user_depart": this.deleteJupyterWindowInfo.user_depart,
+                "user_name": this.deleteJupyterWindowInfo.user_name,
+            }
+           
+            fetch(url, {
+                method: 'POST',
+                body: JSON.stringify(D_postData),
+                headers: {
+                    'content-type': 'application/json'
+                },
+            })
+            .then(function(response) {
                 test = response
                 Vue_JupyterCtrlWindow.updateCustomerJupyterInfos()
                 Vue_JupyterCtrlWindow.deleteJupyterWindowOpen = false

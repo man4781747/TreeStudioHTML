@@ -25,6 +25,7 @@
     <link rel="stylesheet" href="/static/TreeStudioAPIs/JupyterCtrlWindow/style.css">
     <link rel="stylesheet" href="/static/TreeStudioAPIs/TopMenu/style.css">
     <link rel="stylesheet" href="/static/TreeStudioAPIs/LoadingWindow/style.css">
+    <link rel="stylesheet" href="/static/TreeStudioAPIs/GlobalConsole/style.css">
 
     <script src="/static/TreeStudioAPIs/ExternalModule/animeJS/anime.min.js"></script>
 
@@ -2004,144 +2005,167 @@
                             <div>
                                 <div class='top-window-alert-window animate__animated' @click.stop="" :class="deleteJupyterWindowOpen?'animate__fadeInDown':'animate__fadeOutUp'">
                                     
-                                    <div class='top-window-alert-header'>
-                                        <p>確認要刪除此 Jupyter 環境?</p>
-                                        <i class='fas fa-times' @click='deleteJupyterWindowOpen=false'></i>
-                                    </div>
-                                    <div class='top-window-alert-body'>
-                                        <div class="box-card">
-                                            <div class='box-card-body'>
-                                                <div style='margin-bottom: .5rem;'>
-                                                    <div class='input-group-main-title'>基礎資訊</div>
-                                                    <div class='hap-jupyter-customer-ctrl-inputlabel-list'>
-                                                        <div class='hap-jupyter-customer-ctrl-inputlabel'>
-                                                            <div class='input-titles'>
-                                                                <div class='input-main-title'>部門</div>
-                                                                <div class='input-sub-title'>(與Jupyter權限有關，慎選)</div>
+                                    <template v-if="delDobuleCheck==false">
+                                        <div class='top-window-alert-header'>
+                                            <p>確認要刪除此 Jupyter 環境?</p>
+                                            <i class='fas fa-times' @click='deleteJupyterWindowOpen=false'></i>
+                                        </div>
+                                        <div class='top-window-alert-body'>
+                                            <div class="box-card">
+                                                <div class='box-card-body'>
+                                                    <div style='margin-bottom: .5rem;'>
+                                                        <div class='input-group-main-title'>基礎資訊</div>
+                                                        <div class='hap-jupyter-customer-ctrl-inputlabel-list'>
+                                                            <div class='hap-jupyter-customer-ctrl-inputlabel'>
+                                                                <div class='input-titles'>
+                                                                    <div class='input-main-title'>部門</div>
+                                                                    <div class='input-sub-title'>(與Jupyter權限有關，慎選)</div>
+                                                                </div>
+                                                                <input class='hap-jupyter-customer-ctrl-input' type="text" v-model.trim="deleteJupyterWindowInfo.user_depart" disabled>
                                                             </div>
-                                                            <input class='hap-jupyter-customer-ctrl-input' type="text" v-model.trim="deleteJupyterWindowInfo.user_depart" disabled>
-                                                        </div>
-                                                        <div class='hap-jupyter-customer-ctrl-inputlabel'>
-                                                            <div class='input-titles'>
-                                                                <div class='input-main-title'>Port</div>
-                                                                <div class='input-sub-title'></div>
+                                                            <div class='hap-jupyter-customer-ctrl-inputlabel'>
+                                                                <div class='input-titles'>
+                                                                    <div class='input-main-title'>Port</div>
+                                                                    <div class='input-sub-title'></div>
+                                                                </div>
+                                                                <input class='hap-jupyter-customer-ctrl-input' type="text" v-model.trim="deleteJupyterWindowInfo.port" disabled>
                                                             </div>
-                                                            <input class='hap-jupyter-customer-ctrl-input' type="text" v-model.trim="deleteJupyterWindowInfo.port" disabled>
-                                                        </div>
-                                                        <div class='hap-jupyter-customer-ctrl-inputlabel'>
-                                                            <div class='input-titles'>
-                                                                <div class='input-main-title'>Token</div>
-                                                                <div class='input-sub-title'>(請同時包含英文與數字，禁止中文)</div>
+                                                            <div class='hap-jupyter-customer-ctrl-inputlabel'>
+                                                                <div class='input-titles'>
+                                                                    <div class='input-main-title'>Token</div>
+                                                                    <div class='input-sub-title'>(請同時包含英文與數字，禁止中文)</div>
+                                                                </div>
+                                                                <input class='hap-jupyter-customer-ctrl-input' type="text" v-model.trim="deleteJupyterWindowInfo.user_token" disabled>
                                                             </div>
-                                                            <input class='hap-jupyter-customer-ctrl-input' type="text" v-model.trim="deleteJupyterWindowInfo.user_token" disabled>
-                                                        </div>
-                                                        <div class='hap-jupyter-customer-ctrl-inputlabel'>
-                                                            <div class='input-titles'>
-                                                                <div class='input-main-title'>專案名稱</div>
-                                                                <div class='input-sub-title'></div>
+                                                            <div class='hap-jupyter-customer-ctrl-inputlabel'>
+                                                                <div class='input-titles'>
+                                                                    <div class='input-main-title'>專案名稱</div>
+                                                                    <div class='input-sub-title'></div>
+                                                                </div>
+                                                                <input class='hap-jupyter-customer-ctrl-input' type="text" v-model.trim="deleteJupyterWindowInfo.project_name" disabled>
                                                             </div>
-                                                            <input class='hap-jupyter-customer-ctrl-input' type="text" v-model.trim="deleteJupyterWindowInfo.project_name" disabled>
-                                                        </div>
-                                                        <div class='hap-jupyter-customer-ctrl-inputlabel'>
-                                                            <div class='input-titles'>
-                                                                <div class='input-main-title'>申請人名稱</div>
-                                                                <div class='input-sub-title'></div>
+                                                            <div class='hap-jupyter-customer-ctrl-inputlabel'>
+                                                                <div class='input-titles'>
+                                                                    <div class='input-main-title'>申請人名稱</div>
+                                                                    <div class='input-sub-title'></div>
+                                                                </div>
+                                                                <input class='hap-jupyter-customer-ctrl-input' type="text" v-model.trim="deleteJupyterWindowInfo.user_name" disabled>
                                                             </div>
-                                                            <input class='hap-jupyter-customer-ctrl-input' type="text" v-model.trim="deleteJupyterWindowInfo.user_name" disabled>
-                                                        </div>
-                                                        <div class='hap-jupyter-customer-ctrl-inputlabel'>
-                                                            <div class='input-titles'>
-                                                                <div class='input-main-title'>申請人員編</div>
-                                                                <div class='input-sub-title'></div>
+                                                            <div class='hap-jupyter-customer-ctrl-inputlabel'>
+                                                                <div class='input-titles'>
+                                                                    <div class='input-main-title'>申請人員編</div>
+                                                                    <div class='input-sub-title'></div>
+                                                                </div>
+                                                                <input class='hap-jupyter-customer-ctrl-input' type="text" v-model.trim="deleteJupyterWindowInfo.user_id" disabled>
                                                             </div>
-                                                            <input class='hap-jupyter-customer-ctrl-input' type="text" v-model.trim="deleteJupyterWindowInfo.user_id" disabled>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                    
-                                                <div style='margin-bottom: .5rem;'>
-                                                    <div class='input-group-main-title'>Spark UI</div>
-                                                    <div class='hap-jupyter-customer-ctrl-inputlabel-list'>
-                                                        <div class='hap-jupyter-customer-ctrl-inputlabel'>
-                                                            <div class='input-titles'>
-                                                                <div class='input-main-title'>Spark Name</div>
-                                                                <div class='input-sub-title'></div>
-                                                            </div>
-                                                            <input class='hap-jupyter-customer-ctrl-input' type="text" v-model.trim="deleteJupyterWindowInfo.spark_name" disabled>
-                                                        </div>
-                                                        <div class='hap-jupyter-customer-ctrl-inputlabel'>
-                                                            <div class='input-titles'>
-                                                                <div class='input-main-title'>啟用Spark UI</div>
-                                                                <div class='input-sub-title'></div>
-                                                            </div>
-                                                            <input class='hap-jupyter-customer-ctrl-input' type="text" v-model.trim="deleteJupyterWindowInfo.spark_ui" disabled>
                                                         </div>
                                                     </div>
-                                                </div>
-                    
-                                                <div style='margin-bottom: .5rem;'>
-                                                    <div class='input-group-main-title'>資源分配</div>
-                                                    <div class='hap-jupyter-customer-ctrl-inputlabel-list'>
-                                                        <div class='hap-jupyter-customer-ctrl-inputlabel'>
-                                                            <div class='input-titles'>
-                                                                <div class='input-main-title'>Driver Memory</div>
-                                                                <div class='input-sub-title'>(探索機記憶體)</div>
-                                                            </div>
-                                                            <input class='hap-jupyter-customer-ctrl-input' type="text" v-model.trim="deleteJupyterWindowInfo.driver_memory" disabled>
-                                                        </div>
-                                                        <div class='hap-jupyter-customer-ctrl-inputlabel'>
-                                                            <div class='input-titles'>
-                                                                <div class='input-main-title'>Executor Memory</div>
-                                                                <div class='input-sub-title'>(運算節點記憶體數)</div>
-                                                            </div>
-                                                            <input class='hap-jupyter-customer-ctrl-input' type="text" v-model.trim="deleteJupyterWindowInfo.executor_memory" disabled>
-                                                        </div>
                         
-                        
-                                                        <div class='hap-jupyter-customer-ctrl-inputlabel'>
-                                                            <div class='input-titles'>
-                                                                <div class='input-main-title'>Driver Cores</div>
-                                                                <div class='input-sub-title'>(探索機核心數量)</div>
+                                                    <div style='margin-bottom: .5rem;'>
+                                                        <div class='input-group-main-title'>Spark UI</div>
+                                                        <div class='hap-jupyter-customer-ctrl-inputlabel-list'>
+                                                            <div class='hap-jupyter-customer-ctrl-inputlabel'>
+                                                                <div class='input-titles'>
+                                                                    <div class='input-main-title'>Spark Name</div>
+                                                                    <div class='input-sub-title'></div>
+                                                                </div>
+                                                                <input class='hap-jupyter-customer-ctrl-input' type="text" v-model.trim="deleteJupyterWindowInfo.spark_name" disabled>
                                                             </div>
-                                                            <input class='hap-jupyter-customer-ctrl-input' type="text" v-model.trim="deleteJupyterWindowInfo.driver_cores" disabled>
-                                                        </div>
-                        
-                                                        <div class='hap-jupyter-customer-ctrl-inputlabel'>
-                                                            <div class='input-titles'>
-                                                                <div class='input-main-title'>Executor Cores</div>
-                                                                <div class='input-sub-title'>(運算節點核心數量)</div>
+                                                            <div class='hap-jupyter-customer-ctrl-inputlabel'>
+                                                                <div class='input-titles'>
+                                                                    <div class='input-main-title'>啟用Spark UI</div>
+                                                                    <div class='input-sub-title'></div>
+                                                                </div>
+                                                                <input class='hap-jupyter-customer-ctrl-input' type="text" v-model.trim="deleteJupyterWindowInfo.spark_ui" disabled>
                                                             </div>
-                                                            <input class='hap-jupyter-customer-ctrl-input' type="text" v-model.trim="deleteJupyterWindowInfo.executor_cores" disabled>
-                                                        </div>
-                                                        <div class='hap-jupyter-customer-ctrl-inputlabel'>
-                                                            <div class='input-titles'>
-                                                                <div class='input-main-title'>Executor Max Quantity</div>
-                                                                <div class='input-sub-title'>(運算節點數量)</div>
-                                                            </div>
-                                                            <input class='hap-jupyter-customer-ctrl-input' type="text" v-model.trim="deleteJupyterWindowInfo.max_executors" disabled>
                                                         </div>
                                                     </div>
-                                                </div>
-                    
-                                                <div style='margin-bottom: .5rem;'>
-                                                    <div class='input-group-main-title'>其他</div>
-                                                    <div class='hap-jupyter-customer-ctrl-inputlabel-list'>
-                                                        <div class='hap-jupyter-customer-ctrl-inputlabel-big'>
-                                                            <div class='input-titles'>
-                                                                <div class='input-main-title'>註記</div>
-                                                                <div class='input-sub-title'></div>
+                        
+                                                    <div style='margin-bottom: .5rem;'>
+                                                        <div class='input-group-main-title'>資源分配</div>
+                                                        <div class='hap-jupyter-customer-ctrl-inputlabel-list'>
+                                                            <div class='hap-jupyter-customer-ctrl-inputlabel'>
+                                                                <div class='input-titles'>
+                                                                    <div class='input-main-title'>Driver Memory</div>
+                                                                    <div class='input-sub-title'>(探索機記憶體)</div>
+                                                                </div>
+                                                                <input class='hap-jupyter-customer-ctrl-input' type="text" v-model.trim="deleteJupyterWindowInfo.driver_memory" disabled>
                                                             </div>
-                                                            <textarea style="width: calc( 100% - 6px);resize: vertical;min-height: 5rem;" v-model="deleteJupyterWindowInfo.context" readonly></textarea>
+                                                            <div class='hap-jupyter-customer-ctrl-inputlabel'>
+                                                                <div class='input-titles'>
+                                                                    <div class='input-main-title'>Executor Memory</div>
+                                                                    <div class='input-sub-title'>(運算節點記憶體數)</div>
+                                                                </div>
+                                                                <input class='hap-jupyter-customer-ctrl-input' type="text" v-model.trim="deleteJupyterWindowInfo.executor_memory" disabled>
+                                                            </div>
+                            
+                            
+                                                            <div class='hap-jupyter-customer-ctrl-inputlabel'>
+                                                                <div class='input-titles'>
+                                                                    <div class='input-main-title'>Driver Cores</div>
+                                                                    <div class='input-sub-title'>(探索機核心數量)</div>
+                                                                </div>
+                                                                <input class='hap-jupyter-customer-ctrl-input' type="text" v-model.trim="deleteJupyterWindowInfo.driver_cores" disabled>
+                                                            </div>
+                            
+                                                            <div class='hap-jupyter-customer-ctrl-inputlabel'>
+                                                                <div class='input-titles'>
+                                                                    <div class='input-main-title'>Executor Cores</div>
+                                                                    <div class='input-sub-title'>(運算節點核心數量)</div>
+                                                                </div>
+                                                                <input class='hap-jupyter-customer-ctrl-input' type="text" v-model.trim="deleteJupyterWindowInfo.executor_cores" disabled>
+                                                            </div>
+                                                            <div class='hap-jupyter-customer-ctrl-inputlabel'>
+                                                                <div class='input-titles'>
+                                                                    <div class='input-main-title'>Executor Max Quantity</div>
+                                                                    <div class='input-sub-title'>(運算節點數量)</div>
+                                                                </div>
+                                                                <input class='hap-jupyter-customer-ctrl-input' type="text" v-model.trim="deleteJupyterWindowInfo.max_executors" disabled>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                        
+                                                    <div style='margin-bottom: .5rem;'>
+                                                        <div class='input-group-main-title'>其他</div>
+                                                        <div class='hap-jupyter-customer-ctrl-inputlabel-list'>
+                                                            <div class='hap-jupyter-customer-ctrl-inputlabel-big'>
+                                                                <div class='input-titles'>
+                                                                    <div class='input-main-title'>註記</div>
+                                                                    <div class='input-sub-title'></div>
+                                                                </div>
+                                                                <textarea style="width: calc( 100% - 6px);resize: vertical;min-height: 5rem;" v-model="deleteJupyterWindowInfo.context" readonly></textarea>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class='top-window-alert-footer'>
-                                        <button class="ts-btn btn-active" @click='deleteJupyterWindowOpen=false'>取消動作</button>
-                                        <button class="ts-btn btn-active" @click="deleteJupyter()">確認刪除</button>
-                                    </div>
+                                        <div class='top-window-alert-footer'>
+                                            <button class="ts-btn btn-active" @click='delDobuleCheck=false'>取消動作</button>
+                                            <div style="display: flex;">
+                                                <button class="ts-btn btn-active" @click="delDobuleCheck=true">下一頁</button>
+                                            </div>
+                                        </div>
+                                    </template>
+
+                                    <template v-if="delDobuleCheck==true">
+                                        <div class='top-window-alert-header'>
+                                            <p>檔案是否要留下?</p>
+                                            <i class='fas fa-times' @click='deleteJupyterWindowOpen=false'></i>
+                                        </div>
+                                        <div class='top-window-alert-body'>
+                                            注意!!檔案刪除動作不可回朔!!請再三確認!!
+                                        </div>
+                                        <div class='top-window-alert-footer'>
+                                            <button class="ts-btn btn-active" @click='delDobuleCheck=false'>回上一頁</button>
+
+
+                                            <div style="display: flex;">
+                                                <button class="ts-btn btn-active" @click="deleteJupyter_fileDel()">檔案"不"留下</button>
+                                                <button class="ts-btn btn-active" @click="deleteJupyter()">只刪除環境</button>
+                                            </div>
+                                        </div>
+                                    </template>
                                 </div>
                             </div>
                         </div>
@@ -2324,6 +2348,13 @@
                                     公告編輯
                                 </div>
                             </div>
+                            <div v-if="window_chose=='edit_window'" style='display: flex;'>
+                                <div class='ts-btn btn-close' @click="deleteAnnouncement(editWindowInfo)"
+                                    style='width: 1.5rem;'
+                                >
+                                    <i class="fas fa-trash-alt"></i>
+                                </div>
+                            </div>
                         </div>
 
                         <!-- 公告建立視窗 -->
@@ -2471,11 +2502,6 @@
                                                 >
                                                     <i class="fas fa-edit"></i>
                                                 </div>
-                                                <div class='ts-btn btn-close' @click="deleteAnnouncement(data)"
-                                                    style='width: 1.5rem;'
-                                                >
-                                                    <i class="fas fa-trash-alt"></i>
-                                                </div>
                                             </div>
                                         </td>    
                                     </tr>
@@ -2607,7 +2633,34 @@
 
         </div>
     </div>
+
+    <!-- v-console 視窗 -->
+    <div id='v-console-window'>
+        <div v-for="(D_console, S_uuid, index) in D_consoleList"
+            style="display: flex;justify-content: flex-end;"
+        >
+            <div class="v-console-item animate__animated" :class="D_console.style_set">
+                <div class="v-console-item-icon" :style="'border-color:'+D_console.color+';'">
+                    <div class="v-console-item-icon v-console-item-icon-delete-btn">
+                        <i class="fas fa-trash-alt v_console_del_btn" style="color: var(--dark);"
+                            @click="deleteConsole(S_uuid)"
+                        ></i>
+                    </div>
+                    <i v-if="D_console.type=='log'" class="fas fa-info-circle" :style="'color:'+D_console.color+';'"></i>
+                    <i v-else-if="D_console.type=='error'" class="far fa-times-circle" :style="'color:'+D_console.color+';'"></i>
+                    <i v-else-if="D_console.type=='warning'" class="fas fa-exclamation-triangle" :style="'color:'+D_console.color+';'"></i>
+                    <i v-else-if="D_console.type=='debug'" class="fas fa-bug" :style="'color:'+D_console.color+';'"></i>
+                    <i v-else-if="D_console.type=='success'" class="far fa-check-circle" :style="'color:'+D_console.color+';'"></i>
+                </div>
+                <div class="v-console-item-content">
+                    <div>{{D_console.content}}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </body>
+<script type="text/javascript" src="/static/TreeStudioAPIs/GlobalConsole/VueSetting.js"></script>
 <script type="text/javascript" src="/static/TreeStudioAPIs/MainToolBox/VueSetting.js"></script>
 <script type="text/javascript" src="/static/TreeStudioAPIs/HomePage/VueSetting.js"></script>
 <script type="text/javascript" src="/static/TreeStudioAPIs/AnnouncementListWindow/VueSetting.js"></script>

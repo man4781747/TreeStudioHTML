@@ -368,13 +368,16 @@ var Vue_YesterdayFailList = new Vue({
 			.then(function(response) {
 				return response.json()
 			})
+			.catch(function() {
+				v_console.error('AIRJOB列表獲得失敗',5)
+			})
 			.then(function(myJson) {
 				Vue_YesterdayFailList.projectList = myJson['ProjectList']
 				if (myJson['ProjectList'].length != 0){
 					Vue_YesterdayFailList.projectChosed = myJson['ProjectList'][0]
 				}
 				Vue_YesterdayFailList.updateAllFailList(myJson['ProjectList'])
-			});
+			}).catch();
 		},
 
 	},
@@ -420,6 +423,9 @@ var Vue_TableUpdate = new Vue({
 	methods: {
 		updateTableInfoList(){
 			fetch(hive_table_status_URL)
+			.catch(function() {
+				v_console.error('Hive Table更新資訊獲得失敗',5)
+			})
 			.then(function(response) {
 				return response.json()
 			})
