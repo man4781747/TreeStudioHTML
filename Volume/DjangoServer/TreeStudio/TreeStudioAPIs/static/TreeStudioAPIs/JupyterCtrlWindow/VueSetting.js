@@ -188,7 +188,6 @@ var Vue_JupyterCtrlWindow =  new Vue({
             if (this.L_unUsedPortList.indexOf(parseInt(this.portNum))==-1){
                 wraningList.push('請選擇Port號')
             }
-
             return wraningList
         },
 
@@ -239,7 +238,6 @@ var Vue_JupyterCtrlWindow =  new Vue({
             }
             return D_return
         },
-
 
         S_sparkName(){
             return this.portNum + '_' + this.user_name
@@ -310,6 +308,106 @@ var Vue_JupyterCtrlWindow =  new Vue({
             this.spark_name = ''
             this.max_executors = 2
             this.spark_ui = false
+        },
+
+        ifAIRJOBPort(){
+            S_port_ = "" + this.portNum
+            if (S_port_ == "8981"){
+                v_console.log("這個Port為AIRJOB 9h000專用")
+                this.portNum = S_port_
+                this.tokenStr = 'airjob_9h000'
+                this.projectName = 'AIRJOB_9h000'
+                this.user_id = '00880943'
+                this.user_name = 'AIRJOB_9h000'
+                this.user_depart = '9h000'
+                this.driver_cores = 4
+                this.executor_cores = 4
+                this.driver_memory = 4
+                this.executor_memory = 4
+                this.context = 'AIRJOB專用_9h000'
+                this.max_executors = 4
+                this.spark_ui = false
+            }
+            else if (S_port_ == "8983"){
+                v_console.log("這個Port為AIRJOB 9h001專用")
+                this.portNum = S_port_
+                this.tokenStr = 'airjob_9h001'
+                this.projectName = 'AIRJOB_9h001'
+                this.user_id = '00880943'
+                this.user_name = 'AIRJOB_9h001'
+                this.user_depart = '9h001'
+                this.driver_cores = 4
+                this.executor_cores = 4
+                this.driver_memory = 4
+                this.executor_memory = 4
+                this.context = 'AIRJOB專用_9h001'
+                this.max_executors = 4
+                this.spark_ui = false
+            }
+            else if (S_port_ == "8985"){
+                v_console.log("這個Port為AIRJOB 9h002專用")
+                this.portNum = S_port_
+                this.tokenStr = 'airjob_9h002'
+                this.projectName = 'AIRJOB_9h002'
+                this.user_id = '00880943'
+                this.user_name = 'AIRJOB_9h002'
+                this.user_depart = '9h002'
+                this.driver_cores = 4
+                this.executor_cores = 4
+                this.driver_memory = 4
+                this.executor_memory = 4
+                this.context = 'AIRJOB專用_9h002'
+                this.max_executors = 4
+                this.spark_ui = false
+            }
+            else if (S_port_ == "8901"){
+                v_console.log("這個Port為客戶智能科(預設)專用")
+                this.portNum = S_port_
+                this.tokenStr = 'i9h001'
+                this.projectName = 'defalut_9h001'
+                this.user_id = '00880943'
+                this.user_name = 'defalut_9h001'
+                this.user_depart = '9h001'
+                this.driver_cores = 4
+                this.executor_cores = 4
+                this.driver_memory = 4
+                this.executor_memory = 4
+                this.context = '客戶智能科(預設)專用'
+                this.max_executors = 4
+                this.spark_ui = true
+            }
+            else if (S_port_ == "8931"){
+                v_console.log("這個Port商業智能科(預設)專用")
+                this.portNum = S_port_
+                this.tokenStr = 'i9h002'
+                this.projectName = 'defalut_9h002'
+                this.user_id = '00880943'
+                this.user_name = 'defalut_9h002'
+                this.user_depart = '9h002'
+                this.driver_cores = 4
+                this.executor_cores = 4
+                this.driver_memory = 4
+                this.executor_memory = 4
+                this.context = '商業智能科(預設)專用'
+                this.max_executors = 4
+                this.spark_ui = true
+            }
+            else if (S_port_ == "8961"){
+                v_console.log("這個Port數據經營部(預設)專用")
+                this.portNum = S_port_
+                this.tokenStr = 'i9h000'
+                this.projectName = 'defalut_9h000'
+                this.user_id = '00880943'
+                this.user_name = 'defalut_9h000'
+                this.user_depart = '9h000'
+                this.driver_cores = 4
+                this.executor_cores = 4
+                this.driver_memory = 4
+                this.executor_memory = 4
+                this.context = '數據經營部(預設)專用'
+                this.max_executors = 4
+                this.spark_ui = true
+            }
         },
 
         clickSwitchCustomerJupyterButton(customerJupyterInfo){
@@ -502,7 +600,6 @@ var Vue_JupyterCtrlWindow =  new Vue({
                 Vue_JupyterCtrlWindow.popwindowOpen = false
             },300);
         },
-
     },
 
     created: function() {

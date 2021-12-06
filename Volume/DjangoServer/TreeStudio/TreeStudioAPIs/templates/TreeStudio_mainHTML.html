@@ -8,7 +8,6 @@
     <META HTTP-EQUIV="EXPIRES" CONTENT="0">
     <META HTTP-EQUIV="CACHE-CONTROL" CONTENT="NO-CACHE">
 
-
     <link rel="icon" href="/static/TreeStudioAPIs/HAPTreeStudio.ico" type="image/x-icon">
     <title>HAP TREE STUDIO</title>
 	<!-- 導入Vue -->
@@ -278,6 +277,7 @@
                     <i class="fas fa-file-download top-menu-btn" @click="saveAsPDF()"></i>
                 </div>
             </div>
+            
             <div id='wrapper_page' style='padding: 15px calc(1rem + 7.5px);'>
                 <div id="home-grid" v-show="Vue_mainToolBox.chosedPage == 'Home'">
                     <!-- 公告視窗 -->
@@ -528,7 +528,7 @@
                                                                     :href="airjobURL+'AIRJOB/'+dag_id.split('_')[0]+'/?Page=dagInfoView&dag_id='+dag_id+'&SheetChose=Runs_history&dag_run_id='+failInfo.LastFail.dag_run_id.replace('+','%2B')"
                                                                     style='white-space: nowrap;'
                                                                     target="_blank"
-                                                                >{{new Date(failInfo.LastFail.execution_date).format('(w) yyyy-MM-dd hh:mm:ss')}}</a>
+                                                                >{{new Date(failInfo.LastFail.start_date).format('(w) yyyy-MM-dd hh:mm:ss')}}</a>
                                                                 <!-- <div class='nowrap text-overflow-hidden'>{{new Date(failInfo.failList[0].execution_date).format('(w) yyyy-MM-dd hh:mm:ss')}}</div> -->
                                                             </td>
                                                         </tr>
@@ -1453,7 +1453,7 @@
                                             <div class='input-main-title'>Port</div>
                                             <div class='input-sub-title'></div>
                                         </div>
-                                        <select style='height: calc(1.5rem + 6px);' v-model="portNum">
+                                        <select style='height: calc(1.5rem + 6px);' v-model="portNum" @change="ifAIRJOBPort()">
                                             <option v-for="num of L_unUsedPortList">{{num}}</option>
                                         </select>
                                     </div>
@@ -2628,9 +2628,7 @@
                         <h3>{{content}}</h3>
                     </div>
                 </div>
-
             </div>
-
         </div>
     </div>
 
@@ -2658,7 +2656,6 @@
             </div>
         </div>
     </div>
-
 </body>
 <script type="text/javascript" src="/static/TreeStudioAPIs/GlobalConsole/VueSetting.js"></script>
 <script type="text/javascript" src="/static/TreeStudioAPIs/MainToolBox/VueSetting.js"></script>
