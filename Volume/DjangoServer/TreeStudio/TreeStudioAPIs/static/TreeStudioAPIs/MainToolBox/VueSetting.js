@@ -93,6 +93,12 @@ var Vue_mainToolBox =  new Vue({
             if (S_page == 'Home'){
                 let element = document.getElementById("home-grid");
                 element.style.display = '';
+                try {
+                    Vue_homeAnnouncementWindow.updateTableInfoList()
+                }
+                catch {
+                    v_console.debug('最新消息更新失敗')
+                }
             } else {
                 let element = document.getElementById("home-grid");
                 element.style.display = 'none';
@@ -133,6 +139,7 @@ var Vue_mainToolBox =  new Vue({
             if (S_page == 'AnnouncementList'){
                 let element = document.getElementById("hap-announcement-list-window");
                 element.style.display = '';
+                Vue_announcementListManager.updateAnnouncementList()
             } else {
                 let element = document.getElementById("hap-announcement-list-window");
                 element.style.display = 'none';

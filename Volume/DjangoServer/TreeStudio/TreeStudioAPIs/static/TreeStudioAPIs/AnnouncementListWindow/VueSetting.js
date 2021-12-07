@@ -25,7 +25,7 @@ var Vue_announcementListManager =  new Vue({
             who : {
                 'filter_str': '',
                 'open': false,
-                'show_name': 'who',
+                'show_name': '公告者',
             },
             title : {
                 'filter_str': '',

@@ -175,6 +175,7 @@ body{
     padding: .75rem;
     text-align: left;
     font-weight: bolder;
+    white-space: nowrap;
 }
 
 .ts-table thead th:last-child {

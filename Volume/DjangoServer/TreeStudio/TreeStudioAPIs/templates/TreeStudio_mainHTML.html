@@ -286,16 +286,11 @@
                             <div class='box-card-title'>
                                 最新消息
                             </div>
-                            <i class="fas fa-sync-alt ts-btn btn-update" style="margin: 0;"
+                            <!-- <i class="fas fa-sync-alt ts-btn btn-update" style="margin: 0;"
                                 @click="updateTableInfoList()"
-                            ></i>
+                            ></i> -->
                         </div>
                         <div class='box-card-body' style='min-height: 100px;max-height: 200px'>
-                            <!-- <p v-for="(D_info, index) in tableInfoList">
-                                <b style='padding-right: 20px;'>{{D_info.created}}</b> 
-                                {{D_info.title}}
-                            </p> -->
-                            
                             <table class="ts-table" style='width: 100%;'>
                                 <colgroup>
                                     <col style="width: 1px;">
@@ -303,15 +298,14 @@
                                 </colgroup>
                                 <tbody class='n2_1_gray'>
                                     <tr v-for="(D_info, index) in tableInfoList">
-                                        <td><div class='nowrap'>
-                                            {{(new Date(D_info.created)).format('(w) MM/dd')}}
+                                        <td style="padding: 0.4rem 0.75rem;font-weight: bolder;"><div class='nowrap'>
+                                            {{(new Date(D_info.created)).format('MM-dd')}}
                                         </div></td>
-                                        <td>
-                                            <a
-                                                class='home-a-link'
+                                        <td style='display:flex;align-items: flex-end;'>
+                                            <div style='white-space: nowrap;'>{{D_info.title}}</div>
+                                            <i class="far fa-sticky-note announcement-page-btn" 
                                                 @click="OpenAnnouncementDetailWindow(D_info.id)"
-                                                style='white-space: nowrap;'
-                                            >{{D_info.title}}</a>
+                                            ></i>
                                         </td>
                                     </tr>
                                 </tbody>
@@ -704,27 +698,28 @@
                                 <thead>
                                     <tr>
                                         <th v-for='(filter_info, filter_name, filter_index) in title_filter'>
-                                            <div class='hive-table-header-item mouse-pointer' @click="sortByBtmChose(filter_name)">
+                                            <!-- <div class='hive-table-header-item mouse-pointer' @click="sortByBtmChose(filter_name)"> -->
+                                            <div class='hive-table-header-item mouse-pointer'>
                                                 <div class='hive-table-title-and-filter'>
-                                                    <i 
+                                                    <!-- <i 
                                                         v-if="filter_name != 'id'"
                                                         class="fas fa-filter" 
                                                         @click.stop="filter_info.open=!filter_info.open"
                                                         :style="filter_info.filter_str.trim()!=''?'color:var(--loading-green);':''"
-                                                    ></i>
+                                                    ></i> -->
                                                     <div v-if='!filter_info.open'>
                                                         {{filter_info.show_name}}
                                                     </div>
-                                                    <input @click.stop v-else v-model.trim='filter_info.filter_str'>
+                                                    <!-- <input @click.stop v-else v-model.trim='filter_info.filter_str'> -->
                                                 </div>
-                                                <div style='position: relative;'>
+                                                <!-- <div style='position: relative;'>
                                                     <i class="fas fa-sort-down" style='position: absolute;right: 0;bottom: 0;' :style='"color:"+(
                                                         (sortBy==filter_name&sortValue==1)?"#000":"#999"
                                                         )+";"'></i>
                                                     <i class="fas fa-sort-up" :style='"color:"+(
                                                         (sortBy==filter_name&sortValue==-1)?"#000":"#999"
                                                         )+";"'></i>
-                                                </div>
+                                                </div> -->
                                             </div>
                                         </th>
                                     </tr>
@@ -732,7 +727,7 @@
                                 <tbody class='n2_1_gray'>
                                     <tr v-for="(data, index) in tableData[pageChose]" 
                                     >
-                                        <td style='white-space: nowrap;'>{{data.created}}</td>   
+                                        <td style='white-space: nowrap;'>{{data.created.split(' ')[0]}}</td>   
                                         <td style='white-space: nowrap;'>{{data.who}}</td>   
                                         <td @click="openInfoWindow(data.id)" class="home-a-link">{{data.title}}</td>   
                                         <!-- <template v-for="(info, title, index) in title_filter">
@@ -803,7 +798,7 @@
                                     </div>
                                     <div class='hap-jupyter-customer-ctrl-inputlabel-big' style='margin-bottom: 0.5rem;'>
                                         <div class='input-titles'>
-                                            <div class='input-main-title'>公告標題</div>
+                                            <div class='input-main-title'>標題</div>
                                             <div class='input-sub-title'></div>
                                         </div>
                                         <input class='hap-jupyter-customer-ctrl-input disabled-input' type="text" v-model.trim="infoWindowInfo.title" placeholder="請輸入標題" disabled>
@@ -2364,14 +2359,14 @@
                                 <div class='hap-jupyter-customer-ctrl-inputlabel-list'>
                                     <div class='hap-jupyter-customer-ctrl-inputlabel'>
                                         <div class='input-titles'>
-                                            <div class='input-main-title'>你是誰</div>
+                                            <div class='input-main-title'>公告者</div>
                                             <div class='input-sub-title'></div>
                                         </div>
-                                        <input class='hap-jupyter-customer-ctrl-input' type="text" v-model.trim="createAnnouncement.who" placeholder="你是誰?">
+                                        <input class='hap-jupyter-customer-ctrl-input' type="text" v-model.trim="createAnnouncement.who" placeholder="公告者?">
                                     </div>
                                     <div class='hap-jupyter-customer-ctrl-inputlabel-big' style='margin-bottom: 0.5rem;'>
                                         <div class='input-titles'>
-                                            <div class='input-main-title'>公告標題</div>
+                                            <div class='input-main-title'>標題</div>
                                             <div class='input-sub-title'></div>
                                         </div>
                                         <input class='hap-jupyter-customer-ctrl-input' type="text" v-model.trim="createAnnouncement.title" placeholder="請輸入標題">
@@ -2562,14 +2557,14 @@
                                 <div class='hap-jupyter-customer-ctrl-inputlabel-list'>
                                     <div class='hap-jupyter-customer-ctrl-inputlabel'>
                                         <div class='input-titles'>
-                                            <div class='input-main-title'>你是誰</div>
+                                            <div class='input-main-title'>公告者</div>
                                             <div class='input-sub-title'></div>
                                         </div>
-                                        <input class='hap-jupyter-customer-ctrl-input' type="text" v-model.trim="editWindowInfo.who" placeholder="你是誰?">
+                                        <input class='hap-jupyter-customer-ctrl-input' type="text" v-model.trim="editWindowInfo.who" placeholder="公告者">
                                     </div>
                                     <div class='hap-jupyter-customer-ctrl-inputlabel-big' style='margin-bottom: 0.5rem;'>
                                         <div class='input-titles'>
-                                            <div class='input-main-title'>公告標題</div>
+                                            <div class='input-main-title'>標題</div>
                                             <div class='input-sub-title'></div>
                                         </div>
                                         <input class='hap-jupyter-customer-ctrl-input' type="text" v-model.trim="editWindowInfo.title" placeholder="請輸入標題">

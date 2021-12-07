@@ -225,3 +225,13 @@
 .home-a-link:hover {
     color: var(--a-link-blue-hover);
 }
+
+.announcement-page-btn {
+    transition: color .5s;
+    cursor: pointer;
+    margin-left: .25rem;
+}
+
+.announcement-page-btn:hover {
+    color: var(--title-green);
+}
