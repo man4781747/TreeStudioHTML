@@ -290,23 +290,29 @@
                                 @click="updateTableInfoList()"
                             ></i> -->
                         </div>
-                        <div class='box-card-body' style='min-height: 100px;max-height: 200px'>
+                        <div class='box-card-body' style='min-height: 100px;max-height: 200px;padding: 0 1.25rem;'>
                             <table class="ts-table" style='width: 100%;'>
                                 <colgroup>
                                     <col style="width: 1px;">
                                     <col style="">
                                 </colgroup>
-                                <tbody class='n2_1_gray'>
+                                <tbody>
                                     <tr v-for="(D_info, index) in tableInfoList">
-                                        <td style="padding: 0.4rem 0.75rem;font-weight: bolder;"><div class='nowrap'>
-                                            {{(new Date(D_info.created)).format('MM-dd')}}
-                                        </div></td>
-                                        <td style='display:flex;align-items: flex-end;'>
-                                            <div style='white-space: nowrap;'>{{D_info.title}}</div>
-                                            <i class="far fa-sticky-note announcement-page-btn" 
+                                        <td style="padding: 0.4rem 0.75rem;display:flex;align-items: center;border:0;">
+                                            <div class='nowrap' style='font-weight: bolder;'>
+                                                {{(new Date(D_info.created)).format('Y-MM-dd')}}
+                                            </div>
+                                            <div style='white-space: nowrap;margin-left: .75rem;'>{{D_info.title}}</div>
+                                            <i class="fas fa-link announcement-page-btn" 
                                                 @click="OpenAnnouncementDetailWindow(D_info.id)"
                                             ></i>
                                         </td>
+                                        <!-- <td style='display:flex;align-items: flex-end;border:0;'>
+                                            <div style='white-space: nowrap;'>{{D_info.title}}</div>
+                                            <i class="fas fa-link announcement-page-btn" 
+                                                @click="OpenAnnouncementDetailWindow(D_info.id)"
+                                            ></i>
+                                        </td> -->
                                     </tr>
                                 </tbody>
                             </table>
@@ -1046,13 +1052,13 @@
                                     <i class='fas fa-times' @click='statusChangeWindowOpen=false'></i>
                                 </div>
                                 <div v-if="statusChangeWindowInfo.port=='8961'" class='top-window-alert-body'>
-                                    專案名稱: 數據經營部-通用Jupyter
+                                    專案名稱: 數據經營部-共用
                                 </div>
                                 <div v-else-if="statusChangeWindowInfo.port=='8901'" class='top-window-alert-body'>
-                                    專案名稱: 客戶智能科-通用Jupyter
+                                    專案名稱: 客戶智能科-共用
                                 </div>
                                 <div v-else-if="statusChangeWindowInfo.port=='8931'" class='top-window-alert-body'>
-                                    專案名稱: 商業智能科-通用Jupyter
+                                    專案名稱: 商業智能科-共用
                                 </div>
                                 <div v-else class='top-window-alert-body'>
                                     專案名稱: {{statusChangeWindowInfo.project_name}}
@@ -1069,11 +1075,11 @@
                         <h1 >HAP Jupyter</h1>
                         <h3>提供HAP環境探索，IDE為Jupyter Notebook，預設一個單位一個共用環境，若有需要客製化環境，請聯繫數據工程組。</h3>
                     </div>
-                    <!-- 通用 Jupyter Lab視窗 -->
+                    <!-- 共用 Jupyter Lab視窗 -->
                     <div class="box-card">
                         <div class='box-card-header'>
                             <div class='box-card-title'>
-                                通用 Jupyter Lab
+                                共用 Jupyter Lab
                             </div>
                         </div>
                         <div class='box-card-body'>
@@ -1118,9 +1124,9 @@
                                         <tbody class='n2_1_gray'>
                                             <template v-for="(projectJupyterInfoList, index) of customerJupyterInfos">
                                                 <tr v-for="(customerJupyterInfo, index) of projectJupyterInfoList" v-if="['8901','8931','8961'].indexOf(customerJupyterInfo.port)!=-1">
-                                                    <td v-if="customerJupyterInfo.user_depart=='9h000'">數據經營部-通用Jupyter</td>
-                                                    <td v-else-if="customerJupyterInfo.user_depart=='9h001'">客戶智能科-通用Jupyter</td>
-                                                    <td v-else-if="customerJupyterInfo.user_depart=='9h002'">商業智能科-通用Jupyter</td>
+                                                    <td v-if="customerJupyterInfo.user_depart=='9h000'">數據經營部-共用</td>
+                                                    <td v-else-if="customerJupyterInfo.user_depart=='9h001'">客戶智能科-共用</td>
+                                                    <td v-else-if="customerJupyterInfo.user_depart=='9h002'">商業智能科-共用</td>
                                                     <td v-else>未知的部門代號，請通知工程組排除</td>
 
                                                     <td v-if="customerJupyterInfo.user_depart=='9h000'">數據經營部</td>

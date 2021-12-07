@@ -229,7 +229,7 @@
 .announcement-page-btn {
     transition: color .5s;
     cursor: pointer;
-    margin-left: .25rem;
+    margin-left: .75rem;
 }
 
 .announcement-page-btn:hover {
