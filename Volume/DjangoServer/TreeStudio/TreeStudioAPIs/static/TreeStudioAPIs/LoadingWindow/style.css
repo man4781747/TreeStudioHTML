@@ -1,5 +1,5 @@
 :root {
-    --loading-green: #00b050;
+    --loading-color: #007bff;
 }
 
 
@@ -56,7 +56,7 @@
     z-index: 999;
     width: 100%;
     height: 100%;
-    background-color: var(--loading-green);
+    background-color: var(--loading-color);
     top: 0px;
     text-align: center;
     font-size: 2rem;
@@ -103,7 +103,7 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: var(--loading-green);
+    background-color: var(--loading-color);
     text-align: center;
     font-size: 2rem;
     line-height: 100vh;

@@ -1,5 +1,5 @@
 :root {
-    --tool-btn-green: #00b050;
+    --tool-btn-color: #007bff;
 
     --blue: #007bff;
     --indigo: #6610f2;
@@ -229,7 +229,7 @@ body::-webkit-scrollbar {
 }
 
 .main-toolbox-label-btn-active {
-    background-color: var(--tool-btn-green) !important;
+    background-color: var(--tool-btn-color) !important;
     color: #fff !important;
 }
 

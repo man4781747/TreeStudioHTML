@@ -1,7 +1,7 @@
 :root {
     --html-background-color:#f4f6f9;
 
-    --title-green: #00b050;
+    --title-color: #007bff;
     --a-link-blue: #007bff;
     --a-link-blue-hover: #0056b3;
 
@@ -35,14 +35,14 @@ body{
     padding: .75rem 1.25rem;
     position: relative;
     font-size: var(--window-title-font-size);
-    color: var(--title-green);
+    color: var(--title-color);
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
 
 .box-card-title {
-    color: var(--title-green);
+    color: var(--title-color);
     font-size: var(--window-title-font-size);
     font-weight: bold;
 }
@@ -60,12 +60,12 @@ body{
 }
 
 .box-card-title-btn:hover {
-    color: var(--title-green);
+    color: var(--title-color);
 }
 
 .box-card-title-btn-active {
     color: white !important;
-    background-color: var(--title-green) !important;
+    background-color: var(--title-color) !important;
 }
 
 .box-card-footer {
@@ -87,7 +87,7 @@ body{
 /* bax-card-input-table系列 */
 .input-group-main-title {
     font-size: var(--window-title-font-size);
-    color: var(--title-green);
+    color: var(--title-color);
     margin-bottom: 0.5rem;
     font-weight: bold;
     display: flex;
@@ -144,7 +144,7 @@ body{
 
 .description-title h1{
     font-size: var(--big-title-font-size);
-    color: var(--title-green);
+    color: var(--title-color);
 }
 
 .description-title h3{
@@ -221,7 +221,7 @@ body{
 }
 
 .ts-table .table-title-and-filter .fa-filter:hover{
-    color: var(--title-green);
+    color: var(--title-color);
 }
 
 /* 按鈕Style */
@@ -330,6 +330,104 @@ body{
     box-shadow: none;
 }
 
+/* search table 物件 */
+
+.search-bar {
+    display: flex;
+    border-radius: .5rem;
+    border: 2px #e3e4e5 solid;
+    overflow: hidden;
+}
+
+.search-bar * {
+    font-size: 1.1rem;
+    height: 1.1rem;
+    line-height: 1.1rem;
+    padding: .5rem;
+}
+
+.search-bar input {
+    width: 40vw;
+    outline:none;
+    border: 0;
+}
+
+.search-bar i {
+    border-left: 2px #e3e4e5 solid;
+}
+
+.page-choser {
+    display: flex;
+    border-radius: .35rem;
+    overflow: hidden;
+    border: 1px #d1d0d0 solid;
+}
+
+.page-chose-btn {
+    /* margin: 0.5px; */
+    cursor: pointer; 
+    display: inline-block;
+    font-weight: 400;
+    color: #007bff;
+    background-color: #fff;
+    text-align: center;
+    vertical-align: middle;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    padding: .375rem .75rem;
+    font-size: 1rem;
+    line-height: 1.5;
+    transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+}
+
+.page-chose-btn:hover,
+.page-chose-btn-chosed{
+    color: #0056b3 ;
+    text-decoration: none ;
+    background-color: #8fc7ff ;
+    border-color: #0056b3;
+}
+
+.page-chose-btn-noactive {
+    color: #dee2e6 !important;
+    text-decoration: none !important;
+    border-color: #dee2e6 !important;
+    background-color: unset !important;
+}
+
+.table-header-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+}
+
+.table-title-and-filter{
+    display: flex;
+    align-items: center;
+    position: relative;
+    margin-right: 0.2rem;
+}
+
+.table-title-and-filter .fa-filter{
+    font-size: .9rem;
+    margin-right: .2rem;
+    color: rgb(153, 153, 153);
+}
+
+.table-title-and-filter .fa-filter:hover{
+    color: var(--title-color);
+}
+
+.btn-update {
+    color: #333;
+    background-color: #eee;
+    border-color: #adb5bd;
+    box-shadow: none;
+}
+
 /* 文字垂直置中 */
 .text-v-center {
     vertical-align: top;
@@ -404,7 +502,7 @@ body{
 
 .box-small-card-title,
 .box-small-card-title *{
-    color: var(--title-green);
+    color: var(--title-color);
     font-size: 1.1rem;
     font-weight: 600;
     margin: 0;
@@ -535,8 +633,8 @@ body{
 }
 
 #airjob-view .color-set{
-    stroke: var(--title-green);
-    fill: var(--title-green);
+    stroke: var(--title-color);
+    fill: var(--title-color);
 }
 
 .stroke-color-in {opacity:1;stroke-opacity:1;stroke-width:15;fill-opacity:0;}
@@ -546,7 +644,7 @@ body{
 
 .moreButton {
     cursor: pointer;
-    color: var(--title-green);
+    color: var(--title-color);
     transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
 }
 
