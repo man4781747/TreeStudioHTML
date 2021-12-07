@@ -151,6 +151,7 @@ body{
     color: gray;
     font-size: 1rem;
     font-weight: normal;
+    word-break:keep-all;
 }
 
 /* Table系列 */
