@@ -2631,31 +2631,6 @@
             </div>
         </div>
     </div>
-
-    <!-- v-console 視窗 -->
-    <div id='v-console-window'>
-        <div v-for="(D_console, S_uuid, index) in D_consoleList"
-            style="display: flex;justify-content: flex-end;"
-        >
-            <div class="v-console-item animate__animated" :class="D_console.style_set">
-                <div class="v-console-item-icon" :style="'border-color:'+D_console.color+';'">
-                    <div class="v-console-item-icon v-console-item-icon-delete-btn">
-                        <i class="fas fa-trash-alt v_console_del_btn" style="color: var(--dark);"
-                            @click="deleteConsole(S_uuid)"
-                        ></i>
-                    </div>
-                    <i v-if="D_console.type=='log'" class="fas fa-info-circle" :style="'color:'+D_console.color+';'"></i>
-                    <i v-else-if="D_console.type=='error'" class="far fa-times-circle" :style="'color:'+D_console.color+';'"></i>
-                    <i v-else-if="D_console.type=='warning'" class="fas fa-exclamation-triangle" :style="'color:'+D_console.color+';'"></i>
-                    <i v-else-if="D_console.type=='debug'" class="fas fa-bug" :style="'color:'+D_console.color+';'"></i>
-                    <i v-else-if="D_console.type=='success'" class="far fa-check-circle" :style="'color:'+D_console.color+';'"></i>
-                </div>
-                <div class="v-console-item-content">
-                    <div>{{D_console.content}}</div>
-                </div>
-            </div>
-        </div>
-    </div>
 </body>
 <script type="text/javascript" src="/static/TreeStudioAPIs/GlobalConsole/VueSetting.js"></script>
 <script type="text/javascript" src="/static/TreeStudioAPIs/MainToolBox/VueSetting.js"></script>

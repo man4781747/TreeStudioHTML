@@ -191,6 +191,22 @@ var Vue_mainToolBox =  new Vue({
                                 'Type': 'Page',
                                 'icon': 'far fa-circle',
                             },
+                            {
+                                'Name': '數據經營部',
+                                'Type': 'URL',
+                                'URL': '',
+                                'icon': 'far fa-circle',
+                                'title': 'AIRJOB: 數據經營部',
+                                'content': 'AIRJOB為以Airflow為底層延伸設計的自主排程系統。',
+                            },
+                            {
+                                'Name': '數據經營部',
+                                'Type': 'URL',
+                                'URL': '',
+                                'icon': 'far fa-circle',
+                                'title': 'AIRJOB: 數據經營部',
+                                'content': 'AIRJOB為以Airflow為底層延伸設計的自主排程系統。',
+                            },
                         ],
                     }
                 )
