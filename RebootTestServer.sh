@@ -8,7 +8,7 @@ else
     exit 1
 fi
 
-containerName=tree_studio_server
+containerName=treestudio-server-container
 port_out=8999
 port_in=8000
 imageName=django-server:latest
