@@ -11,7 +11,7 @@ fi
 containerName=treestudio-server-container
 port_out=8999
 port_in=8000
-imageName=airjob-server:latest
+imageName=django-server:latest
 dockerfilePath=$(pwd)/../../Volume/DjangoServer/TreeStudio
 # echo $dockerfilePath
 
