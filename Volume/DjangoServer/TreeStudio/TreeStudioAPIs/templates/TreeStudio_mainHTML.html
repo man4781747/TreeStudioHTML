@@ -480,27 +480,27 @@
                                 <div class='input-group-main-title'>公告內容 
                                     <div class='input-group-main-sub-title'>({{infoWindowInfo.created}})</div>
                                 </div>
-                                <div class='hap-jupyter-customer-ctrl-inputlabel-list'>
-                                    <div class='hap-jupyter-customer-ctrl-inputlabel'>
+                                <div class='form-inputlabel-list'>
+                                    <div class='form-ctrl-inputlabel'>
                                         <div class='input-titles'>
                                             <div class='input-main-title'>公告者</div>
                                             <div class='input-sub-title'></div>
                                         </div>
-                                        <input class='hap-jupyter-customer-ctrl-input disabled-input' type="text" v-model.trim="infoWindowInfo.who" placeholder="公告者" disabled>
+                                        <input class='form-ctrl-input disabled-input' type="text" v-model.trim="infoWindowInfo.who" placeholder="公告者" disabled>
                                     </div>
-                                    <div class='hap-jupyter-customer-ctrl-inputlabel-big' style='margin-bottom: 0.5rem;'>
+                                    <div class='form-ctrl-inputlabel-big' style='margin-bottom: 0.5rem;'>
                                         <div class='input-titles'>
                                             <div class='input-main-title'>標題</div>
                                             <div class='input-sub-title'></div>
                                         </div>
-                                        <input class='hap-jupyter-customer-ctrl-input disabled-input' type="text" v-model.trim="infoWindowInfo.title" placeholder="請輸入標題" disabled>
+                                        <input class='form-ctrl-input disabled-input' type="text" v-model.trim="infoWindowInfo.title" placeholder="請輸入標題" disabled>
                                     </div>
-                                    <div class='hap-jupyter-customer-ctrl-inputlabel-big'>
+                                    <div class='form-ctrl-inputlabel-big'>
                                         <div class='input-titles'>
                                             <div class='input-main-title'>公告內容</div>
                                             <div class='input-sub-title'></div>
                                         </div>
-                                        <div class='hap-jupyter-customer-ctrl-input' id="summernote-announcement-shower-up" style='height: unset;width: auto;'>
+                                        <div class='form-ctrl-input' id="summernote-announcement-shower-up" style='height: unset;width: auto;'>
                                             <form method="post">
                                                 <textarea id="summernote-announcement-shower" name="editordata"></textarea>
                                             </form>
@@ -558,22 +558,22 @@
                         <div class='box-card-body' v-show='window_chose=="create_window"'>
                             <div style='margin-bottom: .5rem;'>
                                 <div class='input-group-main-title'>公告資訊</div>
-                                <div class='hap-jupyter-customer-ctrl-inputlabel-list'>
-                                    <div class='hap-jupyter-customer-ctrl-inputlabel'>
+                                <div class='form-inputlabel-list'>
+                                    <div class='form-ctrl-inputlabel'>
                                         <div class='input-titles'>
                                             <div class='input-main-title'>公告者</div>
                                             <div class='input-sub-title'></div>
                                         </div>
-                                        <input class='hap-jupyter-customer-ctrl-input' type="text" v-model.trim="createAnnouncement.who" placeholder="公告者?">
+                                        <input class='form-ctrl-input' type="text" v-model.trim="createAnnouncement.who" placeholder="公告者">
                                     </div>
-                                    <div class='hap-jupyter-customer-ctrl-inputlabel-big' style='margin-bottom: 0.5rem;'>
+                                    <div class='form-ctrl-inputlabel-big' style='margin-bottom: 0.5rem;'>
                                         <div class='input-titles'>
                                             <div class='input-main-title'>標題</div>
                                             <div class='input-sub-title'></div>
                                         </div>
-                                        <input class='hap-jupyter-customer-ctrl-input' type="text" v-model.trim="createAnnouncement.title" placeholder="請輸入標題">
+                                        <input class='form-ctrl-input' type="text" v-model.trim="createAnnouncement.title" placeholder="請輸入標題">
                                     </div>
-                                    <div class='hap-jupyter-customer-ctrl-inputlabel-big'>
+                                    <div class='form-ctrl-inputlabel-big'>
                                         <div class='input-titles'>
                                             <div class='input-main-title'>公告內容</div>
                                             <div class='input-sub-title'></div>
@@ -586,8 +586,8 @@
                                 </div>
                             </div>
 
-                            <div class='hap-jupyter-customer-ctrl-inputlabel-list'>
-                                <div class='hap-jupyter-customer-ctrl-inputlabel-big'>
+                            <div class='form-inputlabel-list'>
+                                <div class='form-ctrl-inputlabel-big'>
                                     <button 
                                     v-if="checkCreateAnnouncementInfo.length==0"
                                     class='ts-btn btn-active input-submit-btn'
@@ -756,22 +756,22 @@
                                 <div class='input-group-main-title'>公告資訊
                                     <div class='input-group-main-sub-title'>({{editWindowInfo.created}})</div>
                                 </div>
-                                <div class='hap-jupyter-customer-ctrl-inputlabel-list'>
-                                    <div class='hap-jupyter-customer-ctrl-inputlabel'>
+                                <div class='form-inputlabel-list'>
+                                    <div class='form-ctrl-inputlabel'>
                                         <div class='input-titles'>
                                             <div class='input-main-title'>公告者</div>
                                             <div class='input-sub-title'></div>
                                         </div>
-                                        <input class='hap-jupyter-customer-ctrl-input' type="text" v-model.trim="editWindowInfo.who" placeholder="公告者">
+                                        <input class='form-ctrl-input' type="text" v-model.trim="editWindowInfo.who" placeholder="公告者">
                                     </div>
-                                    <div class='hap-jupyter-customer-ctrl-inputlabel-big' style='margin-bottom: 0.5rem;'>
+                                    <div class='form-ctrl-inputlabel-big' style='margin-bottom: 0.5rem;'>
                                         <div class='input-titles'>
                                             <div class='input-main-title'>標題</div>
                                             <div class='input-sub-title'></div>
                                         </div>
-                                        <input class='hap-jupyter-customer-ctrl-input' type="text" v-model.trim="editWindowInfo.title" placeholder="請輸入標題">
+                                        <input class='form-ctrl-input' type="text" v-model.trim="editWindowInfo.title" placeholder="請輸入標題">
                                     </div>
-                                    <div class='hap-jupyter-customer-ctrl-inputlabel-big'>
+                                    <div class='form-ctrl-inputlabel-big'>
                                         <div class='input-titles'>
                                             <div class='input-main-title'>公告內容</div>
                                             <div class='input-sub-title'></div>
@@ -783,8 +783,8 @@
                                 </div>
                             </div>
 
-                            <div class='hap-jupyter-customer-ctrl-inputlabel-list'>
-                                <div class='hap-jupyter-customer-ctrl-inputlabel-big'>
+                            <div class='form-inputlabel-list'>
+                                <div class='form-ctrl-inputlabel-big'>
                                     <button 
                                     v-if="checkEditerAnnouncementInfo.length==0"
                                     class='ts-btn btn-active input-submit-btn'

@@ -428,6 +428,36 @@ body{
     box-shadow: none;
 }
 
+/* Form 表單系列 */
+
+.form-inputlabel-list {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-column-gap: 10px;
+}
+
+.form-ctrl-inputlabel {
+    position: relative;
+    margin-bottom: .5rem;
+}
+
+.form-ctrl-inputlabel * {
+    height: 1.5rem;
+    width: 100%;
+}
+
+.form-ctrl-inputlabel-big {
+    position: relative;
+    grid-column-start: 1;
+    grid-column-end: 4;
+}
+
+.form-ctrl-input {
+    margin: 0;
+    width: calc( 100% - 8px);
+    height: 1.5rem;
+}
+
 /* 文字垂直置中 */
 .text-v-center {
     vertical-align: top;
