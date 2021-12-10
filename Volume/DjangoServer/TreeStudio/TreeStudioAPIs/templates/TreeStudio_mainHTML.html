@@ -22,6 +22,7 @@
     <link rel="stylesheet" href="/static/TreeStudioAPIs/TopMenu/style.css">
     <link rel="stylesheet" href="/static/TreeStudioAPIs/LoadingWindow/style.css">
     <link rel="stylesheet" href="/static/TreeStudioAPIs/GlobalConsole/style.css">
+    <link rel="stylesheet" href="/static/TreeStudioAPIs/OrderSystem/style.css">
 
     <script src="/static/TreeStudioAPIs/ExternalModule/animeJS/anime.min.js"></script>
 
@@ -320,6 +321,56 @@
                             <a class='moreButton' @click="OpenAnnouncementListWindow()">More..</a>
                         </div>
                     </div>
+
+                    <!-- 點餐視窗 -->
+                    <div>
+                        <div id='table-update-window' class="box-card" style="height: 100%;">
+                            <div class='box-card-header'>
+                                <div class='box-card-title'>
+                                    今日訂餐
+                                </div>
+                                <i class="fas fa-sync-alt ts-btn btn-update" style="margin: 0;"
+                                    @click=""
+                                ></i>
+                            </div>
+                            <div class='box-card-body'>
+                                <div style="height: 100%;display: grid;grid-auto-rows: min-content auto;">
+                                    訂餐內容
+                                </div>
+                            </div>
+                            <div class='box-card-footer'>
+                                <div></div>
+                                <a class='moreButton' @click="">More..</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Wiki 最新更新-->
+                    <div>
+                        <div id='table-update-window' class="box-card" style="height: 100%;">
+                            <div class='box-card-header'>
+                                <div class='box-card-title'>
+                                    Wiki 最新更新
+                                </div>
+                                <i class="fas fa-sync-alt ts-btn btn-update" style="margin: 0;"
+                                    @click=""
+                                ></i>
+                            </div>
+                            <div class='box-card-body'>
+                                <div style="height: 100%;display: grid;grid-auto-rows: min-content auto;">
+                                    <div style='height: 20vh;'>
+                                        Wiki 最新更新
+                                    </div>
+                                </div>
+                            </div>
+                            <div class='box-card-footer'>
+                                <div></div>
+                                <a class='moreButton' @click="">More..</a>
+                            </div>
+                        </div>
+                    </div>
+
+
                 </div>
                 
                 <!-- 公告系統 -->
@@ -514,6 +565,721 @@
 
                         </div>
 
+                    </div>
+
+                </div>
+
+                <!-- 定餐系統 -->
+                <div id='order-system-window'>
+                    <!-- 編輯餐廳確認視窗 -->
+                    <div class='top-window-alert-background' v-if="editShopWindowOpen==true" @click='editShopWindowOpen=false'>
+                        <div>
+                            <div class='top-window-alert-window animate__animated' @click.stop="" :class="editShopWindowOpen?'animate__fadeInDown':'animate__fadeOutUp'">
+                                
+                                <div class='top-window-alert-header'>
+                                    <p>確認要上傳此店家資訊?</p>
+                                    <i class='fas fa-times' @click='editShopWindowOpen=false'></i>
+                                </div>
+                                <div class='top-window-alert-body'>
+                                    <shop-info-table
+                                        v-bind:shop_info_chosed="shop_info_chosed"
+                                    ></shop-info-table>
+                                </div>
+                                <div class='top-window-alert-footer'>
+                                    <button class="ts-btn btn-active" @click='editShopWindowOpen=false'>取消動作</button>
+                                    <button class="ts-btn btn-active" @click='uploadNewShopInfo()'>確認上傳</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 刪除餐廳確認視窗 -->
+                    <div class='top-window-alert-background' v-if="deleteShopWindowOpen==true" @click='deleteShopWindowOpen=false'>
+                        <div>
+                            <div class='top-window-alert-window animate__animated' @click.stop="" :class="deleteShopWindowOpen?'animate__fadeInDown':'animate__fadeOutUp'">
+                                
+                                <div class='top-window-alert-header'>
+                                    <p>確認要上傳此店家資訊?</p>
+                                    <i class='fas fa-times' @click='deleteShopWindowOpen=false'></i>
+                                </div>
+                                <div class='top-window-alert-body'>
+                                    <shop-info-table
+                                        v-bind:shop_info_chosed="shop_info_chosed"
+                                    ></shop-info-table>
+                                </div>
+                                <div class='top-window-alert-footer'>
+                                    <button class="ts-btn btn-active" @click='deleteShopWindowOpen=false'>取消動作</button>
+                                    <button class="ts-btn btn-active" @click='deleteShopInfo(shop_info_chosed.shop_id)'>確認刪除</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 刪除購物車資訊確認視窗 -->
+                    <div class='top-window-alert-background' v-if="deleteShopCartWindowOpen==true" @click='deleteShopCartWindowOpen=false'>
+                        <div>
+                            <div class='top-window-alert-window animate__animated' @click.stop="" :class="deleteShopCartWindowOpen?'animate__fadeInDown':'animate__fadeOutUp'">
+                                
+                                <div class='top-window-alert-header'>
+                                    <p>確認刪除這筆別人上傳的購物清單資訊?</p>
+                                    <i class='fas fa-times' @click='deleteShopCartWindowOpen=false'></i>
+                                </div>
+                                <div class='top-window-alert-body'>
+                                    <shop-cart-info-table
+                                        v-bind:shop_cart_data_list="delCheckInfo.shop_cart_list"
+                                        v-bind:shop_cart_id="delCheckInfo.shop_cart_id"
+                                    ></shop-cart-info-table>
+                                </div>
+                                <div class='top-window-alert-footer'>
+                                    <button class="ts-btn btn-active" @click='deleteShopCartWindowOpen=false'>取消動作</button>
+                                    <button class="ts-btn btn-active" @click='delAllShopCartByShopCart(delCheckInfo.shop_cart_id)'>確認刪除</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 點菜確認視窗 -->
+                    <div class='top-window-alert-background' v-if="addOrderWindowOpen==true" @click='addOrderWindowOpen=false'>
+                        <div>
+                            <div class='top-window-alert-window animate__animated' @click.stop="" :class="addOrderWindowOpen?'animate__fadeInDown':'animate__fadeOutUp'">
+                                
+                                <div class='top-window-alert-header'>
+                                    <div>
+                                        <p>準備點餐: {{addOrderWindowData.data.name}}</p>
+                                        <label>{{addOrderWindowData.data.desc}}</label>
+                                    </div>
+                                    <i class='fas fa-times' @click='addOrderWindowOpen=false'></i>
+                                </div>
+                                <div class='top-window-alert-body'>
+                                    <div class='order-check-window-info'>
+                                        ${{addOrderWindowData.data.price*addOrderWindowData.number}}
+                                    </div>
+
+                                    <div class='order-check-window-set-number'>
+                                        <i class="fas fa-minus-square"
+                                            @click="addOrderWindowData.number = addOrderWindowData.number - 1"
+                                        ></i>
+                                        <div>{{""+addOrderWindowData.number}}</div>
+                                        <i class="fas fa-plus-square"
+                                            @click="addOrderWindowData.number = addOrderWindowData.number + 1"
+                                        ></i>
+                                    </div>
+                                    <div class='order-check-window-set-content'>
+                                        <input v-model="addOrderWindowData.content" placeholder="有什麼特殊需求嗎?">
+                                    </div>
+                                </div>
+                                <div class='top-window-alert-footer'>
+                                    <button class="ts-btn btn-active" @click='addOrderWindowOpen=false'>取消</button>
+                                    <button class="ts-btn btn-active" @click='addNewOrderToShoppingCart(addOrderWindowData)'>加入購物車</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class='description-title'>
+                        <h1>定餐系統</h1>
+                        <h3>吃飯吃飯</h3>
+                    </div>
+    
+                    <div class="box-card">
+                        <!-- 公告視窗分業選擇 -->
+                        <div class='box-card-header'>
+                            <div style='display: flex;'>
+                                <div class='box-card-title-btn' :class="window_chose=='today_window'?'box-card-title-btn-active':''"
+                                    @click="window_chose='today_window'"
+                                >
+                                    今日訂餐點餐
+                                </div>
+                                <div class='box-card-title-btn' :class="window_chose=='all_shopcart_window'?'box-card-title-btn-active':''"
+                                    v-if="window_chose=='all_shopcart_window'"
+                                >
+                                    已點餐列表
+                                </div>
+                                <div class='box-card-title-btn' :class="window_chose=='setting_window'?'box-card-title-btn-active':''"
+                                    @click="openSettingWindow()"
+                                >
+                                    我要開團
+                                </div>
+                                <div class='box-card-title-btn' :class="window_chose=='edit_window'?'box-card-title-btn-active':''"
+                                    v-if="window_chose=='edit_window'"
+                                >
+                                    店家編輯
+                                </div>
+                                <div class='box-card-title-btn' :class="window_chose=='open_shop_window'?'box-card-title-btn-active':''"
+                                    v-if="window_chose=='open_shop_window'"
+                                >
+                                    準備開團
+                                </div>
+                                <div class='box-card-title-btn' :class="window_chose=='cart_window'?'box-card-title-btn-active':''"
+                                    @click="window_chose='cart_window'"
+                                >
+                                    我的購物車
+                                </div>
+                            </div>
+                            <!-- <div v-if="window_chose=='today_window'" style='display: flex;'>
+                                <i class="fas fa-shopping-cart ts-btn btn-close" 
+                                    @click=""
+                                style="margin:0 ;margin-left: 5px;"></i>
+                            </div> -->
+                        </div>
+
+                        <!-- 今日訂餐點餐視窗 -->
+                        <div class='box-card-body' v-if='window_chose=="today_window"'>
+                            <div @click="clickOpenAllShopCartBtn(chosedOrderData.order_info)">已點餐列表</div>
+                            <div class='user-order-window'>
+                                <div class="user-order-window-title-area">
+                                    <div class="user-order-window-title-image">
+                                        <img src="https://cn-geo1.uber.com/image-proc/resize/eats/format=webp/width=550/height=440/quality=70/srcb64=aHR0cHM6Ly9kMXJhbHNvZ25qbmczNy5jbG91ZGZyb250Lm5ldC8yMzdjYzQ4Mi0xZmJiLTQ2NmQtYjZmOS02MWZhMzQ5OTMzODIuanBlZw=="
+                                            style='width:100%;'
+                                        >
+                                    </div>
+                                    <div class="user-order-window-title-infos">
+                                        <div style="position: absolute;bottom: 0.5rem;">
+                                            <div class="user-order-window-title-shop-name">
+                                                {{chosedOrderData.shop_info.shop_name}}
+                                            </div>
+                                            <div class="user-order-window-title-shop-score">
+                                                {{chosedOrderData.shop_info.score}}
+                                            </div>
+                                            <div class="user-order-window-title-shop-tags">
+                                                tags
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="user-order-window-order-area">
+                                    <!-- <div class='user-order-window-group-list'>
+                                        <ul v-if="chosedOrderData.shop_info.shop_menu != undefined">
+                                            <li v-for="(group, index) of chosedOrderData.shop_info.shop_menu">
+                                                <div class='user-order-window-group-list-label'>
+                                                    {{group.name}}
+                                                </div>
+                                            </li>
+                                        </ul>
+                                        <div v-else>
+                                            尚無資訊
+                                        </div>
+                                    </div> -->
+                                    <div class='user-order-window-item-list' v-if="chosedOrderData.shop_info.shop_menu != undefined">
+                                        <div class='user-order-window-item-list-group-area'
+                                            v-for="(group, index) of chosedOrderData.shop_info.shop_menu"
+                                        >
+                                            <div class='user-order-window-item-list-group-title'>
+                                                {{group.name}}
+                                            </div>
+                                            <div class='user-order-window-item-list-group-items'>
+                                                <div class='user-order-window-item-list-group-item'
+                                                    v-for="(item, index) of group.items"
+                                                    @click="clickOrderItem(item, chosedOrderData.shop_info.shop_id, chosedOrderData.shop_info.shop_name, chosedOrderData.order_info.order_id)"
+                                                >
+                                                    <span class='menu-item-title'>
+                                                        {{item.name}}
+                                                    </span>
+                                                    <span class='menu-item-price'>
+                                                        {{item.price}}
+                                                    </span>
+                                                    <span class='menu-item-desc'>
+                                                        {{item.desc}}
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 已點餐視窗 -->
+                        <div class='box-card-body' v-if='window_chose=="all_shopcart_window"'>
+                            <!-- {{allShopCartOrderInfo}} -->
+                            <order-info-table 
+                                v-if="allShopCartOrderInfo.id != undefined"
+                                v-bind:order_info="allShopCartOrderInfo">
+                            </order-info-table>
+
+                            <div style='margin-bottom: .5rem;'>
+                                <div class='input-group-main-title'>所有下單的列表
+                                    <div class='input-group-main-sub-title'></div>
+                                </div>
+
+                                <div v-for="(L_shopCartDatas, S_shopCartID, index) in caledAllShopCart">
+                                    <shop-cart-info-table
+                                        v-bind:shop_cart_data_list="L_shopCartDatas"
+                                        v-bind:shop_cart_id="S_shopCartID"
+                                    ></shop-cart-info-table>
+                                    
+                                    <!-- <div style='display: flex;justify-content: space-between;align-items: baseline;'>
+                                        <div style='display: flex;align-items: baseline;'>
+                                            <div>點餐者: {{L_shopCartDatas[0].shopper_name}}</div>
+                                            <div style="color:red;font-size:var(--sub-font-size);">購物車單號: {{S_shopCartID}}</div>
+                                        </div>
+                                        <div style='display: flex;'>
+                                            <i class='fas fa-trash-alt'
+                                                @click="delAllShopCartByShopCart(S_shopCartID)"
+                                            ></i>
+                                        </div>
+                                    </div>
+                                    <table class='ts-table'>
+                                        <thead>
+                                            <tr>
+                                                <th>品項名稱</th>
+                                                <th>數量</th>
+                                                <th>總額</th>
+                                                <th>備註</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr v-for="(D_shopCartData, index) in L_shopCartDatas">
+                                                <td>{{D_shopCartData.item_name}}</td>    
+                                                <td>{{D_shopCartData.item_number}}</td>    
+                                                <td>{{D_shopCartData.item_price*D_shopCartData.item_number}}</td>    
+                                                <td>{{D_shopCartData.item_content}}</td>    
+                                                
+                                            </tr>
+                                        </tbody>
+                                    </table> -->
+                                </div>
+                                <th>
+                                <div>
+                                    所有總額: {{caledAllShopCartMoney}}
+                                </div>
+                            </div>
+                            <div>
+                                結單
+                            </div>
+
+                        </div>
+
+                        <!-- 訂餐設定視窗 -->
+                        <div class='box-card-body' v-if='window_chose=="setting_window"'>
+                            <div v-if="shopListUpdateing == true"
+                            style="
+                            display: flex;
+                            justify-content: center;
+                            align-items: center;
+                            position: absolute;
+                            width: 100%;
+                            height: 100%;
+                            background-color: rgba(0,0,0,.5);
+                            z-index: 800;
+                            left: 0;
+                            top: 0;font-size: 3rem;
+                            font-weight: 600;
+                            color: #efefef;">
+                                <i class="fas fa-sync-alt anima-updown-in-2-sec" style="margin-right: .5rem;"></i>
+                                更新中...
+                            </div>
+
+                            <div class='form-inputlabel-list'>
+                                <div class='form-ctrl-inputlabel-big'>
+                                    <button 
+                                    class='ts-btn btn-active input-submit-btn'
+                                    @click="clickAddNewShopBtn()"
+                                    >新增餐廳
+                                    </button>
+                                </div>
+                            </div>
+                            <br>
+                            <div style='display: flex;place-content: space-between;align-items: center;'>
+                                <div style='display: flex;align-items: center;'>
+                                    <i class="fas fa-sync-alt ts-btn btn-update" @click="updateShopList()" style="line-height: 1;"></i>
+                                    最大顯示筆數: 
+                                    <select v-model="pageMaxNum" style='font-size: 1.1rem;'>
+                                        <option value=10 selected>10</option>
+                                        <option value=20>20</option>
+                                        <option value=50>50</option>
+                                        <option value=9999999>-</option>
+                                    </select>
+                                </div>
+                                <div class='search-bar'>
+                                    <input v-model="filterStr">
+                                    <i class="fas fa-search " @click=""></i>
+                                </div>
+                            </div>
+                            
+                            <table class='ts-table'>
+                                <thead>
+                                    <tr>
+                                        <th v-for='(filter_info, filter_name, filter_index) in title_filter'>
+                                            <div class='table-header-item mouse-pointer' @click="sortByBtmChose(filter_name)">
+                                                <div class='table-title-and-filter'>
+                                                    <i 
+                                                        v-if="filter_name != 'id'"
+                                                        class="fas fa-filter" 
+                                                        @click.stop="filter_info.open=!filter_info.open"
+                                                        :style="filter_info.filter_str.trim()!=''?'color:var(--title-color);':''"
+                                                    ></i>
+                                                    <div v-if='!filter_info.open'>
+                                                        {{filter_info.show_name}}
+                                                    </div>
+                                                    <input @click.stop v-else v-model.trim='filter_info.filter_str'>
+                                                </div>
+                                                <div style='position: relative;'>
+                                                    <i class="fas fa-sort-down" style='position: absolute;right: 0;bottom: 0;' :style='"color:"+(
+                                                        (sortBy==filter_name&sortValue==1)?"#000":"#999"
+                                                        )+";"'></i>
+                                                    <i class="fas fa-sort-up" :style='"color:"+(
+                                                        (sortBy==filter_name&sortValue==-1)?"#000":"#999"
+                                                        )+";"'></i>
+                                                </div>
+                                            </div>
+                                        </th>
+                                        <th>操作</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr v-for="(data, index) in tableData[pageChose]" 
+                                    >
+                                        <template v-for="(info, title, index) in title_filter">
+                                            <td>{{data[title]}}</td>    
+                                        </template>
+                                        <td>
+                                            <div class='ts-table-active-list'>
+                                                <div class='ts-btn btn-open' @click="clickOpenShopBtn(data.shop_id)"
+                                                    style='width: 1.5rem;'
+                                                >
+                                                    <i class="fas fa-store"></i>
+                                                </div>
+                                                <div class='ts-btn btn-active' @click="clickEditBtn(data.shop_id)"
+                                                    style='width: 1.5rem;'
+                                                >
+                                                    <i class="fas fa-edit"></i>
+                                                </div>
+                                                <div class='ts-btn btn-close' @click="clickDeleteShopBtn(data.shop_id)"
+                                                    style='width: 1.5rem;'
+                                                >
+                                                    <i class="fas fa-trash-alt"></i>
+                                                </div>
+
+                                            </div>
+                                        </td>    
+                                    </tr>
+                                </tbody>
+                            </table>
+                            
+                            <div style='display: flex;justify-content: space-between;margin: 2px 0;align-items: center;'>
+                                <div style='transform: translateY(5px);'>總筆數:{{tableRawNum}} (第{{parseInt(pageChose)+1}}頁/共{{tablePageNum}}頁)</div>
+                                <div class='page-choser'>
+                                    <div v-if="pageListChose==0" class='page-chose-btn page-chose-btn-noactive'>
+                                        <i class="fas fa-angle-double-left"></i>
+                                    </div>
+                                    <div v-else class='page-chose-btn' @click="pageListChose = pageListChose -1">
+                                        <i class="fas fa-angle-double-left"></i>
+                                    </div>
+                                    <div class='page-chose-btn' v-for="pageIndex of pageList[pageListChose]"
+                                        :class="pageIndex == pageChose?'page-chose-btn-chosed':''"
+                                        @click="pageChose = pageIndex"
+                                    >
+                                        {{parseInt(pageIndex) + 1}}
+                                    </div>
+                                    <div v-if="pageListChose==pageList.length-1" class='page-chose-btn page-chose-btn-noactive'>
+                                        <i class="fas fa-angle-double-right"></i>
+                                    </div>
+                                    <div v-else class='page-chose-btn' @click="pageListChose = pageListChose +1">
+                                        <i class="fas fa-angle-double-right"></i>
+                                    </div>
+                                    
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 我的購物車視窗 -->
+                        <div class='box-card-body' v-if='window_chose=="cart_window"'>
+                            <div style='margin-bottom: .5rem;'>
+                                <div class='input-group-main-title'>下單者資訊
+                                    <div class='input-group-main-sub-title'></div>
+                                </div>
+                                <div class='form-ctrl-inputlabel'>
+                                    <div class='input-titles'>
+                                        <div class='input-main-title'>下單者*</div>
+                                        <div class='input-sub-title'></div>
+                                    </div>
+                                    <input class='form-ctrl-input' type="text" v-model.trim="shopperName">
+                                </div>
+                            </div>
+                            
+                            <div v-for="(L_cartData, order_id, index) in shoppingCar">
+                                <div v-if="L_cartData.length>0">
+                                    <div style='margin-bottom: .5rem;'>
+                                        <div class='input-group-main-title'>{{L_cartData[0].shop_name}}
+                                            <div class='input-group-main-sub-title'>團訂單單號:({{order_id}})</div>
+                                        </div>
+                                    </div>
+                                    <table class='ts-table'>
+                                        <thead>
+                                            <tr>
+                                                <th>項目</th>
+                                                <th>數量</th>
+                                                <th>價格</th>
+                                                <th>特殊要求</th>
+                                                <th>移除</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr v-for="(orderInfo, index) in L_cartData" 
+                                            >
+                                                <td>{{orderInfo.name}}</td>
+                                                <td>
+                                                    {{orderInfo.number}}
+                                                </td>
+                                                <td>{{orderInfo.price*orderInfo.number}}</td>
+                                                <td>
+                                                    <input v-model="orderInfo.content">
+                                                </td>
+    
+                                                <td>
+                                                    <div class='ts-table-active-list'>
+                                                        <div class='ts-btn btn-close' @click="removeOrderOnCart(order_id, index)"
+                                                            style='width: 1.5rem;'
+                                                        >
+                                                            <i class="fas fa-trash-alt"></i>
+                                                        </div>
+                                                    </div>
+                                                </td>    
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    <div style='margin-bottom: .5rem;'>
+                                        <div class='form-ctrl-inputlabel-big'>
+                                            <button 
+                                            v-if = "shopperName!=''"
+                                            class='ts-btn btn-active input-submit-btn'
+                                            @click="uploadShopCartInfo(L_cartData)"
+                                            >送出購物資訊</button>
+                                            <div v-else>
+                                                <button
+                                                style="position:relative;z-index: 2;"
+                                                class='ts-btn btn-notwork input-submit-btn'
+                                                >
+                                                    下單者欄位不得為空白
+                                                </button>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 店家編輯視窗 -->
+                        <div class='box-card-body' v-if='window_chose=="edit_window"'>
+                            <div style='margin-bottom: .5rem;'>
+                                <div class='input-group-main-title'>店家基礎資訊
+                                    <div class='input-group-main-sub-title'></div>
+                                </div>
+                                <div class='form-inputlabel-list'>
+                                    <div class='form-ctrl-inputlabel'>
+                                        <div class='input-titles'>
+                                            <div class='input-main-title'>店家編號</div>
+                                            <div class='input-sub-title'></div>
+                                        </div>
+                                        <input class='form-ctrl-input' type="text" v-model.trim="shop_info_chosed.shop_id" disabled>
+                                    </div>
+                                    <div class='form-ctrl-inputlabel'>
+                                        <div class='input-titles'>
+                                            <div class='input-main-title'>店家種類*</div>
+                                            <div class='input-sub-title'></div>
+                                        </div>
+                                        <select style='height: calc(1.5rem + 6px);' v-model="shop_info_chosed.shop_type">
+                                            <option v-for="type of ['餐廳','飲料','其他']">{{type}}</option>
+                                        </select>
+                                    </div>
+                                    <div class='form-ctrl-inputlabel'>
+                                        <div class='input-titles'>
+                                            <div class='input-main-title'>店家名稱*</div>
+                                            <div class='input-sub-title'></div>
+                                        </div>
+                                        <input class='form-ctrl-input' type="text" v-model.trim="shop_info_chosed.shop_name">
+                                    </div>
+                                    <div class='form-ctrl-inputlabel'>
+                                        <div class='input-titles'>
+                                            <div class='input-main-title'>店家評價</div>
+                                            <div class='input-sub-title'>(事後可編輯)</div>
+                                        </div>
+                                        <input class='form-ctrl-input' type="text" v-model.trim="shop_info_chosed.shop_score">
+                                    </div>
+                                    <div class='form-ctrl-inputlabel'>
+                                        <div class='input-titles'>
+                                            <div class='input-main-title'>店家電話</div>
+                                            <div class='input-sub-title'></div>
+                                        </div>
+                                        <input class='form-ctrl-input' type="text" v-model.trim="shop_info_chosed.shop_phoneNum">
+                                    </div>
+                                    <div class='form-ctrl-inputlabel'>
+                                        <div class='input-titles'>
+                                            <div class='input-main-title'>店家地址</div>
+                                            <div class='input-sub-title'></div>
+                                        </div>
+                                        <input class='form-ctrl-input' type="text" v-model.trim="shop_info_chosed.shop_address">
+                                    </div>
+                                </div>
+                            </div>
+                            <div style='margin-bottom: .5rem;'>
+                                <div class='input-group-main-title'
+                                @drop="console.log('123')"
+                                >菜單編輯
+                                    <div class='input-group-main-sub-title'></div>
+                                </div>
+                                <div class='form-ctrl-inputlabel-big'>
+                                    <div 
+                                        @click="addNewMenuGroup()" 
+                                        style='width: fit-content;margin-bottom: 0.5rem;' 
+                                        class='ts-btn btn-active'
+                                    >新增餐點總類</div>
+                                    <div class='todo-list-area'>
+                                        <div class='todo-list-group'
+                                            v-for="(group_data, group_index) of shop_info_chosed.shop_menu"
+                                            draggable
+                                            @dragstart.stop="menu_group_drag_start($event, group_data, group_index)"
+                                            @dragover.prevent
+                                            @dragend.prevent.stop="menu_group_drag_end($event, group_data, group_index)"
+                                            @drop.stop="drop_on_group($event, group_data, group_index)"
+                                        >
+                                            <div class='todo-group-title'>
+                                                <div class='todo-group-title-toolbar'>
+                                                    <div>
+                                                        <label>種類:</label>
+                                                        <input v-model.trim="group_data.name" placeholder="請輸入餐點分類名稱">
+                                                    </div>
+                                                    <i @click="addNewMenuItem(group_data)" class="far fa-plus-square ts-btn btn-active"></i>
+                                                </div>
+                                                <div class='todo-group-title-toolbar'>
+                                                    <i 
+                                                        @click="delMenuGroup(group_index)" 
+                                                        class='fas fa-trash-alt ts-btn btn-close'
+                                                    ></i>
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <div class='todo-list-item'
+                                                v-for="item_data, item_index) of group_data.items"
+                                                draggable
+                                                @dragstart.stop="menu_item_drag_start($event, group_data, group_index, item_data, item_index)"
+                                                @dragover.prevent.stop="menu_item_drag_over($event, group_data, item_index)"
+                                                @dragend.prevent.stop="menu_item_drag_end($event, group_data, item_index)"
+                                                @drop.stop="drop_on_item($event, group_data, item_index)"
+                                                >
+                                                    <div style="display:flex;justify-content: space-between;">
+                                                        <div style="display:flex;">
+                                                            <i class="fas fa-ellipsis-v"></i>
+                                                            <div>
+                                                                <label>餐點名稱:</label>
+                                                                <input v-model.trim="item_data.name" placeholder="請輸入餐點名稱">
+                                                            </div>
+                                                            <div>
+                                                                <label>餐點價格:</label>
+                                                                <input type="number" min='0' v-model.trim="item_data.price" placeholder="請輸入餐點價格">
+                                                            </div>
+                                                            <div>
+                                                                <label>餐點註解:</label>
+                                                                <input v-model.trim="item_data.desc" placeholder="請輸入餐點註解(非必要)">
+                                                            </div>
+                                                        </div>
+                                                        <div style="display:flex;">
+                                                            <i 
+                                                                @click="delMenuItem(group_data, item_index)" 
+                                                                class='fas fa-trash-alt ts-btn btn-close'
+                                                            ></i>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class='form-ctrl-inputlabel-big'>
+                                <button 
+                                v-if="checkEditerPageInfo.length == 0"
+                                class='ts-btn btn-active input-submit-btn'
+                                @click="editShopWindowOpen=true"
+                                >SUBMIT</button>
+
+                                <div v-else>
+                                    <button
+                                    style="position:relative;z-index: 2;"
+                                    class='ts-btn btn-notwork input-submit-btn'
+                                    >
+                                        SUBMIT
+                                    </button>
+                                    <div class='input-submit-btn-warning-window'>
+                                        <ul>
+                                            <li v-for="waringString of checkEditerPageInfo">
+                                                {{waringString}}
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <!-- 準備開團視窗 -->
+                        <div class='box-card-body' v-if='window_chose=="open_shop_window"'>
+                            <div style='margin-bottom: .5rem;'>
+                                <div class='input-group-main-title'>開團者資訊
+                                    <div class='input-group-main-sub-title'></div>
+                                </div>
+                                <div class='form-inputlabel-list'>
+                                    <div class='form-ctrl-inputlabel'>
+                                        <div class='input-titles'>
+                                            <div class='input-main-title'>訂單編號</div>
+                                            <div class='input-sub-title'></div>
+                                        </div>
+                                        <input class='form-ctrl-input' type="text" v-model.trim="orderInfo.order_id" disabled>
+                                    </div>
+                                    <div class='form-ctrl-inputlabel'>
+                                        <div class='input-titles'>
+                                            <div class='input-main-title'>開團者*</div>
+                                            <div class='input-sub-title'></div>
+                                        </div>
+                                        <input class='form-ctrl-input' type="text" v-model.trim="orderInfo.owner_name">
+                                    </div>
+                                    <div class='form-ctrl-inputlabel'>
+                                        <div class='input-titles'>
+                                            <div class='input-main-title'>訂單截止時間</div>
+                                            <div class='input-sub-title'></div>
+                                        </div>
+                                        <input class='form-ctrl-input' type="text" v-model.trim="orderInfo.close_time">
+                                    </div>
+                                    <div class='form-ctrl-inputlabel'>
+                                        <div class='input-titles'>
+                                            <div class='input-main-title'>開團者匯款帳號</div>
+                                            <div class='input-sub-title'></div>
+                                        </div>
+                                        <input class='form-ctrl-input' type="text" v-model.trim="orderInfo.bank_info">
+                                    </div>
+                                </div>
+                            </div>
+                            <shop-info-table
+                                v-bind:shop_info_chosed="orderInfo.shop_info"
+                            ></shop-info-table>
+                            <div class='form-ctrl-inputlabel-big'>
+                                <button 
+                                v-if="checkNewOrderPageInfo.length == 0"
+                                class='ts-btn btn-active input-submit-btn'
+                                @click="uploadNewOrderInfo()"
+                                >確認開團</button>
+
+                                <div v-else>
+                                    <button
+                                    style="position:relative;z-index: 2;"
+                                    class='ts-btn btn-notwork input-submit-btn'
+                                    >
+                                        無法開團!
+                                    </button>
+                                    <div class='input-submit-btn-warning-window'>
+                                        <ul>
+                                            <li v-for="waringString of checkNewOrderPageInfo">
+                                                {{waringString}}
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                        </div>
                     </div>
 
                 </div>
@@ -833,6 +1599,7 @@
 <script type="text/javascript" src="/static/TreeStudioAPIs/MainToolBox/VueSetting.js"></script>
 <script type="text/javascript" src="/static/TreeStudioAPIs/HomePage/VueSetting.js"></script>
 <script type="text/javascript" src="/static/TreeStudioAPIs/AnnouncementListWindow/VueSetting.js"></script>
+<script type="text/javascript" src="/static/TreeStudioAPIs/OrderSystem/VueSetting.js"></script>
 <script type="text/javascript" src="/static/TreeStudioAPIs/TopMenu/VueSetting.js"></script>
 <script type="text/javascript" src="/static/TreeStudioAPIs/AnnouncementManager/VueSetting.js"></script>
 <script type="text/javascript" src="/static/TreeStudioAPIs/URLdescriptionWindow/VueSetting.js"></script>

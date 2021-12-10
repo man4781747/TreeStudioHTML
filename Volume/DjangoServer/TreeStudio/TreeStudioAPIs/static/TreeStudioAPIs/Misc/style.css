@@ -136,6 +136,42 @@ body{
     z-index: 1;
 }
 
+.todo-list-area {
+    background-color: var(--html-background-color);
+    border: 1px var(--gray-dark) solid;
+    border-radius: 4px;
+    padding: 0.25rem;
+}
+
+.todo-group-title {
+    display: flex;
+    justify-content: space-between;
+}
+
+.todo-group-title-toolbar {
+    display: flex;
+}
+
+.todo-list-group {
+    padding: 0.25rem;
+    margin: 0.25rem;
+    background-color: var(--white);
+    border-radius: 4px;
+    box-shadow: 0 0 5px rgb(0 0 0 / 13%), 1px 1px 5px rgb(0 0 0 / 20%);
+    padding-left: 0.75rem;
+    border-left: 4px var(--title-color) solid;
+}
+
+.todo-list-item {
+    padding: 0.25rem;
+    margin: 0.25rem;
+    background-color: var(--white);
+    border-radius: 4px;
+    box-shadow: 0 0 5px rgb(0 0 0 / 13%), 1px 1px 5px rgb(0 0 0 / 20%);
+    padding-left: 0.75rem;
+    border-left: 4px var(--title-color) solid;
+}
+
 /* 介紹的Title系列 */
 
 .description-title {
@@ -222,6 +258,11 @@ body{
 
 .ts-table .table-title-and-filter .fa-filter:hover{
     color: var(--title-color);
+}
+
+.ts-table-active-list {
+    display: flex;
+    justify-content: center;
 }
 
 /* 按鈕Style */
@@ -457,6 +498,115 @@ body{
     width: calc( 100% - 8px);
     height: 1.5rem;
 }
+
+/* 跳出確認視窗系列 */
+
+.top-window-alert-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1050;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background-color: rgba(0, 0, 0, .6);
+    display: flex;
+    justify-content: center;
+}
+
+.top-window-alert-window-lock{
+    top: 0;
+    left: 0;
+    z-index: 9999;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background-color: rgba(0, 0, 0, .6);
+    display: flex;
+    justify-content: center;
+    position: fixed;
+    line-height: 100vh;
+    color: #fff;
+    font-size: 2rem;
+}
+
+.top-window-alert-window {
+    margin: 3rem 0;
+    box-shadow: 0 0.5rem 1rem rgb(0 0 0 / 50%);
+    display: grid;
+    pointer-events: auto;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid rgba(0,0,0,.2);
+    border-radius: .3rem;
+    box-shadow: 0 0.25rem 0.5rem rgb(0 0 0 / 50%);
+    width: 50vw;
+    position: relative;
+}
+
+.top-window-alert-footer {
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-flex-wrap: wrap;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+    -webkit-align-items: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-justify-content: space-between!important;
+    -ms-flex-pack: justify!important;
+    justify-content: space-between!important;
+    padding: .75rem;
+    border-top: 1px solid #e9ecef;
+    border-bottom-right-radius: calc(.3rem - 1px);
+    border-bottom-left-radius: calc(.3rem - 1px);
+}
+
+.top-window-alert-header {
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-align-items: flex-start;
+    -ms-flex-align: start;
+    align-items: flex-start;
+    -webkit-justify-content: space-between;
+    -ms-flex-pack: justify;
+    justify-content: space-between;
+    padding: 1rem;
+    border-bottom: 1px solid #e9ecef;
+    border-top-left-radius: calc(.3rem - 1px);
+    border-top-right-radius: calc(.3rem - 1px);
+}
+
+.top-window-alert-header p {
+    font-size: 1.5rem;
+    margin: 0;
+}
+
+.top-window-alert-body {
+    padding: .75rem;
+    font-weight: 500;
+    overflow: auto;
+    max-height: 60vh;
+}
+
+.anima-updown-in-2-sec {
+    animation-name:AnimaUpdownin2sec;
+    animation-duration:1s;
+	animation-timing-function: linear;
+	animation-iteration-count:infinite;
+	pointer-events: none;
+    position: relative;
+}
+
+@keyframes AnimaUpdownin2sec{
+    from { top: 0px ; }
+    25%  { top: -5px; } 
+    75%  { top: 5px; } 
+    to   { top: 0px; }
+}
+
 
 /* 文字垂直置中 */
 .text-v-center {

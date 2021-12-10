@@ -14,6 +14,69 @@ var Vue_mainToolBox =  new Vue({
                 'Name': '公告列表',
                 'Type': 'Page',
                 'icon': 'fas fa-bullhorn',
+            },            
+            'OrderSystem': {
+                'Name': '訂餐系統',
+                'Type': 'Page',
+                'icon': 'fas fa-utensils',
+            },         
+            'Wiki_Link': {
+                'Name': 'WIKI 知識庫',
+                'Type': 'URL',
+                'URL': 'http://10.95.43.73:8001',
+                'icon': 'fab fa-wikipedia-w',
+                'title': 'Wiki 知識庫',
+                'content': '數據部專用知識庫，打上關鍵字找到你想要的資訊，限定公司內網使用唷!!',
+            },
+            'Gitlab_Link': {
+                'Name': 'GitLab',
+                'Type': 'URL',
+                'URL': 'http://10.95.43.73:8001',
+                'icon': 'fab fa-gitlab',
+                'title': 'GitLab',
+                'content': '數據部專用程式庫，打上關鍵字找到你想要的專案程式，限定公司內網使用唷!!',
+            },
+            'Jira_Link': {
+                'Name': 'Jira',
+                'Type': 'URL',
+                'URL': 'https://pm.cathaylife.com.tw',
+                'icon': 'fab fa-jira',
+                'title': 'Jira 專案管理工具',
+                'content': '公司的專案管理工具，內外網都可以使用。',
+            },
+            'Tools': {
+                'Name': '常用連結及工具',
+                'Type': 'List', 
+                'opened': false,
+                'icon': 'fas fa-link',
+                'height' : 0,
+                'id' : 'main-toolbox-list-tools',
+                'List': [
+                    {
+                        'Name': 'Gather 虛擬辦公室',
+                        'Type': 'URL',
+                        'URL': 'https://gather.town/app/Kfcmm6p8EEN5MwDm/cathaylife',
+                        'icon': 'far fa-circle',
+                        'title': 'Gather 虛擬辦公室',
+                        'content': '數據部虛擬辦公室，密碼為 cathaylife，建議使用電腦版登入使用。',
+                    },
+                    {
+                        'Name': 'Data Flow Chart',
+                        'Type': 'URL',
+                        'URL': 'http://10.95.42.31:8000/',
+                        'icon': 'far fa-circle',
+                        'title': 'AIRJOB: 客戶智能科',
+                        'content': 'AIRJOB為以Airflow為底層延伸設計的自主排程系統。',
+                    },
+                    {
+                        'Name': 'PixlrX 線上繪圖',
+                        'Type': 'URL',
+                        'URL': 'https://pixlr.com/tw/x/',
+                        'icon': 'far fa-circle',
+                        'title': 'AIRJOB: 商業智能科',
+                        'content': 'AIRJOB為以Airflow為底層延伸設計的自主排程系統。',
+                    },
+                ]
             },
         },
     },
@@ -54,6 +117,15 @@ var Vue_mainToolBox =  new Vue({
                 Vue_announcementListManager.updateAnnouncementList()
             } else {
                 let element = document.getElementById("hap-announcement-list-window");
+                element.style.display = 'none';
+            } 
+
+            if (S_page == 'OrderSystem'){
+                let element = document.getElementById("order-system-window");
+                element.style.display = '';
+                Vue_OrderSystem.uploadAliveOrderInfo()
+            } else {
+                let element = document.getElementById("order-system-window");
                 element.style.display = 'none';
             } 
 
