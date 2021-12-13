@@ -54,50 +54,15 @@ Vue.component('shop-info-table', {
 </div>
 <div style='margin-bottom: .5rem;'>
 <div class='input-group-main-title'
-@drop="console.log('123')"
 >菜單
     <div class='input-group-main-sub-title'></div>
 </div>
 <div class='form-ctrl-inputlabel-big'>
-    <div class='todo-list-area'>
-        <div class='todo-list-group'
-            v-for="(group_data, group_index) of shop_info_chosed.shop_menu"
-            :key="'group_'+group_data.name"
-        >
-            <div class='todo-group-title'>
-                <div class='todo-group-title-toolbar'>
-                    <div>
-                        <label>種類:</label>
-                        <input v-model.trim="group_data.name" placeholder="請輸入餐點分類名稱" disabled>
-                    </div>
-                </div>
-            </div>
-            <div>
-                <div class='todo-list-item'
-                v-for="item_data, item_index) of group_data.items"
-                :key="'item_'+item_data.name"
-                >
-                    <div style="display:flex;justify-content: space-between;">
-                        <div style="display:flex;">
-                            <i class="fas fa-ellipsis-v"></i>
-                            <div>
-                                <label>餐點名稱:</label>
-                                <input v-model.trim="item_data.name" placeholder="請輸入餐點名稱" disabled>
-                            </div>
-                            <div>
-                                <label>餐點價格:</label>
-                                <input type="number" min='0' v-model.trim="item_data.price" placeholder="請輸入餐點價格" disabled>
-                            </div>
-                            <div>
-                                <label>餐點註解:</label>
-                                <input v-model.trim="item_data.desc" placeholder="請輸入餐點註解(非必要)" disabled>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+    <shop-menu-mamager
+    v-bind:shop_menu="shop_info_chosed.shop_menu"
+    ></shop-menu-mamager>
+
+
 </div>
 </div>
 
@@ -163,14 +128,22 @@ Vue.component('order-info-table', {
 Vue.component('shop-cart-info-table', {
     template:`
 <div>
-
 <div style='display: flex;justify-content: space-between;align-items: baseline;'>
     <div style='display: flex;align-items: baseline;'>
         <div>點餐者: {{shop_cart_data_list[0].shopper_name}}</div>
-        <div style="color:red;font-size:var(--sub-font-size);">購物車單號: {{shop_cart_id}}</div>
+        <template v-if="allow_pay==true">
+            <div v-if="shop_cart_data_list[0].pay==false" class="ts-btn btn-open"
+                @click="clickPayBtn(shop_cart_data_list, true)"
+            >去付款</div>
+            <div v-else class="ts-btn btn-notwork"
+            >已付款</div>
+
+        </template>
+        <div v-else style="color:red;font-size:var(--sub-font-size);">購物車單號: {{shop_cart_id}}</div>
     </div>
     <div style='display: flex;'>
         <i class='fas fa-trash-alt'
+            v-if="allow_del"
             @click="Vue_OrderSystem.clickDelShopCartByShopCartIDBtn(shop_cart_id,shop_cart_data_list)"
         ></i>
     </div>
@@ -197,17 +170,169 @@ Vue.component('shop-cart-info-table', {
 
 </div>
 `,
-    props: ['shop_cart_data_list','shop_cart_id'],
+    props: ['shop_cart_data_list','shop_cart_id', 'allow_del', 'allow_pay'],
+
+    methods: {
+        clickPayBtn(shop_cart_data_list, setValue){
+            this.$emit('click_pay_btn', {
+                "shop_cart_data_list": shop_cart_data_list,
+                'setValue': setValue,
+            })
+        },
+
+    },
+
+})
+
+Vue.component('shop-cart-info-table-shorter', {
+    template:`
+<div>
+
+<table class='ts-table'>
+<thead>
+    <tr>
+        <th>品項名稱</th>
+        <th>數量</th>
+        <th>總額</th>
+        <th>備註</th>
+        <th>點菜人</th>
+    </tr>
+</thead>
+<tbody>
+    <tr v-for="(shop_cart_data, S_uniName, index) in shop_cart_data_list_shorter">
+        <td>{{shop_cart_data.item_name}}</td>    
+        <td>{{shop_cart_data.item_number}}</td>    
+        <td>{{shop_cart_data.item_price*shop_cart_data.item_number}}</td>    
+        <td>{{shop_cart_data.item_content}}</td>    
+        <td>
+            <div v-for="(I_number, S_who, index) in shop_cart_data.whoOrder">
+                {{S_who}}:{{I_number}}
+            </div>
+        </td>
+    </tr>
+</tbody>
+</table>
+
+</div>
+`,
+    props: ['shop_cart_data_list_shorter'],
+})
+
+Vue.component('shop-menu-mamager', {
+    template:` 
+<div style='margin-bottom: .5rem;'>
+    <div :class="allow_edit==true?'todo-list-area':''">
+        <div class='user-order-window-item-list-group-area'
+            v-for="(group, group_index) of shop_menu"
+        >
+            <div style="display: flex;align-items: center;">
+                <i 
+                    v-if="allow_edit==true"
+                    @click="delMenuGroup(group_index)" 
+                    class='fas fa-trash-alt ts-btn btn-close'
+                ></i>
+                <div class='user-order-window-item-list-group-title' :class="if_allow_edit">
+                    <input class="edit-entry-input" v-model="group.name" placeholder="請輸入種類名稱">
+                    <div class="edit-entry-label">{{group.name==""?"請輸入種類名稱":group.name}}</div>
+                </div>
+            </div>
+            <div class='user-order-window-item-list-group-items'>
+                <div class='user-order-window-item-list-group-item'
+                    v-for="(item, item_index) of group.items"
+                    @click="allow_click==true?click_order_item(item, shop_info.shop_id, shop_info.shop_name, order_info.order_id):''"
+                >
+                    <div class='menu-item-mains'>
+                        <div class='menu-item-title' :class="if_allow_edit">
+                            <input class="edit-entry-input" v-model="item.name" placeholder="請輸入餐點名稱">
+                            <span class='edit-entry-label'>{{item.name==""?"請輸入餐點名稱":item.name}}</span>
+                        </div>
+
+                        <div class='menu-item-price' :class="if_allow_edit">
+                            <input class="edit-entry-input" type="number" v-model="item.price">
+                            <span class='edit-entry-label'>{{item.price}}</span>
+                        </div>
+
+                        <div class='menu-item-desc' :class="if_allow_edit">
+                            <input class="edit-entry-input" v-model="item.desc" placeholder="請輸入餐點介紹(非必要)">
+                            <span class='edit-entry-label'>{{item.desc==""?"請輸入餐點介紹(非必要)":item.desc}}</span>
+                        </div>
+                    </div>
+                    <div class='menu-item-btns' v-if="allow_edit==true">
+                        <i 
+                            @click="delMenuItem(group, item_index)" 
+                            class='fas fa-trash-alt ts-btn btn-close'
+                            style='margin: 0;'
+                        ></i>
+                    </div>
+                </div>
+                <div v-if="allow_edit==true" class='add-item-btn' @click="addNewMenuItem(group)"> + 新增餐點項目</div>
+            </div>
+        </div>
+        <div v-if="allow_edit==true" class='add-item-btn' @click="addNewMenuGroup(shop_menu)"> + 新增餐點大類</div>
+    </div>
+</div> 
+`,
+    props: ['shop_menu', 'allow_edit', 'shop_info', 'order_info', 'allow_click'],
+    computed: {
+        if_allow_edit(){
+            if (this.allow_edit==true){
+                return "edit-entry"
+            }
+            return "cant-edit"
+        },
+    },
+
+    methods:{
+        addNewMenuGroup(){
+            this.shop_menu.push(
+                {
+                    name: '',
+                    items: [
+                    ],
+                }
+            )
+        },
+        delMenuGroup(index){
+            this.shop_menu.splice(index,1)
+        },
+
+        addNewMenuItem(group_data){
+            group_data.items.push(
+                {
+                    name: '',
+                    price: 0,
+                    desc: '',
+                },
+            )
+        },
+        delMenuItem(group_data, item_index){
+            group_data.items.splice(item_index,1)
+        },
+
+        click_order_item(item_data, shop_id, shop_name, order_id){
+            D_emitData = {
+                item_data : item_data,
+                shop_name : shop_name,
+                shop_id : shop_id,
+                order_id : order_id,
+            }
+            this.$emit('click_order_item', D_emitData); 
+        },
+    },
 })
 
 var Vue_OrderSystem =  new Vue({
     el: '#order-system-window',
     data: {
-        window_chose: 'today_window',
+        true_value: true,
+
+        window_chose: 'today_list_window',
 
         editShopWindowOpen: false,
         deleteShopWindowOpen: false,
         deleteShopCartWindowOpen: false,
+        closeOrderCheckWindowOpen: false,
+        payShopCartCheckWindowOpen: false,
 
         pageChose : 0,
         pageListChose : 0,
@@ -269,9 +394,9 @@ var Vue_OrderSystem =  new Vue({
         orderInfo: {},
 
         // 今日訂餐相關資訊
-        aliveListUpdateing: false,
-        aliveList : [],
-        aliveChosedNum: 0,
+        todayOrderListUpdateing: false,
+        todayOrderList : [],
+        todayOrderChosedNum: 0,
 
         chosedOrderData: {
             'order_info': {},
@@ -293,11 +418,23 @@ var Vue_OrderSystem =  new Vue({
         allShopCartOrderInfo: {},
         allShopCartData: [],
 
+        short_checkbox: false,
+
         delCheckInfo: {
             'shop_cart_id': '',
             'shop_cart_list': [],
-        }
+        },
 
+        closeCheckOrderID: '',
+
+
+        // 付款相關資訊
+        only_not_pay_checkbox: false,
+        payCheckInfo: {
+            'shop_cart_id': '',
+            'shop_cart_list': [],
+            'setValue': false,
+        },
     },
 
     computed: {
@@ -403,6 +540,13 @@ var Vue_OrderSystem =  new Vue({
             return totalCount
         },
 
+        isShopperCartEmpty(){
+            if (Object.keys(this.shoppingCar).length==0){
+                return true
+            }
+            return false
+        },
+
         // 檢查Shop Editer視窗有沒有錯誤之處
         checkEditerPageInfo(){
             if (this.shop_info_chosed.shop_menu == undefined){
@@ -450,7 +594,7 @@ var Vue_OrderSystem =  new Vue({
 
         chosedAliveData(){
             try {
-                return this.aliveList[this.aliveChosedNum]
+                return this.todayOrderList[this.todayOrderChosedNum]
             } catch {
                 return undefined
             }
@@ -459,10 +603,12 @@ var Vue_OrderSystem =  new Vue({
         caledAllShopCart(){
             D_caledAllShopCartData = {}
             for (D_shopCartData of this.allShopCartData){
-                if (D_caledAllShopCartData[D_shopCartData.shop_cart_id] == undefined){
-                    D_caledAllShopCartData[D_shopCartData.shop_cart_id] = []
+                if ((this.only_not_pay_checkbox==false) | (D_shopCartData.pay==false)){
+                    if (D_caledAllShopCartData[D_shopCartData.shop_cart_id] == undefined){
+                        D_caledAllShopCartData[D_shopCartData.shop_cart_id] = []
+                    }
+                    D_caledAllShopCartData[D_shopCartData.shop_cart_id].push(D_shopCartData)
                 }
-                D_caledAllShopCartData[D_shopCartData.shop_cart_id].push(D_shopCartData)
             }
             return D_caledAllShopCartData
         },
@@ -476,6 +622,29 @@ var Vue_OrderSystem =  new Vue({
             return I_money
         },
 
+        caledAllShopCart_Short(){
+            D_allList = {}
+            for (D_shopCartData of this.allShopCartData){
+                S_uniStr = D_shopCartData.item_name + "_" + D_shopCartData.item_content
+                if (D_allList[S_uniStr] == undefined){
+                    D_allList[S_uniStr] = {
+                        item_name : D_shopCartData.item_name,
+                        item_content : D_shopCartData.item_content,
+                        item_number : 0,
+                        item_price : D_shopCartData.item_price,
+                        whoOrder: {},
+                    }
+                }
+                D_allList[S_uniStr].item_number += D_shopCartData.item_number
+
+                if (D_allList[S_uniStr].whoOrder[D_shopCartData.shopper_name] == undefined){
+                    D_allList[S_uniStr].whoOrder[D_shopCartData.shopper_name] = 0
+                }
+                D_allList[S_uniStr].whoOrder[D_shopCartData.shopper_name] += D_shopCartData.item_number
+            }   
+
+            return D_allList
+        },
     },
 
     methods:{
@@ -501,6 +670,7 @@ var Vue_OrderSystem =  new Vue({
                 'shop_menu': [],
             }
         },
+
         clickEditBtn(S_shop_id){
 			fetch('/TreeStudioAPIs/OrderSys_ShopInfo_Manager/'+S_shop_id+'/', {
                 method: 'GET'
@@ -518,10 +688,11 @@ var Vue_OrderSystem =  new Vue({
             console.log(evt)
         },
 
-        openSettingWindow(){
-            this.window_chose='setting_window'
+        openShopListWindow(){
+            this.window_chose='shop_list_window'
             this.updateShopList()
         },
+
 
         clickDeleteShopBtn(S_shop_id){
 			fetch('/TreeStudioAPIs/OrderSys_ShopInfo_Manager/'+S_shop_id+'/', {
@@ -557,6 +728,53 @@ var Vue_OrderSystem =  new Vue({
             this.shoppingCar[order_id].splice(index,1)
         },
         
+        switchShopCartPayStatus(shop_cart_id, setValue){
+            var form = new FormData();
+            form.append("shop_cart_id",shop_cart_id)
+            form.append("pay",setValue)
+
+			fetch('/TreeStudioAPIs/OrderSys_ShopCart_Manager/', {
+				method: 'POST',
+				body: form,
+                mode: 'same-origin',
+                headers: {'X-CSRFToken': csrftoken}
+			}).then(function(response) {
+				return response.json();
+			})
+			.then(function(myJson) {
+				console.log(myJson);
+                v_console.log('付款成功')
+                Vue_OrderSystem.payShopCartCheckWindowOpen = false
+                Vue_OrderSystem.uploadAllShopCartDataByOrderID(
+                    Vue_OrderSystem.payCheckInfo.shop_cart_list[0].order_id
+                )
+
+			});
+        },
+        openPayShopCartCheckWindow(shop_cart_data, setValue){
+            console.log(shop_cart_data.shop_cart_data_list[0].shop_cart_id)
+            this.payShopCartCheckWindowOpen = true
+            this.payCheckInfo= {
+                'shop_cart_id': shop_cart_data.shop_cart_data_list[0].shop_cart_id,
+                'shop_cart_list': shop_cart_data.shop_cart_data_list,
+                'setValue': shop_cart_data.setValue,
+            }
+        },
+
+
+        // 已結單後視窗專用
+        openClosedOrderWindow(order_id){
+            this.window_chose='closed_order_window'
+            this.getOrderInfos(order_id)
+            this.uploadAllShopCartDataByOrderID(order_id)
+        },
+
+        // 訂餐列表專用
+        openOrderListWindow(){
+            this.window_chose='today_list_window'
+            this.uploadTodayOrderInfo()
+        },
+
         // 結單視窗專用
         clickOpenAllShopCartBtn(D_orderInfo){
             this.window_chose='all_shopcart_window'
@@ -581,14 +799,40 @@ var Vue_OrderSystem =  new Vue({
             this.deleteShopCartWindowOpen=true
         },
 
+        // 結單確認視窗專用
+        clickOpenCloseOrderCheckWindowBtn(order_id){
+            this.closeOrderCheckWindowOpen = true
+            this.closeCheckOrderID = order_id
+        },
+
+        clickCloseOrderBtn(order_id){
+            this.closeOrder(order_id)
+            .then(function(return_json) {
+                console.log(return_json)
+				v_console.log('結單成功')
+                Vue_OrderSystem.closeOrderCheckWindowOpen = false
+                Vue_OrderSystem.openOrderListWindow()
+
+			})
+        },
+        
         // 點餐視窗專用
-        clickOrderItem(item_data, shop_id, shop_name, order_id){
-            this.addOrderWindowData.data = item_data
+        openOrderWindow(order_id){
+            this.window_chose='order_window'
+            this.getOrderInfos(order_id)
+        },
+
+        clickOrderItem(D_data){
+            console.log(D_data)
+            if (D_data == undefined){
+                return null
+            }
+            this.addOrderWindowData.data = D_data.item_data
             this.addOrderWindowData.content = ""
             this.addOrderWindowData.number = 0
-            this.addOrderWindowData.shop_name = shop_name
-            this.addOrderWindowData.shop_id = shop_id
-            this.addOrderWindowData.order_id = order_id
+            this.addOrderWindowData.shop_name = D_data.shop_name
+            this.addOrderWindowData.shop_id = D_data.shop_id
+            this.addOrderWindowData.order_id = D_data.order_id
             this.addOrderWindowOpen = true
         },
 
@@ -625,31 +869,6 @@ var Vue_OrderSystem =  new Vue({
             this.init_shop_info_chosed()
         },
 
-        addNewMenuGroup(){
-            this.shop_info_chosed.shop_menu.push(
-                {
-                    name: '',
-                    items: [
-                    ],
-                }
-            )
-        },
-        delMenuGroup(index){
-            this.shop_info_chosed.shop_menu.splice(index,1)
-        },
-
-        addNewMenuItem(group_data){
-            group_data.items.push(
-                {
-                    name: '',
-                    price: 0,
-                    desc: '',
-                },
-            )
-        },
-        delMenuItem(group_data, item_index){
-            group_data.items.splice(item_index,1)
-        },
 
         // db連線 - 通用
         getShopInfo(S_shopID){
@@ -675,6 +894,18 @@ var Vue_OrderSystem =  new Vue({
                 return myJson['data']
 			});
             return fetch_getOrderInfo
+        },
+
+        closeOrder(S_orderID){
+			fetch_closeOrder = fetch('/TreeStudioAPIs/OrderSys_OrderInfo_Manager_Switch_By_Order_Id/'+S_orderID+'/0/', {
+                method: 'GET'
+			}).then(function(response) {
+				return response.json();
+			})
+			.then(function(myJson) {
+                return myJson['data']
+			});
+            return fetch_closeOrder
         },
 
         getAllShopCartByOrderID(S_orderID){
@@ -749,22 +980,22 @@ var Vue_OrderSystem =  new Vue({
         },
 
         // db連線 - today order info
-        uploadAliveOrderInfo(){
-            this.aliveListUpdateing = true
-			fetch('/TreeStudioAPIs/OrderSys_OrderInfo_Manager_GetAlive/', {
+        uploadTodayOrderInfo(){
+            this.todayOrderListUpdateing = true
+			fetch('/TreeStudioAPIs/OrderSys_OrderInfo_Manager_GetTodayOrder/', {
                 method: 'GET'
 			}).then(function(response) {
 				return response.json();
 			})
 			.then(function(myJson) {
                 v_console.success("未關閉訂單更新完成")
-                Vue_OrderSystem.aliveList = myJson['data']
-                Vue_OrderSystem.aliveListUpdateing = false
-                if (Vue_OrderSystem.aliveList.length==1){
-                    Vue_OrderSystem.getOrderInfos(myJson['data'][0].order_id)
-                } else {
-                    Vue_OrderSystem.chosedOrderData['shop_info'] = {}
-                }
+                Vue_OrderSystem.todayOrderList = myJson['data']
+                Vue_OrderSystem.todayOrderListUpdateing = false
+                // if (Vue_OrderSystem.todayOrderList.length==1){
+                //     Vue_OrderSystem.getOrderInfos(myJson['data'][0].order_id)
+                // } else {
+                //     Vue_OrderSystem.chosedOrderData['shop_info'] = {}
+                // }
 			}); 
         },
 
@@ -810,7 +1041,7 @@ var Vue_OrderSystem =  new Vue({
 				console.log(myJson);
                 v_console.success("餐廳新增完成")
                 Vue_OrderSystem.init_shop_info_chosed()
-                Vue_OrderSystem.window_chose = 'setting_window'
+                Vue_OrderSystem.window_chose = 'shop_list_window'
                 Vue_OrderSystem.updateShopList()
                 Vue_OrderSystem.editShopWindowOpen = false
 			});
@@ -846,13 +1077,11 @@ var Vue_OrderSystem =  new Vue({
         // db連線 - order info
         uploadNewOrderInfo(){
 			var form = new FormData();
-
 			form.append("order_id", this.orderInfo['order_id'])
             form.append("owner_name", this.orderInfo['owner_name'])
             form.append("close_time", this.orderInfo['close_time'])
             form.append("bank_info", this.orderInfo['bank_info'])
             form.append("shop_id", this.orderInfo['shop_id'])
-            
 
 			fetch('/TreeStudioAPIs/OrderSys_OrderInfo_Manager/', {
                 // method: 'GET'
@@ -882,7 +1111,7 @@ var Vue_OrderSystem =  new Vue({
                 .then(function(myJson) {
                     console.log(myJson)
                     v_console.success("團訂定單刪除成功")
-                    Vue_OrderSystem.uploadAliveOrderInfo()
+                    Vue_OrderSystem.uploadTodayOrderInfo()
                 });
             })
         },

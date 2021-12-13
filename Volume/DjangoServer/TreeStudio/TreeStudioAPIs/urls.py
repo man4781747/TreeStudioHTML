@@ -14,9 +14,12 @@ urlpatterns = [
     path(r'OrderSys_ShopInfo_Manager/', views.OrderSys_ShopInfo_Manager),
     
     path(r'OrderSys_OrderInfo_Manager_GetAlive/', views.OrderSys_OrderInfo_Manager_GetAlive),
+    path(r'OrderSys_OrderInfo_Manager_GetTodayOrder/', views.OrderSys_OrderInfo_Manager_GetTodayOrder),
     path(r'OrderSys_OrderInfo_Manager/<order_id>/', views.OrderSys_OrderInfo_Manager),
     path(r'OrderSys_OrderInfo_Manager/delete_By_ID/<id>/', views.OrderSys_OrderInfo_Manager),
     path(r'OrderSys_OrderInfo_Manager/', views.OrderSys_OrderInfo_Manager),
+    path(r'OrderSys_OrderInfo_Manager_Switch_By_Order_Id/<order_id>/<int:switch>/', views.OrderSys_OrderInfo_Manager_Switch_By_Order_Id),
+
 
     path(r'OrderSys_ShopCart_Manager/<shop_cart_id>/', views.OrderSys_ShopCart_Manager),
     path(r'OrderSys_ShopCart_Manager/delete_By_ID/<id>/', views.OrderSys_ShopCart_Manager),

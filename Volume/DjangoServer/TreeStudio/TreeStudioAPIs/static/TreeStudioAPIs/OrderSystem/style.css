@@ -15,26 +15,42 @@
     margin-bottom: .75rem;
 }
 
-.user-order-window-item-list-group-title {
+.user-order-window-item-list-group-title *,
+.user-order-window-item-list-group-title{
     font-size: var(--window-title-font-size);
     color: var(--title-color);
     margin: 0.5rem 0;
 }
 
+.user-order-window-item-list-group-title .edit-entry-input {
+    
+}
+
 .user-order-window-item-list-group-items {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(4, calc(25% - 18px));
     gap: 24px 24px;
 }
 
 .user-order-window-item-list-group-item {
-    display: grid;
+    display: flex;
+    justify-content: space-between;
     padding: 8px;
     box-shadow: 0 0 5px rgb(0 0 0 / 13%), 1px 1px 5px rgb(0 0 0 / 20%);
     background-color: #fff;
     transition: all .25s;
     height: 75px;
     cursor: pointer;
+    position: relative;
+}
+
+.menu-item-mains {
+    flex: 0 0 calc( 100% - 40px);
+    overflow: hidden;
+}
+
+.mmenu-item-btns {
+    flex: 0 0 40px;
 }
 
 .user-order-window-item-list-group-item:hover {
@@ -42,18 +58,24 @@
     transform: translateX(-2px) translateY(-2px);
 }
 
+.menu-item-title *,
 .menu-item-title {
     font-size: 1rem;
     font-weight: bold;
+    width: calc(100% - 15px);
 }
 
+.menu-item-price *,
 .menu-item-price {
     font-size: var(--sub-font-size);
+    width: calc(100% - 15px);
 }
 
+.menu-item-desc *,
 .menu-item-desc {
     font-size: var(--sub-font-size);
     color: var(--secondary);
+    width: calc(100% - 15px);
 }
 
 
@@ -95,4 +117,48 @@
 
 .order-check-window-set-number {
     display: flex;
+}
+
+.add-item-btn {
+    padding: 0.5rem;
+    font-weight: bolder;
+    border: 3px gray dashed;
+    background-color: rgba(0,0,0,10%);
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.add-item-btn:hover {
+    background-color: rgba(0,0,0,15%);
+}
+
+.cant-edit .edit-entry-input{
+    display: none;
+}
+
+.edit-entry .edit-entry-input{
+    display: none;
+}
+
+.edit-entry:hover .edit-entry-input,
+.edit-entry:focus .edit-entry-input
+.edit-entry:focus-within .edit-entry-input,
+.edit-entry:focus-visible .edit-entry-input,
+.edit-entry-input:active,
+.edit-entry-input:focus 
+{
+    display: unset;
+}
+
+.edit-entry:hover .edit-entry-label,
+.edit-entry:focus .edit-entry-label
+.edit-entry:focus-within .edit-entry-label,
+.edit-entry:focus-visible .edit-entry-input,
+.edit-entry-input:active +.edit-entry-label,
+.edit-entry-input:target +.edit-entry-label,
+.edit-entry-input:focus +.edit-entry-label
+{
+    display: none;
 }
