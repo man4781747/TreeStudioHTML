@@ -36,7 +36,9 @@ class OrderSys_ShopsInfo(models.Model):
     shop_score = models.FloatField()
     shop_phoneNum = models.TextField()
     shop_address = models.TextField()
+    shop_description = models.TextField()
     shop_menu = models.TextField()
+    shop_picture = models.TextField()
     last_modify_date = models.DateTimeField(auto_now=True)
 
     def to_dict(self):
@@ -61,7 +63,9 @@ class OrderSys_OrderInfo(models.Model):
     owner_name = models.TextField()
     close_time = models.TextField()
     bank_info = models.TextField()
+    bank_info_qr_code = models.TextField()
     shop_id = models.TextField()
+    order_description = models.TextField()
     alive = models.BooleanField(default=True)
     last_modify_date = models.DateTimeField(auto_now=True)
 

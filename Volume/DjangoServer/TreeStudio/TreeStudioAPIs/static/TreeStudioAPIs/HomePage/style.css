@@ -1,6 +1,6 @@
 :root {
     --title-green: #00b050;
-    --a-link-blue: #007bff;
+    --a-link-blue: var(--primary);
     --a-link-blue-hover: #0056b3;
 }
 

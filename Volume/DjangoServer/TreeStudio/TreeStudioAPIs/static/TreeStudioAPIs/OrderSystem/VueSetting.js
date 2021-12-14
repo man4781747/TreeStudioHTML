@@ -2,10 +2,38 @@ Vue.component('shop-info-table', {
     template: `
 <div>
 <div style='margin-bottom: .5rem;'>
-<div class='input-group-main-title'>店家基礎資訊
+<div class='input-group-main-title'>店家資訊
     <div class='input-group-main-sub-title'></div>
 </div>
 <div class='form-inputlabel-list'>
+    <div class='form-ctrl-inputlabel-big'>
+        <div class='input-titles'>
+            <div class='input-main-title'>店家圖片</div>
+        </div>
+        <div style="position: absolute;right: 0;top: 0;">
+            <label>縮圖顯示</label><input type='checkbox' v-model="edit_shopImgShort">
+        </div>
+        <div style='border: 1px #d0d0d0 solid;
+        border-radius: 4px;position: relative;overflow: hidden;
+        min-height: var(--shop-pic-height);'
+        >
+            <div style="position: absolute;
+                height: 100%;
+                width: 100%;z-index: 2;"
+                :style="edit_shopImgShort?'background: rgba(0,0,0,.5);':''"
+            ></div>
+            <img v-if="shop_info_chosed.shop_picture" :src="shop_info_chosed.shop_picture" 
+                style="height: unset;width: 100%;"
+                :style="edit_shopImgShort?'position: absolute;transform: translateY(calc(-50% + 60px) );':''"
+            />
+            <img v-else 
+                style="height: unset;width: 100%;"
+                :style="edit_shopImgShort?'position: absolute;transform: translateY(calc(-50% + 60px) );':''"
+                src="https://cn-geo1.uber.com/image-proc/resize/eats/format=webp/width=550/height=440/quality=70/srcb64=aHR0cHM6Ly9kMXJhbHNvZ25qbmczNy5jbG91ZGZyb250Lm5ldC8yMzdjYzQ4Mi0xZmJiLTQ2NmQtYjZmOS02MWZhMzQ5OTMzODIuanBlZw==">
+        </div>
+
+
+    </div>
     <div class='form-ctrl-inputlabel'>
         <div class='input-titles'>
             <div class='input-main-title'>店家編號</div>
@@ -31,8 +59,8 @@ Vue.component('shop-info-table', {
     </div>
     <div class='form-ctrl-inputlabel'>
         <div class='input-titles'>
-            <div class='input-main-title'>店家評價</div>
-            <div class='input-sub-title'>(事後可編輯)</div>
+            <div class='input-main-title'>評價</div>
+            <div class='input-sub-title'></div>
         </div>
         <input class='form-ctrl-input' type="text" v-model.trim="shop_info_chosed.shop_score" disabled>
     </div>
@@ -50,11 +78,18 @@ Vue.component('shop-info-table', {
         </div>
         <input class='form-ctrl-input' type="text" v-model.trim="shop_info_chosed.shop_address" disabled>
     </div>
+    <div class='form-ctrl-inputlabel-big'>
+        <div class='input-titles'>
+            <div class='input-main-title'>店家簡介</div>
+            <div class='input-sub-title'></div>
+        </div>
+        <input class='form-ctrl-input' type="text" v-model.trim="shop_info_chosed.shop_description" disabled>
+    </div>    
 </div>
 </div>
 <div style='margin-bottom: .5rem;'>
 <div class='input-group-main-title'
->菜單
+>店家菜單
     <div class='input-group-main-sub-title'></div>
 </div>
 <div class='form-ctrl-inputlabel-big'>
@@ -70,7 +105,7 @@ Vue.component('shop-info-table', {
     `,
     data: function () {
       return {
-        count: 0
+        edit_shopImgShort: true,
       }
     },
     props: ['shop_info_chosed'],
@@ -80,7 +115,7 @@ Vue.component('order-info-table', {
     template: `
 <div>
 <div style='margin-bottom: .5rem;'>
-    <div class='input-group-main-title'>開團者資訊
+    <div class='input-group-main-title'>團長資訊
         <div class='input-group-main-sub-title'></div>
     </div>
     <div class='form-inputlabel-list'>
@@ -93,24 +128,39 @@ Vue.component('order-info-table', {
         </div>
         <div class='form-ctrl-inputlabel'>
             <div class='input-titles'>
-                <div class='input-main-title'>開團者*</div>
+                <div class='input-main-title'>團長*</div>
                 <div class='input-sub-title'></div>
             </div>
             <input class='form-ctrl-input' type="text" v-model.trim="order_info.owner_name" disabled>
         </div>
-        <div class='form-ctrl-inputlabel'>
+        <!-- <div class='form-ctrl-inputlabel'>
             <div class='input-titles'>
                 <div class='input-main-title'>訂單截止時間</div>
                 <div class='input-sub-title'></div>
             </div>
             <input class='form-ctrl-input' type="text" v-model.trim="order_info.close_time" disabled>
-        </div>
+        </div> -->
         <div class='form-ctrl-inputlabel'>
             <div class='input-titles'>
-                <div class='input-main-title'>開團者匯款帳號</div>
+                <div class='input-main-title'>團長匯款帳號</div>
                 <div class='input-sub-title'></div>
             </div>
             <input class='form-ctrl-input' type="text" v-model.trim="order_info.bank_info" disabled>
+        </div>
+        <div class='form-ctrl-inputlabel'>
+            <div class='input-titles'>
+                <div class='input-main-title'>團長匯款帳號QR Code</div>
+                <div class='input-sub-title'></div>
+            </div>
+            <input v-if="order_info.bank_info_qr_code==''" class='form-ctrl-input' placeholder="" disabled>
+            <img v-else :src="order_info.bank_info_qr_code" style="height: unset;"/>
+        </div>
+        <div class='form-ctrl-inputlabel'>
+            <div class='input-titles'>
+                <div class='input-main-title'>開團備註</div>
+                <div class='input-sub-title'></div>
+            </div>
+            <input class='form-ctrl-input' type="text" v-model.trim="order_info.order_description" disabled>
         </div>
     </div>
 </div>
@@ -132,10 +182,14 @@ Vue.component('shop-cart-info-table', {
     <div style='display: flex;align-items: baseline;'>
         <div>點餐者: {{shop_cart_data_list[0].shopper_name}}</div>
         <template v-if="allow_pay==true">
-            <div v-if="shop_cart_data_list[0].pay==false" class="ts-btn btn-open"
+            <div 
+                style="margin-left: 0.5rem;"
+                v-if="shop_cart_data_list[0].pay==false" class="ts-btn btn-open"
                 @click="clickPayBtn(shop_cart_data_list, true)"
             >去付款</div>
-            <div v-else class="ts-btn btn-notwork"
+            <div 
+                style="margin-left: 0.5rem;"
+                v-else class="ts-btn btn-notwork"
             >已付款</div>
 
         </template>
@@ -221,7 +275,7 @@ Vue.component('shop-cart-info-table-shorter', {
 Vue.component('shop-menu-mamager', {
     template:` 
 <div style='margin-bottom: .5rem;'>
-    <div :class="allow_edit==true?'todo-list-area':''">
+    <div :class="allow_edit==true?'todo-list-area':'todo-list-area'">
         <div class='user-order-window-item-list-group-area'
             v-for="(group, group_index) of shop_menu"
         >
@@ -232,10 +286,11 @@ Vue.component('shop-menu-mamager', {
                     class='fas fa-trash-alt ts-btn btn-close'
                 ></i>
                 <div class='user-order-window-item-list-group-title' :class="if_allow_edit">
-                    <input class="edit-entry-input" v-model="group.name" placeholder="請輸入種類名稱">
-                    <div class="edit-entry-label">{{group.name==""?"請輸入種類名稱":group.name}}</div>
+                    <input class="edit-entry-input" v-model="group.name" placeholder="請輸入分類名稱">
+                    <div class="edit-entry-label">{{group.name==""?"請輸入分類名稱":group.name}}</div>
                 </div>
             </div>
+            <hr style="margin: 0;margin-bottom: 0.25rem;">
             <div class='user-order-window-item-list-group-items'>
                 <div class='user-order-window-item-list-group-item'
                     v-for="(item, item_index) of group.items"
@@ -248,7 +303,7 @@ Vue.component('shop-menu-mamager', {
                         </div>
 
                         <div class='menu-item-price' :class="if_allow_edit">
-                            <input class="edit-entry-input" type="number" v-model="item.price">
+                            <input class="edit-entry-input" type="number" v-model="item.price" @change="onlyPositiveInt(item,'price')">
                             <span class='edit-entry-label'>{{item.price}}</span>
                         </div>
 
@@ -265,10 +320,10 @@ Vue.component('shop-menu-mamager', {
                         ></i>
                     </div>
                 </div>
-                <div v-if="allow_edit==true" class='add-item-btn' @click="addNewMenuItem(group)"> + 新增餐點項目</div>
+                <div v-if="allow_edit==true" class='add-item-btn' @click="addNewMenuItem(group)"> + 新增品項</div>
             </div>
         </div>
-        <div v-if="allow_edit==true" class='add-item-btn' @click="addNewMenuGroup(shop_menu)"> + 新增餐點大類</div>
+        <div v-if="allow_edit==true" class='add-item-btn' @click="addNewMenuGroup(shop_menu)"> + 新增分類</div>
     </div>
 </div> 
 `,
@@ -318,7 +373,42 @@ Vue.component('shop-menu-mamager', {
             }
             this.$emit('click_order_item', D_emitData); 
         },
+
+        onlyPositiveInt(item,name){
+            inputValue = parseInt(item[name])
+            if (isNaN(inputValue)){
+                inputValue = 0
+            }
+            if (inputValue < 0){
+                inputValue = 0
+            }
+            Vue.set(item, name,inputValue )
+        },
     },
+})
+
+Vue.component('five-star-score', {
+    template:` 
+<div style="text-align: center;display: inline-flex;">
+    <div style="position: relative;display:inline-flex;">
+        <i 
+        v-for="i in [0,0,0,0,0]"
+        class="far fa-star"></i>
+        <div
+            style="position: absolute;
+            top: 0;
+            overflow: hidden;
+            white-space: nowrap;"
+            :style="'width:'+(100*score/5)+'%;'"
+        >
+            <i v-for="i in [0,0,0,0,0]" class="fas fa-star"
+                style="color: var(--yellow);"
+            ></i>
+        </div>
+    </div>
+</div>
+`,
+    props: ['score'],
 })
 
 var Vue_OrderSystem =  new Vue({
@@ -333,10 +423,11 @@ var Vue_OrderSystem =  new Vue({
         deleteShopCartWindowOpen: false,
         closeOrderCheckWindowOpen: false,
         payShopCartCheckWindowOpen: false,
+        deleteOrderWindowOpen: false,
 
         pageChose : 0,
         pageListChose : 0,
-        pageMaxNum: 10,
+        pageMaxNum: 30,
 
 
         filterStr: '',
@@ -357,24 +448,28 @@ var Vue_OrderSystem =  new Vue({
                 'filter_str': '',
                 'open': false,
                 'show_name': '評價',
+                'special': 'five-star-score',
+                'v_html_content': '<five-star-score v-bind:score="data[title]"></five-star-score>',
             },
-            shop_info : {
+            shop_description : {
                 'filter_str': '',
                 'open': false,
-                'show_name': '店家資訊',
+                'show_name': '店家簡介',
             },
-            shop_des : {
-                'filter_str': '',
-                'open': false,
-                'show_name': '備註',
-            },
-            last_modify_date : {
-                'filter_str': '',
-                'open': false,
-                'show_name': '修改日期',
-            },
+            // shop_des : {
+            //     'filter_str': '',
+            //     'open': false,
+            //     'show_name': '備註',
+            // },
+            // last_modify_date : {
+            //     'filter_str': '',
+            //     'open': false,
+            //     'show_name': '修改日期',
+            // },
         },
 
+        // 店家編輯相關
+        edit_shopImgShort: true,
         shop_info_chosed: {},
 
         darg_type: '',
@@ -384,6 +479,7 @@ var Vue_OrderSystem =  new Vue({
             'index': -1,
         },
 
+        newShopCheck: false,
 
         // 商店列表相關
         tableInfoList : [],
@@ -547,6 +643,11 @@ var Vue_OrderSystem =  new Vue({
             return false
         },
 
+        shopperCartNum(){
+            return Object.keys(this.shoppingCar).length
+        },
+
+
         // 檢查Shop Editer視窗有沒有錯誤之處
         checkEditerPageInfo(){
             if (this.shop_info_chosed.shop_menu == undefined){
@@ -585,7 +686,12 @@ var Vue_OrderSystem =  new Vue({
             let wraningList = []
 
             if (this.orderInfo.owner_name == ''){
-                wraningList.push('開團者欄位不得為空')
+                wraningList.push('團長欄位不得為空')
+            }
+            if (
+                new Date(Vue_OrderSystem.orderInfo.close_time) < new Date()
+            ){
+                wraningList.push('結單時間已過')
             }
 
             return wraningList
@@ -667,11 +773,15 @@ var Vue_OrderSystem =  new Vue({
                 'shop_des': '',
                 'shop_address': '',
                 'shop_img': '',
+                'shop_picture' : '',
                 'shop_menu': [],
+                'shop_description': '',
             }
+            this.newShopCheck = true
         },
 
         clickEditBtn(S_shop_id){
+            this.newShopCheck = false
 			fetch('/TreeStudioAPIs/OrderSys_ShopInfo_Manager/'+S_shop_id+'/', {
                 method: 'GET'
 			}).then(function(response) {
@@ -688,11 +798,9 @@ var Vue_OrderSystem =  new Vue({
             console.log(evt)
         },
 
-        openShopListWindow(){
-            this.window_chose='shop_list_window'
-            this.updateShopList()
+        clickDeltetOrderBtn(order_id){
+            this.deleteOrderWindowOpen = true
         },
-
 
         clickDeleteShopBtn(S_shop_id){
 			fetch('/TreeStudioAPIs/OrderSys_ShopInfo_Manager/'+S_shop_id+'/', {
@@ -726,6 +834,9 @@ var Vue_OrderSystem =  new Vue({
 
         removeOrderOnCart(order_id, index){
             this.shoppingCar[order_id].splice(index,1)
+            if (this.shoppingCar[order_id].length==0){
+                Vue.delete(this.shoppingCar, order_id)
+            }
         },
         
         switchShopCartPayStatus(shop_cart_id, setValue){
@@ -829,14 +940,20 @@ var Vue_OrderSystem =  new Vue({
             }
             this.addOrderWindowData.data = D_data.item_data
             this.addOrderWindowData.content = ""
-            this.addOrderWindowData.number = 0
+            this.addOrderWindowData.number = 1
             this.addOrderWindowData.shop_name = D_data.shop_name
             this.addOrderWindowData.shop_id = D_data.shop_id
             this.addOrderWindowData.order_id = D_data.order_id
             this.addOrderWindowOpen = true
         },
 
-        // open new order 專用
+        // 餐廳列表視窗 專用
+        openShopListWindow(){
+            this.window_chose='shop_list_window'
+            this.updateShopList()
+        },
+
+        // 準備開團視窗 專用
         clickOpenShopBtn(S_shop_id){
             this.window_chose='open_shop_window'
             this.setNewOrderData(S_shop_id)
@@ -846,9 +963,12 @@ var Vue_OrderSystem =  new Vue({
             this.orderInfo = {
                 'order_id': uuidv4(),
                 'owner_name': '',
+                // 'close_time': (new Date().addHours(1)).format("Y-MM-ddThh:mm"),
                 'close_time': '',
                 'bank_info' : '',
+                'bank_qr_code': {},
                 'shop_id' : S_shop_id,
+                'order_desc': '',
                 'shop_info': {},
             }
 			fetch('/TreeStudioAPIs/OrderSys_ShopInfo_Manager/'+S_shop_id+'/', {
@@ -861,6 +981,59 @@ var Vue_OrderSystem =  new Vue({
                 Vue_OrderSystem.orderInfo.shop_info = myJson['data']
 			});
 
+        },
+
+        getPicAndReturnBase64String(e, vue_posi, vue_name){
+            if (e.target.files[0].size/1024/1024 > 15){
+                v_console.error("上傳的圖案大於15MB了!取消上傳!")
+                return null
+            }
+
+            this.convertFile(e.target.files[0])
+            .then(data => {
+                //console.log(data) // 把編碼後的字串輸出到console
+                console.log(data.length)
+                if (data.length > 2000000){
+                    v_console.error("上傳的圖案編碼後長度太長，請換過一張")
+                    return null
+                }
+
+                Vue.set(vue_posi,vue_name, {
+                    'file_name': e.target.files[0].name,
+                    'data': data,
+                })
+            })
+            .catch(err => console.log(err))
+        },
+
+        getPicAndReturnBase64String_Sim(e, vue_posi, vue_name){
+            if (e.target.files[0].size/1024/1024 > 15){
+                v_console.error("上傳的圖案大於15MB了!取消上傳!")
+                return null
+            }
+
+            this.convertFile(e.target.files[0])
+            .then(data => {
+                //console.log(data) // 把編碼後的字串輸出到console
+                console.log(data.length)
+                if (data.length > 2000000){
+                    v_console.error("上傳的圖案編碼後長度太長，請換過一張")
+                    return null
+                }
+
+                Vue.set(vue_posi,vue_name, data)
+            })
+            .catch(err => console.log(err))
+        },
+
+        convertFile(file) {
+            console.log(file)
+            return new Promise((resolve,reject)=>{
+                let reader = new FileReader()
+                reader.onload = () => { resolve(reader.result) }
+                reader.onerror = () => { reject(reader.error) }
+                reader.readAsDataURL(file)
+            })
         },
 
         // edit 專用
@@ -1028,6 +1201,9 @@ var Vue_OrderSystem =  new Vue({
             form.append("shop_address", this.shop_info_chosed['shop_address'])
             form.append("shop_img", this.shop_info_chosed['shop_img'])
             form.append("shop_menu", JSON.stringify(this.shop_info_chosed['shop_menu']))
+            form.append("shop_description", this.shop_info_chosed['shop_description'])
+            form.append("shop_picture", this.shop_info_chosed['shop_picture'])
+            
             
 			fetch('/TreeStudioAPIs/OrderSys_ShopInfo_Manager/', {
 				method: 'POST',
@@ -1069,8 +1245,9 @@ var Vue_OrderSystem =  new Vue({
 			})
 			.then(function(myJson) {
                 v_console.success("餐廳刪除成功")
-                Vue_OrderSystem.updateShopList()
+                // Vue_OrderSystem.updateShopList()
                 Vue_OrderSystem.deleteShopWindowOpen=false
+                Vue_OrderSystem.openShopListWindow()
 			});
         },
 
@@ -1082,7 +1259,9 @@ var Vue_OrderSystem =  new Vue({
             form.append("close_time", this.orderInfo['close_time'])
             form.append("bank_info", this.orderInfo['bank_info'])
             form.append("shop_id", this.orderInfo['shop_id'])
-
+            form.append("order_description", this.orderInfo['order_desc'])
+            form.append("bank_info_qr_code", this.orderInfo['bank_qr_code']['data'])
+            
 			fetch('/TreeStudioAPIs/OrderSys_OrderInfo_Manager/', {
                 // method: 'GET'
 				method: 'POST',
@@ -1095,25 +1274,23 @@ var Vue_OrderSystem =  new Vue({
 			.then(function(myJson) {
 				console.log(myJson);
                 v_console.success("開新團完成")
-                Vue_OrderSystem.window_chose = 'today_window'
+                Vue_OrderSystem.openOrderListWindow()
 			});
         },
         delOrderInfo(S_order_id){
-            this.delAllShopCartByOrderID(S_order_id)
-            .then(function(myJson) {
-                fetch('/TreeStudioAPIs/OrderSys_OrderInfo_Manager/'+S_order_id+'/', {
-                    method: 'DELETE',
-                    mode: 'same-origin',
-                    headers: {'X-CSRFToken': csrftoken},
-                }).then(function(response) {
-                    return response.json();
-                })
-                .then(function(myJson) {
-                    console.log(myJson)
-                    v_console.success("團訂定單刪除成功")
-                    Vue_OrderSystem.uploadTodayOrderInfo()
-                });
+            fetch('/TreeStudioAPIs/OrderSys_OrderInfo_Manager/'+S_order_id+'/', {
+                method: 'DELETE',
+                mode: 'same-origin',
+                headers: {'X-CSRFToken': csrftoken},
+            }).then(function(response) {
+                return response.json();
             })
+            .then(function(myJson) {
+                console.log(myJson)
+                v_console.success("團訂定單刪除成功")
+                Vue_OrderSystem.deleteOrderWindowOpen=false
+                Vue_OrderSystem.openOrderListWindow()
+            });
         },
 
         // 拖拉區域
@@ -1166,6 +1343,27 @@ var Vue_OrderSystem =  new Vue({
                 this.darg_item.group.items.splice(this.darg_item.index,1)
             }
         },
+
+        // 資料防呆
+        thisNumCantMinus(position, name){
+            if (parseInt(number)<0){
+                number = 0
+            }
+            number = parseInt(number);
+        },
+        setScoreNum(position, name){
+            I_number = position[name]
+            if (isNaN(parseFloat(I_number))){
+                I_number = 0
+            } else if (parseFloat(I_number)<0){
+                I_number = 0
+            } else if (parseFloat(I_number)>5){
+                I_number = 5
+            } 
+            I_number = parseFloat(I_number);
+            Vue.set(position, name, I_number)
+        },
+
     },
 
     created: function () {

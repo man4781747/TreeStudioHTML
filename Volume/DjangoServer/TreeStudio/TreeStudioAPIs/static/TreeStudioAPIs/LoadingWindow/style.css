@@ -1,5 +1,5 @@
 :root {
-    --loading-color: #007bff;
+    --loading-color: var(--primary);
 }
 
 

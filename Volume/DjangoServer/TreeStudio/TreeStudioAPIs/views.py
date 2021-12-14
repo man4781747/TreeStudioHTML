@@ -9,6 +9,29 @@ import os
 import csv
 import datetime
 
+def deleteShopInfoByShopID(shop_id):
+    # 刪除商店資訊，必須連對應的團訂單一起刪除(留者也沒意義)
+    ShopsInfo = OrderSys_ShopsInfo.objects.get(shop_id=shop_id)
+    L_All_OrderInfo_By_ShopID = OrderSys_OrderInfo.objects.filter(shop_id=shop_id)
+    print(L_All_OrderInfo_By_ShopID)
+    for OrderInfo in L_All_OrderInfo_By_ShopID:
+        deleteOrderInfoByOrderID(OrderInfo.to_dict()['order_id'])
+
+    print('Del shop: {}'.format(shop_id))
+    ShopsInfo.delete()
+
+def deleteOrderInfoByOrderID(order_id):
+    # 刪除團單，必須連購物車單一起刪除
+    OrderInfo = OrderSys_OrderInfo.objects.get(order_id=order_id)
+    deleteAllShopCartByOrderID(order_id)
+    print('Del order: {}'.format(order_id))
+    OrderInfo.delete()
+
+def deleteAllShopCartByOrderID(order_id):
+    L_All_ShopCart_By_OrderID = OrderSys_ShopCartInfo.objects.filter(order_id=order_id)
+    for ShopCart in L_All_ShopCart_By_OrderID:
+        print('Del shop cart: {}'.format(ShopCart.to_dict()['shop_cart_id']))
+        ShopCart.delete()
 
 @csrf_protect
 def mainHTML(request):
@@ -93,6 +116,8 @@ def OrderSys_ShopInfo_Manager(request, shop_id=None, id=None):
                 dataGet.shop_phoneNum = request.POST.dict()['shop_phoneNum']
                 dataGet.shop_address = request.POST.dict()['shop_address']
                 dataGet.shop_menu = request.POST.dict()['shop_menu'] 
+                dataGet.shop_description = request.POST.dict()['shop_description'] 
+                dataGet.shop_picture = request.POST.dict()['shop_picture'] 
                 dataGet.last_modify_date = datetime.datetime.now()
                 dataGet.save()
                 return JsonResponse({'result': 'success', 'data': {'message': '更新成功'}})
@@ -104,7 +129,9 @@ def OrderSys_ShopInfo_Manager(request, shop_id=None, id=None):
                     shop_score = float(request.POST.dict()['shop_score']),
                     shop_phoneNum = request.POST.dict()['shop_phoneNum'],
                     shop_address = request.POST.dict()['shop_address'],
+                    shop_description = request.POST.dict()['shop_description'],
                     shop_menu = request.POST.dict()['shop_menu'],     
+                    shop_picture = request.POST.dict()['shop_picture'],     
                 )
                 return JsonResponse({'result': 'success', 'data': {'message': '新增成功'}})
             
@@ -128,6 +155,8 @@ def OrderSys_ShopInfo_Manager(request, shop_id=None, id=None):
                     'shop_phoneNum',
                     'shop_address',
                     'shop_menu',
+                    'shop_description',
+                    'shop_picture',
                     'last_modify_date'
                 )
                 if len(data) > 300:
@@ -138,9 +167,8 @@ def OrderSys_ShopInfo_Manager(request, shop_id=None, id=None):
 
         elif request.method == 'DELETE':
             if shop_id != None:
-                instance = OrderSys_ShopsInfo.objects.get(shop_id=shop_id)
-                instance.delete()
-                return JsonResponse({'result': 'success', 'data':{}})
+                deleteShopInfoByShopID(shop_id)
+                return JsonResponse({'result': 'success', 'data':''})
             else:
                 return JsonResponse({'result': 'fail', 'data':{'message': '缺少參數: shop_id'}})
         else:
@@ -170,6 +198,8 @@ def OrderSys_OrderInfo_Manager(request, order_id=None, id=None):
                     close_time = request.POST.dict()['close_time'],
                     bank_info = request.POST.dict()['bank_info'],
                     shop_id = request.POST.dict()['shop_id'],
+                    order_description =request.POST.dict()['order_description'],
+                    bank_info_qr_code = request.POST.dict()['bank_info_qr_code'],
                 )
                 return JsonResponse({'result': 'success', 'data': {'message': '新增成功'}})
             
@@ -190,6 +220,8 @@ def OrderSys_OrderInfo_Manager(request, order_id=None, id=None):
                     'close_time',
                     'bank_info',
                     'shop_id',
+                    'bank_info_qr_code',
+                    'order_description',
                     'alive',
                     'last_modify_date'
                 )
@@ -200,8 +232,7 @@ def OrderSys_OrderInfo_Manager(request, order_id=None, id=None):
 
         elif request.method == 'DELETE':
             if order_id != None:
-                instance = OrderSys_OrderInfo.objects.get(order_id=order_id)
-                instance.delete()
+                deleteOrderInfoByOrderID(order_id)
                 return JsonResponse({'result': 'success', 'data':{}})
             else:
                 return JsonResponse({'result': 'fail', 'data':{'message': '缺少參數: order_id'}})
@@ -264,6 +295,10 @@ def OrderSys_OrderInfo_Manager_Switch_By_Order_Id(request, order_id, switch):
         if request.method == 'GET':
             dataGet = OrderSys_OrderInfo.objects.get(order_id=order_id)
             dataGet.alive = bool(switch)
+            if bool(switch) == False:
+                dataGet.close_time = datetime.datetime.now().strftime("%Y-%m-%dT%H:%M:%S+08:00")
+            else:
+                dataGet.close_time = ""
             dataGet.save()
             return JsonResponse({'result': 'success', 'data': {
                 order_id: order_id,

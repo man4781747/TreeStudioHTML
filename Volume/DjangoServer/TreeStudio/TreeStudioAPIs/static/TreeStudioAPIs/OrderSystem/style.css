@@ -1,3 +1,7 @@
+:root {
+    --shop-pic-height : 120px;
+}
+
 .user-order-window-order-area {
     display: flex;
     position: relative;
@@ -18,8 +22,9 @@
 .user-order-window-item-list-group-title *,
 .user-order-window-item-list-group-title{
     font-size: var(--window-title-font-size);
-    color: var(--title-color);
-    margin: 0.5rem 0;
+    color: var(--dark);
+    margin: 0.25rem 0;
+    font-weight: bolder;
 }
 
 .user-order-window-item-list-group-title .edit-entry-input {
@@ -100,8 +105,8 @@
     width: 100%;
     background: rgba(0,0,0,.5);
     color: rgb(203, 203, 203);
-    padding: 0.5rem;
 }
+
 
 .user-order-window-title-shop-name {
     font-size: var(--big-title-font-size);
@@ -111,12 +116,30 @@
 
 }
 
-.user-order-window-title-shop-desc {
-    
+.user-order-window-title-shop-description {
+    font-size: var(--sub-font-size);
+}
+
+.order-check-window-info {
+    font-size: 1.1rem;
+    margin-bottom: 0.25rem;
 }
 
 .order-check-window-set-number {
     display: flex;
+    justify-content: center;
+    font-size: 3rem;
+    align-items: center;
+}
+
+.order-check-window-set-content {
+    margin: 0;
+    width: calc( 100% - 8px);
+    height: 1.5rem;
+}
+
+.order-check-window-set-content input {
+    width: 100%;
 }
 
 .add-item-btn {
