@@ -390,14 +390,16 @@ Vue.component('shop-menu-mamager', {
 Vue.component('five-star-score', {
     template:` 
 <div style="text-align: center;display: inline-flex;">
-    <div style="position: relative;display:inline-flex;">
+    <div style="position: relative;display:inline-flex;width: min-content;">
         <i 
-        v-for="i in [0,0,0,0,0]"
-        class="far fa-star"></i>
+            v-for="i of [1,2,3,4,5]"
+            class="far fa-star"
+            @click="edit_able?setScore(i):''"
+        ></i>
         <div
             style="position: absolute;
-            top: 0;
-            overflow: hidden;
+            top: 0;pointer-events: none;
+            overflow: hidden;display: flex;
             white-space: nowrap;"
             :style="'width:'+(100*score/5)+'%;'"
         >
@@ -408,8 +410,766 @@ Vue.component('five-star-score', {
     </div>
 </div>
 `,
-    props: ['score'],
+    props: ['score', 'edit_able'],
+    methods:{
+        setScore(score){
+            this.score = score
+            this.$emit('set_score', score)
+        },
+    },
 })
+
+Vue.component('message-board-textarea', {
+    template:` 
+<div style='margin-bottom: .5rem;'>
+    <div class='input-group-main-title' style="justify-content: space-between;">
+        我有話要說
+    </div>
+    <div class='form-inputlabel-list'>
+        <div class='form-ctrl-inputlabel'>
+            <div class='input-titles'>
+                <div class='input-main-title'>我是誰</div>
+                <div class='input-sub-title'></div>
+            </div>
+            <input class='form-ctrl-input' type="text" v-model="who" placeholder="你是誰">
+        </div>
+        <div class='form-ctrl-inputlabel'>
+            <div class='input-titles'>
+                <div class='input-main-title'>評分</div>
+                <div class='input-sub-title'></div>
+            </div>
+            <five-star-score
+                style="font-size: 1.5rem;"
+                v-bind:score="score"
+                v-bind:edit_able=true
+                @set_score="setScore"
+            ></five-star-score>
+        </div>
+        <div class='form-ctrl-inputlabel-big'' style='margin-bottom: 0.5rem;'>
+            <div class='input-titles'>
+                <div class='input-main-title'>標題</div>
+                <div class='input-sub-title'></div>
+            </div>
+            <input class='form-ctrl-input' type="text" v-model="title" placeholder="請輸入標題">
+        </div>
+        <div class='form-ctrl-inputlabel-big'>
+            <div class='input-titles'>
+                <div class='input-main-title'>內容</div>
+                <div class='input-sub-title'></div>
+            </div>
+            <form method="post">
+                <textarea :id="'shop-message-board-'+shop_id" name="editordata"></textarea>
+            </form>
+        </div>
+    </div>
+
+    <div class='form-inputlabel-list'>
+        <div class='form-ctrl-inputlabel-big'>
+            <button 
+            v-if="checkEditerInfo.length==0"
+            class='ts-btn btn-active input-submit-btn'
+            @click="uploadMessage()"
+            >送出</button>
+
+            <div v-else>
+                <button
+                style="position:relative;z-index: 2;"
+                class='ts-btn btn-notwork input-submit-btn'
+                >
+                    無法送出
+                </button>
+                <div class='input-submit-btn-warning-window'>
+                    <ul>
+                        <li v-for="waringString of checkEditerInfo">
+                            {{waringString}}
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+`,
+    props: ['shop_id'],
+
+    data: function () {
+        return {
+            who: '',
+            title: '',
+            content: '',
+            score: 3,
+        }
+    },
+
+    computed:{
+        checkEditerInfo(){
+            returnList = []
+            if (this.who == ""){
+                returnList.push("請輸入你是誰")
+            }
+            if (this.title == ""){
+                returnList.push("標題不可為空")
+            }
+
+            return returnList
+        }, 
+    },
+
+    methods:{
+        setRandomWho(){
+            L_whoList = ["海鷗","鴿子","鶴","老鷹","麻雀","燕子","天鵝","鵝","啄木鳥","鸚鵡","烏鴉","金絲雀","紅鶴","貓頭鷹","孔雀","企鵝","雞","火雞","鴨子","黑面琵鷺","美洲豹","雲豹","石虎","印度豹","獅子","老虎","獾","豬","公豬","熊","浣熊","棕熊","蝙蝠","刺蝟","鴨嘴獸","土撥鼠","驢子","馬","駱駝","臭鼬","熊貓","馬來膜"]
+            this.who = "匿名"+L_whoList[Math.floor(Math.random()*L_whoList.length)+0]
+        },
+
+        getTextareaContent(){
+            return $('#shop-message-board-'+this.shop_id).summernote('code')
+        },
+
+        setScore(score){
+            this.score = score
+        },
+
+        uploadMessage(){
+            var ThisComp = this
+            message_id = uuidv4()
+            var form = new FormData();
+            form.append("message_id",message_id)
+            form.append("shop_id",this.shop_id)
+            form.append("who",this.who)
+            form.append("title",this.title)
+            form.append("score",this.score)
+            form.append("content",this.getTextareaContent())
+            
+			fetch('/TreeStudioAPIs/OrderSys_Message_Manager/', {
+				method: 'POST',
+				body: form,
+                mode: 'same-origin',
+                headers: {'X-CSRFToken': csrftoken}
+			}).then(function(response) {
+				return response.json();
+			})
+			.then(function(myJson) {
+				console.log(myJson);
+                v_console.log("送出留言成功");
+                $('#shop-message-board-'+ThisComp.shop_id).summernote('code', '')
+                ThisComp.title = ""
+                ThisComp.setRandomWho()
+                ThisComp.$emit("send_done", ThisComp.shop_id)
+			});
+
+
+        },
+    },
+
+    mounted(){
+        var This = this
+        $(document).ready(function() {
+            $('#shop-message-board-'+This.shop_id).summernote({
+                placeholder: '請輸入內容',
+                height: 200,
+                lang: 'zh-TW',
+                toolbar: [
+                    ['style', ['style']],
+                    ['font', ['bold', 'underline', 'clear']],
+                    ['fontname', ['fontname']],
+                    ['color', ['color']],
+                    ['para', ['ul', 'ol', 'paragraph']],
+                    ['table', ['table']],
+                    ['insert', ['link', 'picture', 'video']],
+                    ['height', ['height']],
+                    ['view', ['codeview', 'help']],
+                ],
+            });
+        });
+        this.setRandomWho()
+    },
+
+})
+
+Vue.component('shop-info-title-window', {
+    template: `
+<div class="user-order-window-title-area" style="margin-bottom: 0.5rem;">
+    <div class="user-order-window-title-image">
+        <img v-if="shop_info.shop_picture" :src="shop_info.shop_picture" 
+        style="width: 100%;"/>
+        <img v-else src="https://cn-geo1.uber.com/image-proc/resize/eats/format=webp/width=550/height=440/quality=70/srcb64=aHR0cHM6Ly9kMXJhbHNvZ25qbmczNy5jbG91ZGZyb250Lm5ldC8yMzdjYzQ4Mi0xZmJiLTQ2NmQtYjZmOS02MWZhMzQ5OTMzODIuanBlZw=="
+            style='width:100%;'
+        >
+    </div>
+    <div class="user-order-window-title-infos">
+        <div style="position: absolute;bottom:0;padding: 0.5rem;">
+            <div class="user-order-window-title-shop-name">
+                {{shop_info.shop_name}}
+            </div>
+            <div class="user-order-window-title-shop-score">
+                <five-star-score
+                    v-bind:score="shop_info.shop_score"
+                ></five-star-score>
+            </div>
+            <div class="user-order-window-title-shop-description">
+                {{shop_info.shop_description}}
+            </div>
+        </div>
+    </div>
+    <div 
+        v-if="allow_shop_carts==true"
+        @click="clickOpenAllShopCartBtn(order_info)" 
+        style="position: absolute;z-index: 2;right: 0;bottom:.5rem;"
+        class="ts-btn btn-close"
+    >
+        查看點單資訊<i class="fas fa-shipping-fast"></i>
+    </div>
+</div>
+    `,
+    props: ['shop_info', 'order_info', 'allow_shop_carts'],
+    methods: {
+        clickOpenAllShopCartBtn(order_info){
+            this.$emit('click_open_all_shop_cart_btn', order_info)
+        },
+    },
+})
+
+Vue.component('new-message-table', {
+    template: `
+<div style='margin-bottom: .5rem;'>
+        <div class='input-group-main-title'>
+            最新評價
+            <i class="far fa-list-alt ts-btn btn-open"
+                v-if="allow_link_all_message_page == true"
+                @click="$emit('open_all_massage', shop_id)"
+            ></i>
+            <div class='input-group-main-sub-title'></div>
+        </div>
+    <table class="ts-table" style='width: 100%;'>
+        <colgroup>
+            <col style="width: 1px;">
+            <col style="">
+        </colgroup>
+        <tbody>
+            <tr v-for="(D_info, index) in messageList">
+                <td style="padding: 0.4rem 0.75rem;display:flex;align-items: center;border:0;">
+                    <div style="display:flex;justify-content: space-between;">
+                        <five-star-score
+                            v-bind:score="D_info.score"
+                        ></five-star-score>
+                        <div style='white-space: nowrap;margin-left: .75rem;'><label style='font-weight: bolder;'>{{D_info.who}} 說: </label>{{D_info.title}}</div>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+    `,
+    props: ['shop_id', 'allow_link_all_message_page'],
+    data: function () {
+        return {
+            messageList: null,
+        }
+    },
+    methods:{
+        uploadMessageList(shop_id){
+            var This = this
+            this.shop_id = shop_id
+			fetch('/TreeStudioAPIs/OrderSys_Message_Manager/shop/'+shop_id+'/5/', {
+                method: 'GET'
+			}).then(function(response) {
+				return response.json();
+			})
+			.then(function(myJson) {
+                This.messageList = myJson['data']
+			});
+        },
+    },
+    mounted(){
+    },
+})
+
+Vue.component('all-message-table', {
+    template: `
+<div>
+<div style='margin-bottom: .5rem;'>
+    <div class='input-group-main-title'>留言討論區
+        <i class="fas fa-clipboard-list ts-btn btn-open"
+            @click="$emit('close_all_massage', shop_id)"
+        ></i>
+        <div class='input-group-main-sub-title'></div>
+    </div>
+</div>
+
+<div style='display: flex;place-content: space-between;align-items: center;'>
+    <div style='display: flex;align-items: center;'>
+        <i class="fas fa-sync-alt ts-btn btn-update" @click="updateTableInfoList(shop_id)" style="line-height: 1;"></i>
+        最大顯示筆數: 
+        <select v-model="pageMaxNum" style='font-size: 1.1rem;'>
+            <option value=10>10</option>
+            <option value=20>20</option>
+            <option value=50>50</option>
+            <option value=100 selected>100</option>
+            <option value=9999999>-</option>
+        </select>
+    </div>
+    <div class='search-bar'>
+        <input v-model="filterStr">
+        <i class="fas fa-search " @click=""></i>
+    </div>
+</div>
+
+<table class='ts-table'>
+    <thead>
+        <tr>
+            <th v-for='(filter_info, filter_name, filter_index) in title_filter'
+                :style="filter_name!='title'?'width: 1px;':''"
+            >
+                <div class='table-header-item mouse-pointer' @click="sortByBtmChose(filter_name)">
+                    <div class='table-title-and-filter'>
+                        <i 
+                            v-if="filter_info.no_filter != true"
+                            class="fas fa-filter" 
+                            @click.stop="filter_info.open=!filter_info.open"
+                            :style="filter_info.filter_str.trim()!=''?'color:var(--title-color);':''"
+                        ></i>
+                        <div v-if='!filter_info.open'>
+                            {{filter_info.show_name}}
+                        </div>
+                        <input @click.stop v-else v-model.trim='filter_info.filter_str'>
+                    </div>
+                    <div style='position: relative;'>
+                        <i class="fas fa-sort-down" style='position: absolute;right: 0;bottom: 0;' :style='"color:"+(
+                            (sortBy==filter_name&sortValue==1)?"#000":"#999"
+                            )+";"'></i>
+                        <i class="fas fa-sort-up" :style='"color:"+(
+                            (sortBy==filter_name&sortValue==-1)?"#000":"#999"
+                            )+";"'></i>
+                    </div>
+                </div>
+            </th>
+        </tr>
+    </thead>
+    <tbody class="n2_1_gray">
+        <tr v-for="(data, index) in tableData[pageChose]" 
+        >
+            <template v-for="(info, title, index) in title_filter">
+                <td v-if='info.special == "five-star-score"' style="text-align: center;vertical-align: middle;">
+                    <five-star-score v-bind:score="data[title]">
+                    </five-star-score>
+                </td>
+                <td v-else-if='info.special=="datetime_format"'>
+                    {{ (new Date(data[title])).format('Y-MM-dd') }}
+                </td>
+                <td v-else-if='title=="title"'>
+                    <div class="home-a-link"
+                        @click="clickOpenMessageDetailWindowBtn(data['message_id'])"
+                    >{{data[title]}}</div>
+                </td>
+                <td v-else>{{data[title]}}</td> 
+            </template>
+        </tr>
+    </tbody>
+</table>
+
+<div style='display: flex;justify-content: space-between;margin: 2px 0;align-items: center;'>
+    <div style='transform: translateY(5px);'>總筆數:{{tableRawNum}} (第{{parseInt(pageChose)+1}}頁/共{{tablePageNum}}頁)</div>
+    <div class='page-choser'>
+        <div v-if="pageListChose==0" class='page-chose-btn page-chose-btn-noactive'>
+            <i class="fas fa-angle-double-left"></i>
+        </div>
+        <div v-else class='page-chose-btn' @click="pageListChose = pageListChose -1">
+            <i class="fas fa-angle-double-left"></i>
+        </div>
+        <div class='page-chose-btn' v-for="pageIndex of pageList[pageListChose]"
+            :class="pageIndex == pageChose?'page-chose-btn-chosed':''"
+            @click="pageChose = pageIndex"
+        >
+            {{parseInt(pageIndex) + 1}}
+        </div>
+        <div v-if="pageListChose==pageList.length-1" class='page-chose-btn page-chose-btn-noactive'>
+            <i class="fas fa-angle-double-right"></i>
+        </div>
+        <div v-else class='page-chose-btn' @click="pageListChose = pageListChose +1">
+            <i class="fas fa-angle-double-right"></i>
+        </div>
+    </div>
+</div>
+</div>`,
+    props: ['shop_id'],
+    data: function () {
+        return {
+            messageList: null,
+
+            tableInfoList: [],
+
+            pageChose : 0,
+            pageListChose : 0,
+            pageMaxNum: 10,
+
+            filterStr: '',
+            sortBy : '',
+            sortValue: -1,
+            title_filter: {
+                who : {
+                    'filter_str': '',
+                    'open': false,
+                    'show_name': '留言者',
+                },
+                score : {
+                    'filter_str': '',
+                    'open': false,
+                    'show_name': '評分',
+                    'special': 'five-star-score',
+                    'no_filter': true,
+                },
+                title : {
+                    'filter_str': '',
+                    'open': false,
+                    'show_name': '標題',
+                },
+                created : {
+                    'filter_str': '',
+                    'open': false,
+                    'show_name': '時間',
+                    'special': 'datetime_format',
+                },
+            },
+        }
+    },
+
+    computed: {
+		tableData(){
+            if (this.sortBy != ""){
+                afterSortList = []
+                var sortByList = []
+                for (let itemInfo of this.tableInfoList){
+                    sortByList.push([itemInfo[this.sortBy],itemInfo])
+                }
+                
+                if (this.sortBy == 'id'){
+                    sortByList.sort(function(a, b) {
+                        return a - b;
+                      });
+                } else {
+                    sortByList.sort()
+                }
+
+                if (this.sortValue == -1){
+                    sortByList.reverse()
+                }
+                for (let itemInfo_after of sortByList){
+                    afterSortList.push(itemInfo_after[1])
+                }
+            } else {
+                afterSortList = this.tableInfoList
+            }
+
+            var afterTitleFilterList = afterSortList
+            for (let S_titleChose of Object.keys(this.title_filter)){
+                if (this.title_filter[S_titleChose].filter_str.trim()==""){
+                    continue
+                }
+                else {
+                    afterTitleFilterList_chose = []
+                    for (let itemInfo of afterTitleFilterList){
+                        if (itemInfo[S_titleChose].indexOf(this.title_filter[S_titleChose].filter_str.trim())!= -1){
+                            afterTitleFilterList_chose.push(itemInfo)
+                        }
+                    }
+                    afterTitleFilterList = afterTitleFilterList_chose
+                }
+            }
+
+            var afterFilterList = []
+            if (this.filterStr.trim()==""){
+                afterFilterList = afterTitleFilterList
+            } else {
+                for (let itemInfo of afterTitleFilterList){
+                    for (key of Object.keys(this.title_filter)){
+                        if ((''+itemInfo[key]).indexOf(this.filterStr.trim())!= -1){
+                            afterFilterList.push(itemInfo)
+                            break
+                        }
+                    }
+                }
+            }
+            var tableData = [[]]
+            for (let itemIndex in afterFilterList){
+                let I_page = Math.floor(itemIndex/this.pageMaxNum)
+                if (tableData[I_page] == undefined){
+                    tableData[I_page] = []
+                }
+                tableData[I_page].push(afterFilterList[itemIndex])
+            }
+            if (this.pageChose >=  tableData.length){
+                this.pageChose = tableData.length - 1
+            }
+            return tableData
+        },
+
+        pageList(){
+            var pageListList = [[]]
+            for (let pageIndex in this.tableData){
+                let I_listInex = Math.floor(pageIndex/5)
+                if (pageListList[I_listInex] == undefined){
+                    pageListList[I_listInex] = []
+                }
+                pageListList[I_listInex].push(pageIndex)
+            }
+
+            if (this.pageListChose >=  pageListList.length){
+                this.pageListChose = pageListList.length - 1
+            }
+
+            return pageListList
+        },
+
+        tableRawNum(){
+            let totalCount = 0
+            for (L_pageList of this.tableData){
+                totalCount = totalCount + L_pageList.length
+            }
+            return totalCount
+        },
+
+        tablePageNum(){
+            let totalCount = 0
+            for (L_pageList of this.pageList){
+                totalCount = totalCount + L_pageList.length
+            }
+            return totalCount
+        },
+
+    },
+
+    methods:{
+        sortByBtmChose(sortByStr){
+            if (this.sortBy == sortByStr){
+                this.sortValue = this.sortValue * -1
+            } else {
+                this.sortValue = 1
+            }
+            this.sortBy = sortByStr
+        },
+
+        updateTableInfoList(shop_id){
+            var This = this
+            this.shop_id = shop_id
+			fetch('/TreeStudioAPIs/OrderSys_Message_Manager/shop/'+shop_id+'/', {
+                method: 'GET'
+			}).then(function(response) {
+				return response.json();
+			})
+			.then(function(myJson) {
+                This.tableInfoList = myJson['data']
+			});
+        },
+
+        clickOpenMessageDetailWindowBtn(message_id){
+            this.$emit('open_message_id', message_id)
+        },
+    },
+    mounted(){
+    },
+
+})
+
+Vue.component('message-detail-textarea', {
+    template:` 
+<div style='margin-bottom: .5rem;'>
+    <div class='input-group-main-title' style="justify-content: space-between;">
+        留言內容
+        <i class="fas fa-reply ts-btn btn-open"
+            @click="$emit('back_to_all_message_window', messageDetail.shop_id)"
+        ></i>
+    </div>
+    <div class='form-inputlabel-list'>
+        <div class='form-ctrl-inputlabel'>
+            <div class='input-titles'>
+                <div class='input-main-title'>留言者</div>
+                <div class='input-sub-title'></div>
+            </div>
+            <input class='form-ctrl-input' type="text" v-model="messageDetail.who" disable>
+        </div>
+        <div class='form-ctrl-inputlabel'>
+            <div class='input-titles'>
+                <div class='input-main-title'>評分</div>
+                <div class='input-sub-title'></div>
+            </div>
+            <five-star-score
+                style="font-size: 1.5rem;"
+                v-bind:score="messageDetail.score"
+                v-bind:edit_able=true
+                @set_score="setScore"
+            ></five-star-score>
+        </div>
+        <div class='form-ctrl-inputlabel-big'' style='margin-bottom: 0.5rem;'>
+            <div class='input-titles'>
+                <div class='input-main-title'>標題</div>
+                <div class='input-sub-title'></div>
+            </div>
+            <input class='form-ctrl-input' type="text" v-model="messageDetail.title" placeholder="請輸入標題">
+        </div>
+        <div class='form-ctrl-inputlabel-big'>
+            <div class='input-titles'>
+                <div class='input-main-title'>內容</div>
+                <div class='input-sub-title'></div>
+            </div>
+            <form method="post" v-if="message_id != ''">
+                <textarea :id="'message-detail-'+message_id" name="editordata"></textarea>
+            </form>
+        </div>
+    </div>
+
+    <div class='form-inputlabel-list'>
+        <div class='form-ctrl-inputlabel-big'>
+            <button 
+            v-if="checkEditerInfo.length==0"
+            class='ts-btn btn-active input-submit-btn'
+            @click="uploadMessage()"
+            >送出</button>
+
+            <div v-else>
+                <button
+                style="position:relative;z-index: 2;"
+                class='ts-btn btn-notwork input-submit-btn'
+                >
+                    無法送出
+                </button>
+                <div class='input-submit-btn-warning-window'>
+                    <ul>
+                        <li v-for="waringString of checkEditerInfo">
+                            {{waringString}}
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+`,
+    props: ['message_id'],
+
+    data: function () {
+        return {
+            messageDetail:{},
+            message_id: '',
+        }
+    },
+
+    computed:{
+        checkEditerInfo(){
+            returnList = []
+            if (this.messageDetail.who == ""){
+                returnList.push("請輸入你是誰")
+            }
+            if (this.messageDetail.title == ""){
+                returnList.push("標題不可為空")
+            }
+
+            return returnList
+        }, 
+    },
+
+    methods:{
+        getTextareaContent(){
+            return $('#message-detail-'+this.messageDetail.message_id).summernote('code')
+        },
+
+        setTextareaContent(content){
+            $('#message-detail-'+this.messageDetail.message_id).summernote('code',content)
+        },
+
+        setScore(score){
+            this.messageDetail.score = score
+        },
+
+        uploadMessage(){
+            var ThisComp = this
+            var form = new FormData();
+            form.append("message_id",this.messageDetail.message_id)
+            form.append("shop_id",this.messageDetail.shop_id)
+            form.append("who",this.messageDetail.who)
+            form.append("title",this.messageDetail.title)
+            form.append("score",this.messageDetail.score)
+            form.append("content",this.getTextareaContent())
+            console.log(this.messageDetail)
+			fetch('/TreeStudioAPIs/OrderSys_Message_Manager/', {
+				method: 'POST',
+				body: form,
+                mode: 'same-origin',
+                headers: {'X-CSRFToken': csrftoken}
+			}).then(function(response) {
+				return response.json();
+			})
+			.then(function(myJson) {
+				console.log(myJson);
+                v_console.log("更新留言成功");
+                ThisComp.$emit('back_to_all_message_window', ThisComp.messageDetail.shop_id)
+			});
+
+
+        },
+
+        loadMessageDetailData(message_id){
+            var This = this
+            this.message_id = message_id
+            console.log(message_id)
+            this.$nextTick(() => {
+                $(document).ready(function() {
+                    $('#message-detail-'+message_id).summernote({
+                        placeholder: '請輸入內容',
+                        height: 200,
+                        lang: 'zh-TW',
+                        toolbar: [
+                            ['style', ['style']],
+                            ['font', ['bold', 'underline', 'clear']],
+                            ['fontname', ['fontname']],
+                            ['color', ['color']],
+                            ['para', ['ul', 'ol', 'paragraph']],
+                            ['table', ['table']],
+                            ['insert', ['link', 'picture', 'video']],
+                            ['height', ['height']],
+                            ['view', ['codeview', 'help']],
+                        ],
+                    });
+                });
+                fetch('/TreeStudioAPIs/OrderSys_Message_Manager/message/'+message_id+'/', {
+                    method: 'GET'
+                }).then(function(response) {
+                    return response.json();
+                })
+                .then(function(myJson) {
+                    This.messageDetail = myJson['data']
+                    This.setTextareaContent(myJson['data'].content)
+                    console.log(myJson)
+                });
+            })
+        },
+    },
+
+    mounted(){
+        // var This = this
+        // $(document).ready(function() {
+        //     $('#message-detail-'+this.message_id).summernote({
+        //         placeholder: '請輸入內容',
+        //         height: 200,
+        //         lang: 'zh-TW',
+        //         toolbar: [
+        //             ['style', ['style']],
+        //             ['font', ['bold', 'underline', 'clear']],
+        //             ['fontname', ['fontname']],
+        //             ['color', ['color']],
+        //             ['para', ['ul', 'ol', 'paragraph']],
+        //             ['table', ['table']],
+        //             ['insert', ['link', 'picture', 'video']],
+        //             ['height', ['height']],
+        //             ['view', ['codeview', 'help']],
+        //         ],
+        //     });
+        // });
+    },
+
+})
+
 
 var Vue_OrderSystem =  new Vue({
     el: '#order-system-window',
@@ -489,10 +1249,13 @@ var Vue_OrderSystem =  new Vue({
         // 開團相關資訊
         orderInfo: {},
 
-        // 今日訂餐相關資訊
+        // 訂餐相關資訊
         todayOrderListUpdateing: false,
         todayOrderList : [],
         todayOrderChosedNum: 0,
+
+        orderList_startDate: new Date().format("Y-MM-dd"),
+        orderList_endDate: new Date().format("Y-MM-dd"),
 
         chosedOrderData: {
             'order_info': {},
@@ -531,6 +1294,13 @@ var Vue_OrderSystem =  new Vue({
             'shop_cart_list': [],
             'setValue': false,
         },
+
+        // 商店資訊視窗
+        shopInfoWindow: {
+            'shop_info': {},
+            'message_board_info': {},
+        },
+        messageWindowSwitch: 'menu',
     },
 
     computed: {
@@ -873,6 +1643,46 @@ var Vue_OrderSystem =  new Vue({
         },
 
 
+
+        // 餐廳資訊視窗專用
+        openShopInfoWindow(shop_id){
+            this.window_chose="shop_info_window"
+            this.uploadShopInfo(shop_id)
+            this.updateNewMessageMenuWindow(shop_id)
+        },
+
+        uploadShopInfo(shop_id){
+            // shopInfoWindow.shop_info
+            this.getShopInfo(shop_id)
+			.then(function(myJson) {
+                Vue_OrderSystem.shopInfoWindow.shop_info = myJson
+			});
+        },
+
+        openMessageDetailWindow(message_id){
+            this.messageWindowSwitch = 'detail'
+            this.$nextTick(() => {
+                console.log(message_id)
+                Vue_OrderSystem.$refs['message-detail-window'].loadMessageDetailData(message_id)
+            }) 
+            
+        },
+
+        updateNewMessageMenuWindow(shop_id){
+            this.messageWindowSwitch = 'menu'
+            this.$nextTick(() => {
+                Vue_OrderSystem.$refs['new-message-table-in-shop-meun'].uploadMessageList(shop_id)
+            })
+        },
+
+        openAllMessageWindow(shop_id){
+            this.messageWindowSwitch = 'all'
+            this.$nextTick(() => {
+                Vue_OrderSystem.$refs['all-message-table-'+shop_id].updateTableInfoList(shop_id)
+            })
+        },
+
+
         // 已結單後視窗專用
         openClosedOrderWindow(order_id){
             this.window_chose='closed_order_window'
@@ -883,7 +1693,7 @@ var Vue_OrderSystem =  new Vue({
         // 訂餐列表專用
         openOrderListWindow(){
             this.window_chose='today_list_window'
-            this.uploadTodayOrderInfo()
+            this.uploadOrderListInfo()
         },
 
         // 結單視窗專用
@@ -1153,9 +1963,9 @@ var Vue_OrderSystem =  new Vue({
         },
 
         // db連線 - today order info
-        uploadTodayOrderInfo(){
+        uploadOrderListInfo(){
             this.todayOrderListUpdateing = true
-			fetch('/TreeStudioAPIs/OrderSys_OrderInfo_Manager_GetTodayOrder/', {
+			fetch('/TreeStudioAPIs/Get_OrderInfo_By_Time_Range/'+this.orderList_startDate+"to"+this.orderList_endDate+"/", {
                 method: 'GET'
 			}).then(function(response) {
 				return response.json();

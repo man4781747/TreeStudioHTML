@@ -1,13 +1,15 @@
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt, csrf_protect
 from django.http import JsonResponse
-from .models import AnnouncementList, OrderSys_ShopsInfo, OrderSys_OrderInfo, OrderSys_ShopCartInfo
+from .models import AnnouncementList, OrderSys_ShopsInfo, OrderSys_OrderInfo, OrderSys_ShopCartInfo, OrderSys_Message
 
 import uuid
 import json
 import os
 import csv
 import datetime
+
+# 非API區塊
 
 def deleteShopInfoByShopID(shop_id):
     # 刪除商店資訊，必須連對應的團訂單一起刪除(留者也沒意義)
@@ -33,10 +35,15 @@ def deleteAllShopCartByOrderID(order_id):
         print('Del shop cart: {}'.format(ShopCart.to_dict()['shop_cart_id']))
         ShopCart.delete()
 
+
+# API區塊
+
 @csrf_protect
 def mainHTML(request):
     return render(request, 'TreeStudio_mainHTML.html')
 
+
+# 公告系統區塊
 @csrf_protect
 def Announcement_Manager(request, id=None):
     try:
@@ -104,6 +111,7 @@ def Update_Announcement(request):
         return JsonResponse({'result': 'fail', 'date': {'message': '不正確的HTTP請求method'}})
 
 
+# 點餐系統區塊
 @csrf_protect
 def OrderSys_ShopInfo_Manager(request, shop_id=None, id=None):
     try:
@@ -145,19 +153,20 @@ def OrderSys_ShopInfo_Manager(request, shop_id=None, id=None):
                 data=OrderSys_ShopsInfo.objects.get(shop_id=shop_id)
                 return JsonResponse({'result': 'success', 'data':data.to_dict()})
             else:
+                # 若不指定 shop_id 則指回傳最低需求的數據
                 data=OrderSys_ShopsInfo.objects.order_by('-created').values(
                     'id',
-                    'created',
+                    # 'created',
                     'shop_id',
                     'shop_type',
                     'shop_name',
                     'shop_score',
-                    'shop_phoneNum',
-                    'shop_address',
-                    'shop_menu',
+                    # 'shop_phoneNum',
+                    # 'shop_address',
+                    # 'shop_menu',
                     'shop_description',
-                    'shop_picture',
-                    'last_modify_date'
+                    # 'shop_picture',
+                    # 'last_modify_date'
                 )
                 if len(data) > 300:
                     data = data[:300]
@@ -310,6 +319,56 @@ def OrderSys_OrderInfo_Manager_Switch_By_Order_Id(request, order_id, switch):
     except Exception as e:
         return JsonResponse({'result': 'fail', 'data': {'message': str(e)}})
 
+def Get_OrderInfo_By_Time_Range(request, time_range=None):
+    # 訂餐列表視窗所用
+    try:
+        if request.method == 'GET':
+            if time_range  == None:
+                start = datetime.datetime(1990,1,1)
+                end = datetime.datetime(3000,1,1)
+            else:
+                L_timeRange = time_range.split('to')
+                start = datetime.datetime.strptime(L_timeRange[0], "%Y-%m-%d")
+                end = datetime.datetime.strptime(L_timeRange[1], "%Y-%m-%d") + datetime.timedelta(days=1)
+
+
+            orderListData = OrderSys_OrderInfo.objects.filter(
+                created__range=[
+                    start,
+                    end
+                ]
+            ).order_by('-created').values(
+                    'id',
+                    'created',
+                    'alive',
+                    'owner_name',
+                    'shop_id',
+                    'close_time',
+                    'order_id',
+            )
+
+            orderList = {}
+            for orderData in orderListData:
+                D_orderInfo = {}
+                try:
+                    shopInfo = OrderSys_ShopsInfo.objects.get(shop_id=orderData['shop_id']).to_dict()
+                    orderData['shop_name'] = shopInfo['shop_name']
+                    orderData['shop_type'] = shopInfo['shop_type']
+                    orderData['shop_score'] = shopInfo['shop_score']
+                    orderList[orderData['order_id']] = orderData
+                except:
+                    orderData['shop_name'] = "遺失"
+                    orderData['shop_type'] = "遺失"
+                    orderData['shop_score'] = -1
+                    orderList[orderData['order_id']] = orderData
+
+
+            return JsonResponse({'result': 'success', 'data':orderList})
+        else:
+            return JsonResponse({'result': 'fail', 'date': {'message': '不正確的HTTP請求method'}})
+    except Exception as e:
+        return JsonResponse({'result': 'fail', 'data': {'message': str(e)}})
+
 @csrf_protect
 def OrderSys_ShopCart_Manager(request, shop_cart_id=None, id=None, order_id=None):
     try:
@@ -394,6 +453,87 @@ def Get_All_ShopCart_By_OrderID(request, order_id):
 
             return JsonResponse({'result': 'success', 'data': returnList})
             
+        else:
+            return JsonResponse({'result': 'fail', 'date': {'message': '不正確的HTTP請求method'}})
+
+    except Exception as e:
+        return JsonResponse({'result': 'fail', 'data': {'message': str(e)}})
+
+@csrf_protect
+def OrderSys_Message_Manager(request, shop_id=None, id=None, message_id=None, last_num=300):
+    try:
+        if request.method == 'POST':
+            try:
+                dataGet = OrderSys_Message.objects.get(message_id=request.POST.dict()['message_id'])
+                dataGet.who = request.POST.dict()['who']
+                dataGet.title = request.POST.dict()['title']
+                dataGet.content = request.POST.dict()['content']
+                dataGet.score = int(request.POST.dict()['score'])
+                dataGet.last_modify_date = datetime.datetime.now()
+                dataGet.save()
+                return JsonResponse({'result': 'success', 'data': {'message': '更新成功'}})
+            except:
+                OrderSys_Message.objects.create(
+                    message_id = request.POST.dict()['message_id'],
+                    shop_id = request.POST.dict()['shop_id'],
+                    who = request.POST.dict()['who'],
+                    title = request.POST.dict()['title'],
+                    content = request.POST.dict()['content'],
+                    score = int(request.POST.dict()['score']),
+                )
+                return JsonResponse({'result': 'success', 'data': {'message': '新增成功'}})
+
+        elif request.method == 'GET':
+            if id != None:
+                instance = OrderSys_Message.objects.get(id=id)
+                instance.delete()
+                return JsonResponse({'result': 'success', 'data':{}})
+            elif shop_id != None:
+                print(shop_id, last_num)
+                L_data=OrderSys_Message.objects.filter(shop_id=shop_id).order_by('-created').values(
+                    'id',
+                    'created',
+                    'message_id',
+                    'shop_id',
+                    'who',
+                    'title',
+                    'score',
+                    'last_modify_date'
+                )[:last_num]
+                returnData = [data for data in L_data]
+                return JsonResponse({'result': 'success', 'data':returnData})
+            elif message_id != None:
+                Message_data=OrderSys_Message.objects.get(message_id=message_id)
+                return JsonResponse({'result': 'success', 'data':Message_data.to_dict()})
+            else:
+                data=OrderSys_Message.objects.order_by('-created').values(
+                    'id',
+                    'created',
+                    'message_id',
+                    'shop_id',
+                    'who',
+                    'title',
+                    'content',
+                    'score',
+                    'last_modify_date'
+                )
+                if len(data) > 300:
+                    data = data[:300]
+                returnList = [data[i] for i in range(len(data))]
+                return JsonResponse({'result': 'success', 'data':returnList})
+
+        elif request.method == 'DELETE':
+            if shop_cart_id != None:
+                instance = OrderSys_ShopCartInfo.objects.filter(shop_cart_id=shop_cart_id)
+                returnData = [data.delete() for data in instance]
+                return JsonResponse({'result': 'success', 'data':returnData})
+            elif order_id != None:
+                L_All_ShopCart_By_OrderID = OrderSys_ShopCartInfo.objects.filter(order_id=order_id)
+                L_return = [data.delete() for data in L_All_ShopCart_By_OrderID]
+                return JsonResponse({'result': 'success', 'data':L_return})
+            else:
+                return JsonResponse({'result': 'fail', 'data':{'message': '缺少參數: shop_cart_id'}})
+        
         else:
             return JsonResponse({'result': 'fail', 'date': {'message': '不正確的HTTP請求method'}})
 

@@ -569,7 +569,7 @@
 
                 </div>
 
-                <!-- 定餐系統 -->
+                <!-- 訂餐系統 -->
                 <div id='order-system-window'>
                     <!-- 編輯餐廳確認視窗 -->
                     <div class='top-window-alert-background' v-if="editShopWindowOpen==true" @click='editShopWindowOpen=false'>
@@ -783,18 +783,19 @@
                     </div>
 
                     <div class='description-title'>
-                        <h1>定餐系統</h1>
+                        <h1>訂餐系統</h1>
                         <h3>吃飯吃飯</h3>
                     </div>
     
                     <div class="box-card">
+
                         <!-- 訂餐視窗分業選擇 -->
                         <div class='box-card-header'>
                             <div style='display: flex;'>
                                 <div class='box-card-title-btn' :class="window_chose=='today_list_window'?'box-card-title-btn-active':''"
                                     @click="openOrderListWindow()"
                                 >
-                                    今日訂餐列表
+                                    今日訂餐
                                 </div>
                                 <div class='box-card-title-btn' :class="window_chose=='order_window'?'box-card-title-btn-active':''"
                                 v-if="window_chose=='order_window'"
@@ -815,6 +816,11 @@
                                     @click="openShopListWindow()"
                                 >
                                     餐廳列表
+                                </div>
+                                <div class='box-card-title-btn' :class="window_chose=='shop_info_window'?'box-card-title-btn-active':''"
+                                    v-if="window_chose=='shop_info_window'"
+                                >
+                                    餐廳資訊
                                 </div>
                                 <div class='box-card-title-btn' :class="window_chose=='edit_window'?'box-card-title-btn-active':''"
                                     v-if="window_chose=='edit_window'"
@@ -852,13 +858,32 @@
                             </div>
                         </div>
 
-                        <!-- 今日訂單列表視窗 -->
+                        <!-- 訂單列表視窗 -->
                         <div class='box-card-body' v-if='window_chose=="today_list_window"'>
                             <div class='form-ctrl-inputlabel-big'>
                                 <button 
                                 class='ts-btn btn-active input-submit-btn'
                                 @click="openShopListWindow()"
                                 >我要開團</button>
+                            </div>
+
+                            <div style="display:flex;justify-content: flex-end;margin-top: 1rem;">
+                                <div style="display: flex;
+                                    align-items: center;
+                                    margin-left: 0.5rem;">
+                                    <label style="margin-right: 5px;">開始日:</label>
+                                    <input type='date' v-model="orderList_startDate">
+                                </div>
+                                <div style="display: flex;
+                                    align-items: center;
+                                    margin-left: 0.5rem;">
+                                    <label style="margin-right: 5px;">結束日:</label>
+                                    <input type='date' v-model="orderList_endDate">
+                                </div>
+                                <i class="fas fa-search ts-btn btn-update"
+                                    style="margin: 0;margin-left: 10px;"
+                                    @click="uploadOrderListInfo()"
+                                ></i>
                             </div>
 
                             <table class='ts-table'>
@@ -873,7 +898,7 @@
                                         <th>結單時間</th>
                                     </tr>
                                 </thead>
-                                <tbody>
+                                <tbody class="n2_1_gray">
                                     <tr v-for="(orderInfo, order_id, index) in todayOrderList" 
                                     >
                                         <td>
@@ -881,7 +906,9 @@
                                             <div v-else>已結單</div>
                                         </td>
                                         <td>
-                                            <div @click="orderInfo.alive?openOrderWindow(order_id):openClosedOrderWindow(order_id)">
+                                            <div 
+                                                class='home-a-link'
+                                                @click="orderInfo.alive?openOrderWindow(order_id):openClosedOrderWindow(order_id)">
                                                 {{orderInfo.shop_name}}
                                             </div>
                                         </td>
@@ -904,32 +931,14 @@
                         
                         <!-- 點餐視窗 -->
                         <div class='box-card-body' v-if='window_chose=="order_window"'>
-                            <div @click="clickOpenAllShopCartBtn(chosedOrderData.order_info)">已點餐列表</div>
                             <div class='user-order-window'>
-                                <div class="user-order-window-title-area">
-                                    <div class="user-order-window-title-image">
-                                        <img v-if="chosedOrderData.shop_info.shop_picture" :src="chosedOrderData.shop_info.shop_picture" 
-                                        style="width: 100%;"/>
-                                        <img v-else src="https://cn-geo1.uber.com/image-proc/resize/eats/format=webp/width=550/height=440/quality=70/srcb64=aHR0cHM6Ly9kMXJhbHNvZ25qbmczNy5jbG91ZGZyb250Lm5ldC8yMzdjYzQ4Mi0xZmJiLTQ2NmQtYjZmOS02MWZhMzQ5OTMzODIuanBlZw=="
-                                            style='width:100%;'
-                                        >
-                                    </div>
-                                    <div class="user-order-window-title-infos">
-                                        <div style="position: absolute;bottom:0;padding: 0.5rem;">
-                                            <div class="user-order-window-title-shop-name">
-                                                {{chosedOrderData.shop_info.shop_name}}
-                                            </div>
-                                            <div class="user-order-window-title-shop-score">
-                                                <five-star-score
-                                                    v-bind:score="chosedOrderData.shop_info.shop_score"
-                                                ></five-star-score>
-                                            </div>
-                                            <div class="user-order-window-title-shop-description">
-                                                {{chosedOrderData.shop_info.shop_description}}
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                                <shop-info-title-window
+                                    v-bind:shop_info="chosedOrderData.shop_info"
+                                    v-bind:order_info="chosedOrderData.order_info"
+                                    v-bind:allow_shop_carts="true"
+                                    @click_open_all_shop_cart_btn="clickOpenAllShopCartBtn"
+                                ></shop-info-title-window>
+
                                 <div>
                                     <shop-menu-mamager
                                         v-if="chosedOrderData.shop_info.shop_menu != undefined"
@@ -941,16 +950,27 @@
                                         @click_order_item="clickOrderItem"
                                     ></shop-menu-mamager>
                                 </div>
+
+                                <new-message-table
+                                    v-bind:shop_id="chosedOrderData.shop_info.shop_id"
+                                ></new-message-table>
                             </div>
                         </div>
 
                         <!-- 已點餐視窗 -->
                         <div class='box-card-body' v-if='window_chose=="all_shopcart_window"'>
-                            <div class="ts-btn btn-close"
-                                style="position: absolute;right: 1.25rem;"
-                                @click="clickDeltetOrderBtn(allShopCartOrderInfo.order_id)"
-                                
-                            >刪除此團訂單</div>
+                            <div style="display: flex;margin-bottom: 0.5rem;align-items: center;position: absolute;right: 0;">
+                                <div class="ts-btn btn-open" style="padding: 0.25rem 0.75rem;margin: 0;margin-left: 10px;"
+                                    @click="openOrderWindow(allShopCartOrderInfo.order_id)"
+                                >
+                                    <i class="fas fa-shopping-bag"></i>
+                                </div>
+                                <div class="ts-btn btn-close" style="padding: 0.25rem 0.75rem;margin: 0;margin-left: 10px;"
+                                    @click="clickDeltetOrderBtn(allShopCartOrderInfo.order_id)"
+                                >
+                                    <i class="fas fa-trash-alt"></i>
+                                </div>
+                            </div>
                             <order-info-table 
                                 v-if="allShopCartOrderInfo.id != undefined"
                                 v-bind:order_info="allShopCartOrderInfo">
@@ -1137,6 +1157,10 @@
                                         </template>
                                         <td>
                                             <div class='ts-table-active-list'>
+                                                <div class='ts-btn btn-info' @click="openShopInfoWindow(data.shop_id)"
+                                                >
+                                                    <i class="fas fa-info table-smail-btn"></i>
+                                                </div>
                                                 <div class='ts-btn btn-open' @click="clickOpenShopBtn(data.shop_id)"
                                                 >
                                                     <i class="fas fa-store table-smail-btn"></i>
@@ -1145,12 +1169,6 @@
                                                 >
                                                     <i class="fas fa-edit table-smail-btn"></i>
                                                 </div>
-                                                <!-- <div class='ts-btn btn-close' @click="clickDeleteShopBtn(data.shop_id)"
-                                                    style='width: 1.5rem;'
-                                                >
-                                                    <i class="fas fa-trash-alt"></i>
-                                                </div> -->
-
                                             </div>
                                         </td>    
                                     </tr>
@@ -1181,6 +1199,49 @@
                                     
                                 </div>
                             </div>
+                        </div>
+
+                        <!-- 餐廳資訊視窗 -->
+                        <div class='box-card-body' v-if='window_chose=="shop_info_window"'>
+                            <shop-info-title-window
+                                v-bind:shop_info="shopInfoWindow.shop_info"
+                            ></shop-info-title-window>
+
+                            <template v-if="messageWindowSwitch=='menu'">
+                                <shop-menu-mamager
+                                    v-if="shopInfoWindow.shop_info.shop_menu != undefined"
+                                    v-bind:shop_menu="shopInfoWindow.shop_info.shop_menu"
+                                    v-bind:allow_edit="false"
+                                    v-bind:allow_click="false"
+                                    v-bind:shop_info="shopInfoWindow.shop_info"
+                                ></shop-menu-mamager>
+                                <new-message-table
+                                    v-bind:shop_id="shopInfoWindow.shop_info.shop_id"
+                                    v-bind:allow_link_all_message_page="true"
+                                    ref="new-message-table-in-shop-meun"
+                                    @open_all_massage="openAllMessageWindow(shopInfoWindow.shop_info.shop_id)"
+                                ></new-message-table>
+                            </template>
+                            <template v-else-if="messageWindowSwitch=='all'">
+                                <all-message-table
+                                    v-bind:shop_id="shopInfoWindow.shop_info.shop_id"
+                                    :ref="'all-message-table-'+shopInfoWindow.shop_info.shop_id"
+                                    @close_all_massage="openShopInfoWindow(shopInfoWindow.shop_info.shop_id)"
+                                    @open_message_id="openMessageDetailWindow"
+                                ></all-message-table>
+                            </template>
+                            <template v-else-if="messageWindowSwitch=='detail'">
+                                <message-detail-textarea
+                                    ref="message-detail-window"
+                                    @back_to_all_message_window="openAllMessageWindow"
+                                ></message-detail-textarea>
+                            </template>
+
+                            <message-board-textarea
+                                v-if="messageWindowSwitch!='detail'"
+                                v-bind:shop_id="shopInfoWindow.shop_info.shop_id"
+                                @send_done="updateNewMessageMenuWindow(shopInfoWindow.shop_info.shop_id)"
+                            ></message-board-textarea>
                         </div>
 
                         <!-- 我的購物車視窗 -->
@@ -1418,6 +1479,11 @@
 
                         <!-- 準備開團視窗 -->
                         <div class='box-card-body' v-if='window_chose=="open_shop_window"'>
+                            <div class='top-window-alert-body-wraning-message'>
+                                注意: 團長資訊一旦建立後都不可更改，若要更改要刪除整份團訂單!
+                            </div>
+
+
                             <div style='margin-bottom: .5rem;'>
                                 <div class='input-group-main-title'>團長資訊
                                     <div class='input-group-main-sub-title'></div>

@@ -123,7 +123,7 @@ var Vue_mainToolBox =  new Vue({
             if (S_page == 'OrderSystem'){
                 let element = document.getElementById("order-system-window");
                 element.style.display = '';
-                Vue_OrderSystem.uploadTodayOrderInfo()
+                Vue_OrderSystem.openOrderListWindow()
             } else {
                 let element = document.getElementById("order-system-window");
                 element.style.display = 'none';

@@ -228,7 +228,8 @@ body{
 }
 
 .box-card-body {
-    padding: 1.25rem;
+    /* padding: 1.25rem; */
+    margin: 1.25rem;
     width: calc( 100% - 2.5rem);
     overflow: auto;
     position: relative;
@@ -421,6 +422,7 @@ body{
 .table-smail-btn {
     margin: 0 !important;
     line-height: 1 !important;
+    min-width: 1.1rem;
 }
 
 /* 按鈕Style */

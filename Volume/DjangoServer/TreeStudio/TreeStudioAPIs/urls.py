@@ -12,7 +12,9 @@ urlpatterns = [
     path(r'OrderSys_ShopInfo_Manager/<shop_id>/', views.OrderSys_ShopInfo_Manager),
     path(r'OrderSys_ShopInfo_Manager/delete_By_ID/<id>/', views.OrderSys_ShopInfo_Manager),
     path(r'OrderSys_ShopInfo_Manager/', views.OrderSys_ShopInfo_Manager),
-    
+    path(r'Get_OrderInfo_By_Time_Range/<time_range>/', views.Get_OrderInfo_By_Time_Range),
+    path(r'Get_OrderInfo_By_Time_Range/', views.Get_OrderInfo_By_Time_Range),
+
     path(r'OrderSys_OrderInfo_Manager_GetAlive/', views.OrderSys_OrderInfo_Manager_GetAlive),
     path(r'OrderSys_OrderInfo_Manager_GetTodayOrder/', views.OrderSys_OrderInfo_Manager_GetTodayOrder),
     path(r'OrderSys_OrderInfo_Manager/<order_id>/', views.OrderSys_OrderInfo_Manager),
@@ -27,5 +29,11 @@ urlpatterns = [
     path(r'Get_All_ShopCart_By_OrderID/<order_id>/', views.Get_All_ShopCart_By_OrderID),
     path(r'Del_All_ShopCart_By_OrderID/<order_id>/', views.OrderSys_ShopCart_Manager),
 
+    path(r'OrderSys_Message_Manager/', views.OrderSys_Message_Manager),
+    path(r'OrderSys_Message_Manager/shop/<shop_id>/<int:last_num>/', views.OrderSys_Message_Manager),
+    path(r'OrderSys_Message_Manager/shop/<shop_id>/', views.OrderSys_Message_Manager),
+    path(r'OrderSys_Message_Manager/message/<message_id>/', views.OrderSys_Message_Manager),
+    path(r'OrderSys_Message_Manager/id/<id>/', views.OrderSys_Message_Manager),
+    
 ]
 
