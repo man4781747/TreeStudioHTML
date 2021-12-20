@@ -39,6 +39,7 @@ class OrderSys_ShopsInfo(models.Model):
     shop_description = models.TextField()
     shop_menu = models.TextField()
     shop_picture = models.TextField()
+    is_delete = models.BooleanField(default=False)
     last_modify_date = models.DateTimeField(auto_now=True)
 
     def to_dict(self):
@@ -61,12 +62,13 @@ class OrderSys_OrderInfo(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     order_id = models.TextField()
     owner_name = models.TextField()
-    close_time = models.TextField()
+    close_time = models.TextField(default="")
     bank_info = models.TextField()
     bank_info_qr_code = models.TextField()
     shop_id = models.TextField()
     order_description = models.TextField()
     alive = models.BooleanField(default=True)
+    is_delete = models.BooleanField(default=False)
     last_modify_date = models.DateTimeField(auto_now=True)
 
     def to_dict(self):
@@ -94,7 +96,9 @@ class OrderSys_ShopCartInfo(models.Model):
     item_number = models.IntegerField()
     item_price = models.IntegerField()
     item_content = models.TextField()
+    item_index = models.IntegerField()
     pay = models.BooleanField(default=False)
+    is_delete = models.BooleanField(default=False)
     last_modify_date = models.DateTimeField(auto_now=True)
 
     def to_dict(self):
@@ -121,6 +125,7 @@ class OrderSys_Message(models.Model):
     title = models.TextField()
     content = models.TextField()
     score = models.IntegerField()
+    is_delete = models.BooleanField(default=False)
     last_modify_date = models.DateTimeField(auto_now=True)
 
     def to_dict(self):

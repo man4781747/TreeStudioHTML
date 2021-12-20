@@ -19,7 +19,28 @@ var Vue_mainToolBox =  new Vue({
                 'Name': '訂餐系統',
                 'Type': 'Page',
                 'icon': 'fas fa-utensils',
+            },        
+            'OrderSystem_List': {
+                'Name': '訂餐系統',
+                'Type': 'List', 
+                'opened': false,
+                'icon': 'fas fa-utensils',
+                'height' : 0,
+                'id' : 'order_system_list',
+                'List': [
+                    {
+                        'Name': '今日點餐',
+                        'Type': 'Page',
+                        'icon': 'far fa-circle',
+                    },
+                    {
+                        'Name': '訂餐設定',
+                        'Type': 'Page',
+                        'icon': 'far fa-circle',
+                    },
+                ]
             },         
+            
             'Wiki_Link': {
                 'Name': 'WIKI 知識庫',
                 'Type': 'URL',
@@ -111,6 +132,27 @@ var Vue_mainToolBox =  new Vue({
                 let element = document.getElementById("hap-announcement-manage-window");
                 element.style.display = 'none';
             } 
+
+
+            if (S_page == 'OrderSystem_List.今日點餐'){
+                let element = document.getElementById("order-system-window-order-list");
+                Vue_OrderSystem_OrderList.openTodayListWindow()
+                element.style.display = '';
+            } else {
+                let element = document.getElementById("order-system-window-order-list");
+                element.style.display = 'none';
+            } 
+
+            if (S_page == 'OrderSystem_List.訂餐設定'){
+                let element = document.getElementById("order-system-window-order-setting");
+                Vue_OrderSystem_OrderSetting.updateShopList()
+                element.style.display = '';
+            } else {
+                let element = document.getElementById("order-system-window-order-setting");
+                element.style.display = 'none';
+            } 
+
+            
             if (S_page == 'AnnouncementList'){
                 let element = document.getElementById("hap-announcement-list-window");
                 element.style.display = '';

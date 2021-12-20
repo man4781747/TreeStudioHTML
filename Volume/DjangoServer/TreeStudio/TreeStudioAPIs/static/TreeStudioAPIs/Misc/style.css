@@ -218,6 +218,25 @@ body{
     background-color: var(--primary) !important;
 }
 
+
+.box-card-title-btn-info {
+    color: white;
+    font-size: var(--window-title-font-size);
+    font-weight: bold;
+    transition: all .5s;
+    padding: 0. 0.25rem;
+    border-radius: 0.25rem;
+    margin-right: .25rem;
+    cursor: pointer;
+}
+
+.box-card-title-btn-info:hover {
+    color: var(--info) !important;
+    background-color: white !important;
+}
+
+
+
 .box-card-footer {
     padding: .75rem 1.25rem;
     background-color: rgba(0,0,0,.03);
@@ -423,6 +442,48 @@ body{
     margin: 0 !important;
     line-height: 1 !important;
     min-width: 1.1rem;
+}
+
+
+.ts-table-simple {
+    width: 100%;
+    background-color: transparent;
+    clear: both;
+    margin-top: 6px !important;
+    margin-bottom: 6px !important;
+    max-width: none !important;
+    border-collapse: separate !important;
+    border-spacing: 0;
+}
+
+.ts-table-simple thead th {
+    border-top: 1px solid var(--table-border);
+    border-bottom: 2px solid var(--table-border);
+    /* border-left: 1px solid var(--table-border); */
+    border-right: 0;
+    padding: .75rem;
+    text-align: left;
+    font-weight: bolder;
+    white-space: nowrap;
+}
+
+.ts-table-simple thead th:last-child {
+    /* border-right: 1px solid var(--table-border); */
+}
+
+.ts-table-simple tbody td {
+    border-top: 0;
+    border-bottom: 1px solid var(--table-border);
+    /* border-left: 1px solid var(--table-border); */
+    border-right: 0;
+    padding: .4rem 0.75rem;
+    text-align: left;
+    font-weight: normal;
+    white-space: nowrap;
+}
+
+.ts-table-simple tbody td:last-child {
+    /* border-right: 1px solid var(--table-border); */
 }
 
 /* 按鈕Style */
@@ -1036,4 +1097,40 @@ body{
 
 .home-a-link:hover {
     color: var(--a-link-blue-hover);
+}
+
+.step-window{
+    display: flex;
+    justify-content: space-between;
+    margin: 0 30px;
+    position: relative;
+}
+
+.step-item {
+    display: flex;
+    align-items: center;
+    background-color: var(--white);
+    padding: 0.75rem;
+    z-index: 2;
+}
+
+.step-number {
+    display: -ms-inline-flexbox;
+    display: inline-flex;
+    -ms-flex-line-pack: center;
+    align-content: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+    width: 2em;
+    /* height: 2em; */
+    padding: 0.5em 0;
+    margin: 0.25rem;
+    line-height: 1em;
+    color: #fff;
+    background-color: #6c757d;
+    border-radius: 1em;
+}
+.step-text {
+    display: inline-block;
+    margin: 0.25rem;
 }

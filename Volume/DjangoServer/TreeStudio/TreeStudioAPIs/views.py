@@ -116,20 +116,7 @@ def Update_Announcement(request):
 def OrderSys_ShopInfo_Manager(request, shop_id=None, id=None):
     try:
         if request.method == 'POST':
-            try:
-                dataGet = OrderSys_ShopsInfo.objects.get(shop_id=request.POST.dict()['shop_id'])
-                dataGet.shop_type = request.POST.dict()['shop_type']
-                dataGet.shop_name = request.POST.dict()['shop_name']
-                dataGet.shop_score = float(request.POST.dict()['shop_score'])
-                dataGet.shop_phoneNum = request.POST.dict()['shop_phoneNum']
-                dataGet.shop_address = request.POST.dict()['shop_address']
-                dataGet.shop_menu = request.POST.dict()['shop_menu'] 
-                dataGet.shop_description = request.POST.dict()['shop_description'] 
-                dataGet.shop_picture = request.POST.dict()['shop_picture'] 
-                dataGet.last_modify_date = datetime.datetime.now()
-                dataGet.save()
-                return JsonResponse({'result': 'success', 'data': {'message': '更新成功'}})
-            except:
+            if shop_id == None:
                 OrderSys_ShopsInfo.objects.create(
                     shop_id = request.POST.dict()['shop_id'],
                     shop_type = request.POST.dict()['shop_type'],
@@ -142,7 +129,20 @@ def OrderSys_ShopInfo_Manager(request, shop_id=None, id=None):
                     shop_picture = request.POST.dict()['shop_picture'],     
                 )
                 return JsonResponse({'result': 'success', 'data': {'message': '新增成功'}})
-            
+            else:
+                dataGet = OrderSys_ShopsInfo.objects.get(shop_id=shop_id)
+                dataGet.shop_type = request.POST.dict()['shop_type']
+                dataGet.shop_name = request.POST.dict()['shop_name']
+                dataGet.shop_score = float(request.POST.dict()['shop_score'])
+                dataGet.shop_phoneNum = request.POST.dict()['shop_phoneNum']
+                dataGet.shop_address = request.POST.dict()['shop_address']
+                dataGet.shop_menu = request.POST.dict()['shop_menu'] 
+                dataGet.shop_description = request.POST.dict()['shop_description'] 
+                dataGet.shop_picture = request.POST.dict()['shop_picture'] 
+                dataGet.last_modify_date = datetime.datetime.now()
+                dataGet.save()
+                return JsonResponse({'result': 'success', 'data': {'message': '更新成功'}})
+    
         elif request.method == 'GET':
             if id != None:
                 instance = OrderSys_ShopsInfo.objects.get(id=id)
@@ -190,7 +190,17 @@ def OrderSys_ShopInfo_Manager(request, shop_id=None, id=None):
 def OrderSys_OrderInfo_Manager(request, order_id=None, id=None):
     try:
         if request.method == 'POST':
-            try:
+            if order_id == None:
+                OrderSys_OrderInfo.objects.create(
+                    order_id = request.POST.dict()['order_id'],
+                    owner_name = request.POST.dict()['owner_name'],
+                    bank_info = request.POST.dict()['bank_info'],
+                    shop_id = request.POST.dict()['shop_id'],
+                    order_description =request.POST.dict()['order_description'],
+                    bank_info_qr_code = request.POST.dict()['bank_info_qr_code'],
+                )
+                return JsonResponse({'result': 'success', 'data': {'message': '新增成功'}})
+            else:
                 dataGet = OrderSys_OrderInfo.objects.get(order_id=request.POST.dict()['order_id'])
                 dataGet.owner_name = request.POST.dict()['owner_name']
                 dataGet.close_time = request.POST.dict()['close_time']
@@ -200,18 +210,7 @@ def OrderSys_OrderInfo_Manager(request, order_id=None, id=None):
                 dataGet.last_modify_date = datetime.datetime.now()
                 dataGet.save()
                 return JsonResponse({'result': 'success', 'data': {'message': '更新成功'}})
-            except:
-                OrderSys_OrderInfo.objects.create(
-                    order_id = request.POST.dict()['order_id'],
-                    owner_name = request.POST.dict()['owner_name'],
-                    close_time = request.POST.dict()['close_time'],
-                    bank_info = request.POST.dict()['bank_info'],
-                    shop_id = request.POST.dict()['shop_id'],
-                    order_description =request.POST.dict()['order_description'],
-                    bank_info_qr_code = request.POST.dict()['bank_info_qr_code'],
-                )
-                return JsonResponse({'result': 'success', 'data': {'message': '新增成功'}})
-            
+
         elif request.method == 'GET':
             if id != None:
                 instance = OrderSys_OrderInfo.objects.get(id=id)
@@ -369,25 +368,93 @@ def Get_OrderInfo_By_Time_Range(request, time_range=None):
     except Exception as e:
         return JsonResponse({'result': 'fail', 'data': {'message': str(e)}})
 
+def Get_Today_OrderInfo(request):
+    # 今日訂餐列表 (包含今日訂單(不管有無結單) + 過去還沒結單項目)
+    try:
+        if request.method == 'GET':
+            orderListData_Today = OrderSys_OrderInfo.objects.filter(
+                created__range=[
+                    datetime.date.today(),
+                    datetime.date.today() + datetime.timedelta(days=1)
+                ]
+            ).order_by('-created').values(
+                    'order_id',
+                    'id',
+                    'alive',
+                    'owner_name',
+                    'created',
+                    'close_time',
+                    'shop_id',
+            )
+
+            L_orderList = []
+            for orderData in orderListData_Today:
+                try:
+                    shopInfo = OrderSys_ShopsInfo.objects.get(shop_id=orderData['shop_id']).to_dict()
+                    orderData['shop_name'] = shopInfo['shop_name']
+                    orderData['shop_type'] = shopInfo['shop_type']
+                    orderData['shop_score'] = shopInfo['shop_score']
+                except:
+                    orderData['shop_name'] = "遺失"
+                    orderData['shop_type'] = "遺失"
+                    orderData['shop_score'] = -1
+                L_orderList.append(orderData)
+
+            orderListData_notAlive = OrderSys_OrderInfo.objects.filter(
+                created__range=[
+                    datetime.date(1990,1,1),
+                    datetime.date.today()
+                ]
+            ).filter(alive=True).order_by('-created').values(
+                    'order_id',
+                    'id',
+                    'alive',
+                    'owner_name',
+                    'created',
+                    'close_time',
+                    'shop_id',
+            )
+            for orderData in orderListData_notAlive:
+                try:
+                    shopInfo = OrderSys_ShopsInfo.objects.get(shop_id=orderData['shop_id']).to_dict()
+                    orderData['shop_name'] = shopInfo['shop_name']
+                    orderData['shop_type'] = shopInfo['shop_type']
+                    orderData['shop_score'] = shopInfo['shop_score']
+                except:
+                    orderData['shop_name'] = "遺失"
+                    orderData['shop_type'] = "遺失"
+                    orderData['shop_score'] = -1
+                L_orderList.append(orderData)
+
+
+            return JsonResponse({'result': 'success', 'data':L_orderList})
+        else:
+            return JsonResponse({'result': 'fail', 'date': {'message': '不正確的HTTP請求method'}})
+    except Exception as e:
+        return JsonResponse({'result': 'fail', 'data': {'message': str(e)}})
+
+
 @csrf_protect
-def OrderSys_ShopCart_Manager(request, shop_cart_id=None, id=None, order_id=None):
+def OrderSys_ShopCart_Manager(request, shop_cart_id=None, id=None, order_id=None, item_index=None):
     try:
         if request.method == 'POST':
-            if request.POST.dict().get('pay', None) != None:
-                S_shop_cart_id = request.POST.dict()['shop_cart_id']
-                L_shopCartList = OrderSys_ShopCartInfo.objects.filter(shop_cart_id=S_shop_cart_id)
-                for shopCartItem in L_shopCartList:
-                    if request.POST.dict()['pay'] == 'true':
-                        shopCartItem.pay = True
-                    else:
-                        shopCartItem.pay = False
-                    shopCartItem.save()
-                return JsonResponse({'result': 'success', 'data': {'message': '更新成功'}})
+            if shop_cart_id != None:
+                if item_index != None:
+                    shopCartItem=OrderSys_ShopCartInfo.objects.filter(
+                        shop_cart_id=shop_cart_id).get(item_index=item_index)
+                    if request.POST.dict().get('pay', None) != None:
+                        if request.POST.dict()['pay'] == 'true':
+                            shopCartItem.pay = True
+                        else:
+                            shopCartItem.pay = False
+                        shopCartItem.save()
+                        return JsonResponse({'result': 'success', 'data': {'message': '更新成功'}})
+                    return JsonResponse({'result': 'fail', 'data': {'message': '缺少參數 pay'}})
             else:
                 L_shopCartList = json.loads(request.POST.dict()['shop_cart_data'])
                 S_shop_cart_id = request.POST.dict()['shop_cart_id']
                 S_shopper_name = request.POST.dict()['shopper_name']
-                for shopCartItem in L_shopCartList:
+                for item_index,shopCartItem in enumerate(L_shopCartList):
                     OrderSys_ShopCartInfo.objects.create(
                         shop_cart_id = S_shop_cart_id,
                         shopper_name = S_shopper_name,
@@ -396,20 +463,35 @@ def OrderSys_ShopCart_Manager(request, shop_cart_id=None, id=None, order_id=None
                         item_number = int(shopCartItem['number']),
                         item_price = int(shopCartItem['price']),
                         item_content = shopCartItem['content'],
+                        item_index = item_index,
                     )
                 return JsonResponse({'result': 'success', 'data': {'message': '新增成功'}})
+
             
         elif request.method == 'GET':
             if id != None:
                 instance = OrderSys_ShopCartInfo.objects.get(id=id)
+                print(instance.to_dict())
                 instance.delete()
                 return JsonResponse({'result': 'success', 'data':{}})
-            if shop_cart_id != None:
-                L_data=OrderSys_ShopCartInfo.objects.filter(shop_cart_id=shop_cart_id)
-                returnData = [data.to_dict() for data in L_data]
-                return JsonResponse({'result': 'success', 'data':returnData})
+            elif shop_cart_id != None:
+                if item_index != None:
+                    data=OrderSys_ShopCartInfo.objects.filter(
+                        shop_cart_id=shop_cart_id).get(item_index=item_index)
+                    
+                    return JsonResponse({'result': 'success', 'data':data.to_dict()})
+                else:
+                    L_data=OrderSys_ShopCartInfo.objects.filter(shop_cart_id=shop_cart_id).filter(is_delete=False)
+                    returnData = [data.to_dict() for data in L_data]
+                    return JsonResponse({'result': 'success', 'data':returnData})
+            elif order_id != None:
+                print(order_id)
+                L_All_ShopCart_By_OrderID = OrderSys_ShopCartInfo.objects.filter(order_id=order_id).filter(is_delete=False)
+                print(L_All_ShopCart_By_OrderID)
+                returnList = [L_All_ShopCart_By_OrderID[i].to_dict() for i in range(len(L_All_ShopCart_By_OrderID))]
+                return JsonResponse({'result': 'success', 'data': returnList})
             else:
-                data=OrderSys_ShopCartInfo.objects.order_by('-created').values(
+                data=OrderSys_ShopCartInfo.objects.filter(is_delete=False).order_by('-created').values(
                     'id',
                     'created',
                     'shop_cart_id',
@@ -419,6 +501,7 @@ def OrderSys_ShopCart_Manager(request, shop_cart_id=None, id=None, order_id=None
                     'item_number',
                     'item_price',
                     'item_content',
+                    'item_index',
                     'pay',
                     'last_modify_date'
                 )
@@ -429,13 +512,24 @@ def OrderSys_ShopCart_Manager(request, shop_cart_id=None, id=None, order_id=None
 
         elif request.method == 'DELETE':
             if shop_cart_id != None:
-                instance = OrderSys_ShopCartInfo.objects.filter(shop_cart_id=shop_cart_id)
-                returnData = [data.delete() for data in instance]
-                return JsonResponse({'result': 'success', 'data':returnData})
+                if item_index != None:
+                    data=OrderSys_ShopCartInfo.objects.filter(
+                        shop_cart_id=shop_cart_id).get(item_index=item_index)
+                    data.is_delete = True
+                    data.save()
+                    return JsonResponse({'result': 'success', 'data':''})
+                else:
+                    L_ShopCartInfo = OrderSys_ShopCartInfo.objects.filter(shop_cart_id=shop_cart_id)
+                    for ShopCartInfo in L_ShopCartInfo:
+                        ShopCartInfo.is_delete = True
+                        ShopCartInfo.save()
+                    return JsonResponse({'result': 'success', 'data':''})
             elif order_id != None:
                 L_All_ShopCart_By_OrderID = OrderSys_ShopCartInfo.objects.filter(order_id=order_id)
-                L_return = [data.delete() for data in L_All_ShopCart_By_OrderID]
-                return JsonResponse({'result': 'success', 'data':L_return})
+                for data in L_All_ShopCart_By_OrderID:
+                    data.is_delete = True
+                    data.save()
+                return JsonResponse({'result': 'success', 'data':''})
             else:
                 return JsonResponse({'result': 'fail', 'data':{'message': '缺少參數: shop_cart_id'}})
         

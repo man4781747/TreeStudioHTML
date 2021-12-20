@@ -1,7 +1,7 @@
 Vue.component('shop-info-table', {
     template: `
 <div>
-<div style='margin-bottom: .5rem;'>
+<div style=''>
 <div class='input-group-main-title'>店家資訊
     <div class='input-group-main-sub-title'></div>
 </div>
@@ -87,7 +87,7 @@ Vue.component('shop-info-table', {
     </div>    
 </div>
 </div>
-<div style='margin-bottom: .5rem;'>
+<div style=''>
 <div class='input-group-main-title'
 >店家菜單
     <div class='input-group-main-sub-title'></div>
@@ -198,7 +198,7 @@ Vue.component('shop-cart-info-table', {
     <div style='display: flex;'>
         <i class='fas fa-trash-alt'
             v-if="allow_del"
-            @click="Vue_OrderSystem.clickDelShopCartByShopCartIDBtn(shop_cart_id,shop_cart_data_list)"
+            @click="clickDelShopCartBtn(shop_cart_id, shop_cart_data_list)"
         ></i>
     </div>
 </div>
@@ -232,6 +232,10 @@ Vue.component('shop-cart-info-table', {
                 "shop_cart_data_list": shop_cart_data_list,
                 'setValue': setValue,
             })
+        },
+
+        clickDelShopCartBtn(shop_cart_id, shop_cart_data_list){
+            this.$emit('del_shop_cart_id', shop_cart_id, shop_cart_data_list)
         },
 
     },
@@ -274,7 +278,7 @@ Vue.component('shop-cart-info-table-shorter', {
 
 Vue.component('shop-menu-mamager', {
     template:` 
-<div style='margin-bottom: .5rem;'>
+<div style=''>
     <div :class="allow_edit==true?'todo-list-area':'todo-list-area'">
         <div class='user-order-window-item-list-group-area'
             v-for="(group, group_index) of shop_menu"
@@ -346,9 +350,11 @@ Vue.component('shop-menu-mamager', {
                     ],
                 }
             )
+            this.$emit('menu_changed', true)
         },
         delMenuGroup(index){
             this.shop_menu.splice(index,1)
+            this.$emit('menu_changed', true)
         },
 
         addNewMenuItem(group_data){
@@ -359,9 +365,11 @@ Vue.component('shop-menu-mamager', {
                     desc: '',
                 },
             )
+            this.$emit('menu_changed', true)
         },
         delMenuItem(group_data, item_index){
             group_data.items.splice(item_index,1)
+            this.$emit('menu_changed', true)
         },
 
         click_order_item(item_data, shop_id, shop_name, order_id){
@@ -1216,16 +1224,6 @@ var Vue_OrderSystem =  new Vue({
                 'open': false,
                 'show_name': '店家簡介',
             },
-            // shop_des : {
-            //     'filter_str': '',
-            //     'open': false,
-            //     'show_name': '備註',
-            // },
-            // last_modify_date : {
-            //     'filter_str': '',
-            //     'open': false,
-            //     'show_name': '修改日期',
-            // },
         },
 
         // 店家編輯相關
@@ -1687,7 +1685,7 @@ var Vue_OrderSystem =  new Vue({
         openClosedOrderWindow(order_id){
             this.window_chose='closed_order_window'
             this.getOrderInfos(order_id)
-            this.uploadAllShopCartDataByOrderID(order_id)
+            Vue_OrderSystem.uploadAllShopCartDataByOrderID(order_id)
         },
 
         // 訂餐列表專用
@@ -1741,6 +1739,16 @@ var Vue_OrderSystem =  new Vue({
         openOrderWindow(order_id){
             this.window_chose='order_window'
             this.getOrderInfos(order_id)
+            .then(function(shop_id) {
+                console.log(shop_id)
+                Vue_OrderSystem.updateNewMessageTableOnOrderPage(shop_id)
+			})
+        },
+
+        updateNewMessageTableOnOrderPage(shop_id){
+            this.$nextTick(() => {
+                Vue_OrderSystem.$refs['new-message-table-on-order-page'].uploadMessageList(shop_id)
+            })
         },
 
         clickOrderItem(D_data){
@@ -1892,7 +1900,7 @@ var Vue_OrderSystem =  new Vue({
         },
 
         getAllShopCartByOrderID(S_orderID){
-			fetch_getAllShopCartByOrderID = fetch('/TreeStudioAPIs/Get_All_ShopCart_By_OrderID/'+S_orderID+'/', {
+			fetch_getAllShopCartByOrderID = fetch('/TreeStudioAPIs/OrderSys_ShopCart_Manager/order_id/'+S_orderID+'/', {
                 method: 'GET'
 			}).then(function(response) {
 				return response.json();
@@ -1983,7 +1991,7 @@ var Vue_OrderSystem =  new Vue({
         },
 
         getOrderInfos(S_orderID){
-            this.getOrderInfo(S_orderID)
+            fetch_result = this.getOrderInfo(S_orderID)
             .then(function(orderData) {
                 Vue_OrderSystem.chosedOrderData['order_info'] = orderData
                 S_shopID = orderData.shop_id
@@ -1991,12 +1999,14 @@ var Vue_OrderSystem =  new Vue({
 				return S_shopID;
 			})
             .then(function(S_shopID) {
-                Vue_OrderSystem.getShopInfo(S_shopID)
+                fetch_result_2 = Vue_OrderSystem.getShopInfo(S_shopID)
                 .then(function(D_shopData) {
                     Vue_OrderSystem.chosedOrderData['shop_info'] = D_shopData
                 })
-                
+                console.log(S_shopID)
+                return S_shopID
 			}) 
+            return fetch_result
         },
 
         // db連線 - shop info
@@ -2186,3 +2196,915 @@ var Vue_OrderSystem =  new Vue({
     updated: function () {
     },
 })
+
+var Vue_OrderSystem_OrderList = new Vue({
+    el: '#order-system-window-order-list',
+    data: {
+
+        // 購物車刪除確認視窗
+        delCheckWindowOpen : false,
+        delCheckInfo : {},
+
+
+        // 點菜視窗
+        // shop_order_window_unfold: true,
+        
+        shop_order_resize_window: false,
+        shop_order_window_unfold: true,
+        shop_order_window_open : false,
+        shop_order_info: {
+            shop_info: {},
+            order_info: {},
+        },
+
+
+        // 今日訂單列表相關
+        window_chose: 'today_list_window',
+        todayOrderList : [],
+
+
+        // 點菜跳出視窗相關
+        addOrderWindowOpen: false,
+        addOrderWindowData: {
+            data : {},
+            content : "",
+            number: 0,
+            order_id: "",
+        },
+
+        // 購物車資訊
+        shoppingCar : {},
+        shopperName: '',
+        shop_cart_resize_window: false,
+        shop_cart_window_unfold: false,
+
+        // 訂單統計相關資訊
+        all_shopcart_window_resize: true,
+        all_shopcart_window_unfold: true,
+        all_shopcart_window_size: 0,
+
+        allShopCartOrderInfo: {},
+        allShopCartData: [],
+        allShopCart_OrderID: '',
+
+        short_checkbox: false,
+
+        closeCheckOrderID: '',
+    },
+
+    computed:{
+        caledAllShopCart(){
+            D_caledAllShopCartData = {}
+            for (D_shopCartData of this.allShopCartData){
+                if ((this.only_not_pay_checkbox==false) | (D_shopCartData.pay==false)){
+                    if (D_caledAllShopCartData[D_shopCartData.shop_cart_id] == undefined){
+                        D_caledAllShopCartData[D_shopCartData.shop_cart_id] = []
+                    }
+                    D_caledAllShopCartData[D_shopCartData.shop_cart_id].push(D_shopCartData)
+                }
+            }
+            return D_caledAllShopCartData
+        },
+
+        caledAllShopCartMoney(){
+            I_money = 0
+
+            for (D_shopCartData of this.allShopCartData){
+                I_money = I_money + (D_shopCartData.item_price*D_shopCartData.item_number)
+            }
+            return I_money
+        },
+
+        caledAllShopCart_Short(){
+            D_allList = {}
+            for (D_shopCartData of this.allShopCartData){
+                S_uniStr = D_shopCartData.item_name + "_" + D_shopCartData.item_content
+                if (D_allList[S_uniStr] == undefined){
+                    D_allList[S_uniStr] = {
+                        item_name : D_shopCartData.item_name,
+                        item_content : D_shopCartData.item_content,
+                        item_number : 0,
+                        item_price : D_shopCartData.item_price,
+                        whoOrder: {},
+                    }
+                }
+                D_allList[S_uniStr].item_number += D_shopCartData.item_number
+
+                if (D_allList[S_uniStr].whoOrder[D_shopCartData.shopper_name] == undefined){
+                    D_allList[S_uniStr].whoOrder[D_shopCartData.shopper_name] = 0
+                }
+                D_allList[S_uniStr].whoOrder[D_shopCartData.shopper_name] += D_shopCartData.item_number
+            }   
+
+            return D_allList
+        },
+    },
+
+    methods:{
+        openHistoryListWindow(){
+            v_console.log('test')
+        },
+
+        calcShopOrderWindowSize(){
+            this.$nextTick(() => {
+                Vue_OrderSystem_OrderList.shop_order_resize_window = true
+            })
+        },
+
+
+        calcShopcartWindowSize(reopen){
+            this.$nextTick(() => {
+                Vue_OrderSystem_OrderList.all_shopcart_window_resize = true 
+            })
+        },
+
+        openTodayListWindow(){
+            this.window_chose = 'today_list_window'
+            this.updateTodayOrderList()
+        },
+
+        updateTodayOrderList(){
+            S_today = new Date().format("Y-MM-dd")
+			fetch('/TreeStudioAPIs/Get_Today_OrderInfo/', {
+                method: 'GET'
+			}).then(function(response) {
+				return response.json();
+			})
+			.then(function(myJson) {
+                Vue_OrderSystem_OrderList.todayOrderList = myJson['data']
+			}); 
+        },
+
+        openOrderWindow(order_id){
+            Vue_OrderSystem_OrderList.shop_order_window_open = true
+            this.updateAllShopCartList(order_id)
+            getOrderInfo(order_id)
+            .then(function(order_info) {
+                Vue_OrderSystem_OrderList.shop_order_info.order_info = order_info
+                return order_info.shop_id
+            })
+            .then(function(shop_id) {
+                getShopInfo(shop_id)
+                .then(function(shop_info) {
+                    Vue_OrderSystem_OrderList.shop_order_info.shop_info = shop_info
+                    Vue_OrderSystem_OrderList.calcShopOrderWindowSize()
+                    Vue_OrderSystem_OrderList.shop_order_window_unfold = true
+                    jumpToDOM("#order-shop-menu-window")
+                })
+            })
+        },
+
+        clickOrderItem(D_data){
+            console.log(D_data)
+            if (D_data == undefined){
+                return null
+            }
+            this.addOrderWindowData.data = D_data.item_data
+            this.addOrderWindowData.content = ""
+            this.addOrderWindowData.number = 1
+            this.addOrderWindowData.shop_name = D_data.shop_name
+            this.addOrderWindowData.shop_id = D_data.shop_id
+            this.addOrderWindowData.order_id = D_data.order_id
+            this.addOrderWindowOpen = true
+        },
+
+        // 購物車相關
+        addNewOrderToShoppingCart(D_orderInfo){
+            D_input = {
+                'order_id': D_orderInfo.order_id,
+                'shop_name': D_orderInfo.shop_name,
+                'shop_id': D_orderInfo.shop_id,
+                'name': D_orderInfo.data.name,
+                'price': D_orderInfo.data.price,
+                'number': D_orderInfo.number,
+                'content': D_orderInfo.content,
+            }
+            if (this.shoppingCar[D_orderInfo.order_id] == undefined){
+                Vue.set(this.shoppingCar,D_orderInfo.order_id,[])
+            }
+            this.shoppingCar[D_orderInfo.order_id].push(D_input)
+            this.addOrderWindowOpen = false
+            // this.calcShopOrderWindowSize()
+            this.$nextTick(() => {
+                Vue_OrderSystem_OrderList.shop_cart_resize_window = true
+                this.shop_cart_window_unfold = true
+            })
+        },
+
+        removeOrderOnCart(order_id, index){
+            this.shoppingCar[order_id].splice(index,1)
+            if (this.shoppingCar[order_id].length==0){
+                Vue.delete(this.shoppingCar, order_id)
+            }
+            this.calcShopOrderWindowSize()
+            this.$nextTick(() => {
+                Vue_OrderSystem_OrderList.shop_cart_resize_window = true
+            })
+        },
+ 
+        clikcUploadShopCartBtn(L_cartData, shopperName){
+            var order_id = L_cartData[0].order_id
+            uploadShopCartInfo(L_cartData, shopperName)
+            .then(function(myJson) {
+                Vue.delete(Vue_OrderSystem_OrderList.shoppingCar, order_id)
+                Vue_OrderSystem_OrderList.updateAllShopCartList(order_id)
+                Vue_OrderSystem_OrderList.$nextTick(() => {
+                    Vue_OrderSystem_OrderList.shop_cart_resize_window = true
+                })
+            });
+        },
+
+        // 定單統計相關
+        updateAllShopCartList(order_id){
+            this.allShopCart_OrderID = order_id
+            getAllShopCartByOrderID(order_id)
+            .then(function(data) {
+                Vue_OrderSystem_OrderList.allShopCartData = data
+                Vue_OrderSystem_OrderList.calcShopcartWindowSize()
+                return data;
+            })
+        },
+
+        openDelShopCartWindow(shop_cart_id, shop_cart_data_list){
+            this.deleteShopCartWindowOpen = true
+            this.delCheckInfo = {
+                shop_cart_id: shop_cart_id,
+                shop_cart_list: shop_cart_data_list,
+            }
+        },
+
+        // 刪除購物車確認視窗
+        clickDelShopCartItemBtn(D_shopCartItemData){
+            this.delCheckInfo = D_shopCartItemData
+            this.delCheckWindowOpen = true
+        },
+
+        delShopCartByShopCartIDAndItemIndex(shop_cart_id, item_index){
+            delShopCartByShopCartIDAndItemIndex(shop_cart_id, item_index)
+            .then(function(json) {
+                Vue_OrderSystem_OrderList.delCheckWindowOpen = false
+                Vue_OrderSystem_OrderList.updateAllShopCartList(
+                    Vue_OrderSystem_OrderList.allShopCart_OrderID
+                )
+            })
+        },
+    },
+})
+
+
+var Vue_OrderSystem_OrderSetting = new Vue({
+    el: '#order-system-window-order-setting',
+    data: {
+        // 商店列表相關
+        tableInfoList : [],
+        shopListUpdateing: false,
+        pageChose : 0,
+        pageListChose : 0,
+        pageMaxNum: 30,
+        filterStr: '',
+        sortBy : '',
+        sortValue: -1,
+        title_filter: {
+            shop_name : {
+                'filter_str': '',
+                'open': false,
+                'show_name': '店家名稱',
+            },
+            shop_type : {
+                'filter_str': '',
+                'open': false,
+                'show_name': '店家種類',
+            },
+            shop_score : {
+                'filter_str': '',
+                'open': false,
+                'show_name': '評價',
+                'special': 'five-star-score',
+                'v_html_content': '<five-star-score v-bind:score="data[title]"></five-star-score>',
+            },
+            shop_description : {
+                'filter_str': '',
+                'open': false,
+                'show_name': '店家簡介',
+            },
+        },
+
+        // 我要開團相關
+        open_order_window_resize: true,
+        open_order_window_unfold: false,
+
+        newOrderStep: 'choseShop',
+
+        open_shop_chosed_info: {},
+
+        orderInfo: {},
+
+        // 新增餐廳相關
+        add_shop_window_resize: true,
+        add_shop_window_unfold: false,
+
+        addShopStep: 'shopInfo',
+
+        add_shop_info: {},
+
+        // 編輯餐廳相關
+        edit_shop_window_resize: true,
+        edit_shop_window_unfold: false,
+
+        edit_shop_window_style:"" ,
+
+        editShopStep: 'shopInfo',
+
+        edit_shop_info: {},
+
+        
+
+    },
+
+    computed:{
+		tableData(){
+            if (this.sortBy != ""){
+                afterSortList = []
+                var sortByList = []
+                for (let itemInfo of this.tableInfoList){
+                    sortByList.push([itemInfo[this.sortBy],itemInfo])
+                }
+                
+                if (this.sortBy == 'id'){
+                    sortByList.sort(function(a, b) {
+                        return a - b;
+                      });
+                } else {
+                    sortByList.sort()
+                }
+
+                if (this.sortValue == -1){
+                    sortByList.reverse()
+                }
+                for (let itemInfo_after of sortByList){
+                    afterSortList.push(itemInfo_after[1])
+                }
+            } else {
+                afterSortList = this.tableInfoList
+            }
+
+            var afterTitleFilterList = afterSortList
+            for (let S_titleChose of Object.keys(this.title_filter)){
+                if (this.title_filter[S_titleChose].filter_str.trim()==""){
+                    continue
+                }
+                else {
+                    afterTitleFilterList_chose = []
+                    for (let itemInfo of afterTitleFilterList){
+                        if (itemInfo[S_titleChose].indexOf(this.title_filter[S_titleChose].filter_str.trim())!= -1){
+                            afterTitleFilterList_chose.push(itemInfo)
+                        }
+                    }
+                    afterTitleFilterList = afterTitleFilterList_chose
+                }
+            }
+
+            var afterFilterList = []
+            if (this.filterStr.trim()==""){
+                afterFilterList = afterTitleFilterList
+            } else {
+                for (let itemInfo of afterTitleFilterList){
+                    for (key of Object.keys(this.title_filter)){
+                        if ((''+itemInfo[key]).indexOf(this.filterStr.trim())!= -1){
+                            afterFilterList.push(itemInfo)
+                            break
+                        }
+                    }
+                }
+            }
+            var tableData = [[]]
+            for (let itemIndex in afterFilterList){
+                let I_page = Math.floor(itemIndex/this.pageMaxNum)
+                if (tableData[I_page] == undefined){
+                    tableData[I_page] = []
+                }
+                tableData[I_page].push(afterFilterList[itemIndex])
+            }
+            if (this.pageChose >=  tableData.length){
+                this.pageChose = tableData.length - 1
+            }
+            return tableData
+        },
+
+        pageList(){
+            var pageListList = [[]]
+            for (let pageIndex in this.tableData){
+                let I_listInex = Math.floor(pageIndex/5)
+                if (pageListList[I_listInex] == undefined){
+                    pageListList[I_listInex] = []
+                }
+                pageListList[I_listInex].push(pageIndex)
+            }
+
+            if (this.pageListChose >=  pageListList.length){
+                this.pageListChose = pageListList.length - 1
+            }
+
+            return pageListList
+        },
+
+        tableRawNum(){
+            let totalCount = 0
+            for (L_pageList of this.tableData){
+                totalCount = totalCount + L_pageList.length
+            }
+            return totalCount
+        },
+
+        tablePageNum(){
+            let totalCount = 0
+            for (L_pageList of this.pageList){
+                totalCount = totalCount + L_pageList.length
+            }
+            return totalCount
+        },
+
+        // 檢查新增店家資訊
+        checkAddShopInfo(){
+            if (this.add_shop_info.shop_menu == undefined){
+                return []
+            }
+
+            let wraningList = []
+            if (this.add_shop_info.shop_name == ''){
+                wraningList.push('商店名稱不得為空')
+            }
+            if (this.add_shop_info.shop_menu.length == 0){
+                wraningList.push('菜單目前是空的')
+            }
+
+            for (D_group of this.add_shop_info.shop_menu){
+                if (D_group.name == ''){
+                    wraningList.push('菜單項目分類名稱不得為空')
+                }
+                if (D_group['items'].length == 0){
+                    wraningList.push('菜單項目分類內品項目得為空')
+                }
+                for (D_item of D_group['items']){
+                    if (D_item['name'] == ''){
+                        wraningList.push('餐點名稱不得為空')
+                    }
+                }
+            }
+
+            return wraningList
+        },
+
+        // 檢查新增團訂單資訊
+        checkAddOrderInfo(){
+            if (this.orderInfo.order_id == undefined){
+                return []
+            }
+            let wraningList = []
+            if (this.orderInfo.owner_name == ''){
+                wraningList.push('團長欄位不得為空')
+            }
+            return wraningList
+        },
+
+        // 檢查新增店家資訊
+        checkEditShopInfo(){
+            if (this.edit_shop_info.shop_menu == undefined){
+                return []
+            }
+
+            let wraningList = []
+            if (this.edit_shop_info.shop_name == ''){
+                wraningList.push('商店名稱不得為空')
+            }
+            if (this.edit_shop_info.shop_menu.length == 0){
+                wraningList.push('菜單目前是空的')
+            }
+
+            for (D_group of this.edit_shop_info.shop_menu){
+                if (D_group.name == ''){
+                    wraningList.push('菜單項目分類名稱不得為空')
+                }
+                if (D_group['items'].length == 0){
+                    wraningList.push('菜單項目分類內品項目得為空')
+                }
+                for (D_item of D_group['items']){
+                    if (D_item['name'] == ''){
+                        wraningList.push('餐點名稱不得為空')
+                    }
+                }
+            }
+
+            return wraningList
+        },
+    },
+
+    methods:{
+        sortByBtmChose(sortByStr){
+            if (this.sortBy == sortByStr){
+                this.sortValue = this.sortValue * -1
+            } else {
+                this.sortValue = 1
+            }
+            this.sortBy = sortByStr
+        },
+
+        // 商店列表相關
+        updateShopList(){
+			fetch('/TreeStudioAPIs/OrderSys_ShopInfo_Manager/', {
+                method: 'GET'
+			}).then(function(response) {
+				return response.json();
+			})
+			.then(function(myJson) {
+                v_console.success("餐廳列表完成")
+                Vue_OrderSystem_OrderSetting.tableInfoList = myJson['data']
+            });
+        },
+
+        clickOpenOrderBtn(shop_id){
+            this.newOrderStep = 'choseShop'
+            this.updateShopInfo(shop_id)
+            this.orderInfo.shop_id = shop_id
+            this.open_order_window_unfold = true
+            jumpToDOM("#open-new-order-window")
+        },
+
+
+        // 我要開團相關
+        calcOpenOrderWindowSize(){
+            this.$nextTick(() => {
+                Vue_OrderSystem_OrderSetting.open_order_window_resize = true 
+            })
+        },
+        
+        switchOpenOrderWindowUnfold(){
+            this.calcOpenOrderWindowSize()
+            this.open_order_window_unfold = !this.open_order_window_unfold
+        },
+
+        openStepPage(step){
+            this.newOrderStep = step
+            this.calcOpenOrderWindowSize()
+        },
+
+        updateShopInfo(ship_id){
+            getShopInfo(ship_id)
+            .then(function(shop_info) {
+                Vue_OrderSystem_OrderSetting.open_shop_chosed_info = shop_info
+                Vue_OrderSystem_OrderSetting.calcOpenOrderWindowSize()
+            })
+        },
+
+        init_order_setting_info(){
+            this.orderInfo = {
+                'order_id': uuidv4(),
+                'owner_name': '',
+                'bank_info' : '',
+                'bank_info_qr_code': '',
+                'order_desc': '',
+                'shop_id': '',
+            }
+        },
+
+        clickUploadOrderPictureBtn(event, orderInfo, key_name){
+            getPicAndReturnBase64String_Sim(event, orderInfo, key_name)
+            .then(data => {
+                Vue_OrderSystem_OrderSetting.calcOpenOrderWindowSize()
+            })
+        },
+
+        clickAddNewOrderBtn(){
+            createNewOrderInfo(this.orderInfo)
+            .then(function(data) {
+                v_console.success("建立新團訂單成功")
+                Vue_OrderSystem_OrderSetting.init_order_setting_info()
+                Vue_OrderSystem_OrderSetting.newOrderStep = 'choseShop'
+                Vue_OrderSystem_OrderSetting.open_shop_chosed_info = {}
+                Vue_OrderSystem_OrderSetting.open_order_window_unfold = false
+
+            })
+        },
+
+        // 新增餐廳相關
+        calcAddShopWindowSize(){
+            this.$nextTick(() => {
+                Vue_OrderSystem_OrderSetting.add_shop_window_resize = true 
+            })
+        },
+
+        switchAddShopWindowUnfold(){
+            this.calcAddShopWindowSize()
+            this.add_shop_window_unfold = !this.add_shop_window_unfold
+        },
+
+        openAddShopStepPage(step){
+            this.addShopStep = step
+            this.calcAddShopWindowSize()
+        },
+
+        init_add_shop_info(){
+            this.add_shop_info = {
+                'shop_id': uuidv4(),
+                'shop_type': '餐廳',
+                'shop_name': '',
+                'shop_score': 0,
+                'shop_phoneNum': '',
+                'shop_des': '',
+                'shop_address': '',
+                'shop_img': '',
+                'shop_picture' : '',
+                'shop_menu': [],
+                'shop_description': '',
+            }
+        },
+
+        clickUploadShopPictureBtn(event, add_shop_info, key_name){
+            getPicAndReturnBase64String_Sim(event, add_shop_info, key_name)
+            .then(data => {
+                Vue_OrderSystem_OrderSetting.calcAddShopWindowSize()
+            })
+        },
+
+        clickAddNewShopBtn(){
+            createShopInfo(this.add_shop_info)
+            .then(function(data) {
+                v_console.success("建立新商店成功")
+                Vue_OrderSystem_OrderSetting.init_add_shop_info()
+                Vue_OrderSystem_OrderSetting.addShopStep = 'shopInfo'
+                Vue_OrderSystem_OrderSetting.add_shop_window_unfold = false
+                Vue_OrderSystem_OrderSetting.updateShopList()
+            })
+        },
+
+        // 編輯餐廳相關
+        loadEditShopInfo(shop_id){
+            getShopInfo(shop_id)
+            .then(function(shop_data) {
+                Vue_OrderSystem_OrderSetting.edit_shop_window_style = "animate__animated animate__backInRight"
+                Vue_OrderSystem_OrderSetting.edit_shop_info = shop_data
+                Vue_OrderSystem_OrderSetting.openEditShopStepPage('shopInfo')
+                Vue_OrderSystem_OrderSetting.edit_shop_window_unfold = true
+                Vue_OrderSystem_OrderSetting.$nextTick(() => {
+                    jumpToDOM("#edit-shop-window")
+                })
+            });
+        },
+
+        calcEditShopWindowSize(){
+            this.$nextTick(() => {
+                Vue_OrderSystem_OrderSetting.edit_shop_window_resize = true
+            })
+        },
+
+        switchEditShopWindowUnfold(){
+            this.calcEditShopWindowSize()
+            this.edit_shop_window_unfold = !this.edit_shop_window_unfold
+        },
+
+        openEditShopStepPage(step){
+            this.editShopStep = step
+            this.calcEditShopWindowSize()
+        },
+
+        clickUploadShopPictureBtn(event, edit_shop_info, key_name){
+            getPicAndReturnBase64String_Sim(event, edit_shop_info, key_name)
+            .then(data => {
+                Vue_OrderSystem_OrderSetting.calcEditShopWindowSize()
+            })
+        },
+
+        clickEditShopBtn(){
+            console.log(this.edit_shop_info)
+            uploadShopInfo(this.edit_shop_info)
+            .then(function(data) {
+                v_console.success("編輯商店成功")
+                Vue_OrderSystem_OrderSetting.updateShopList()
+                Vue_OrderSystem_OrderSetting.closeEditShopWindow()
+            })
+        },
+
+        closeEditShopWindow(){
+            Vue_OrderSystem_OrderSetting.edit_shop_window_unfold = false
+            Vue_OrderSystem_OrderSetting.edit_shop_window_style = "animate__animated animate__backOutRight"
+            setTimeout(function(){
+                Vue_OrderSystem_OrderSetting.edit_shop_info = {}
+            },500)
+        },
+    },
+
+    mounted(){
+        this.init_order_setting_info()
+        this.init_add_shop_info()
+    },
+})
+
+// db - 商店資訊相關
+function getShopInfo(S_shopID){
+    fetch_getShopInfo = fetch('/TreeStudioAPIs/OrderSys_ShopInfo_Manager/'+S_shopID+'/', {
+        method: 'GET'
+    })
+    .then(function(response) {
+        return response.json();
+    })
+    .then(function(myJson) {
+        myJson['data']["shop_menu"] = JSON.parse(myJson['data']["shop_menu"])
+        return myJson['data']
+    });
+    return fetch_getShopInfo
+}
+
+function createShopInfo(D_shopInfo){
+    var form = new FormData();
+    form.append("shop_id", D_shopInfo['shop_id'])
+    form.append("shop_type", D_shopInfo['shop_type'])
+    form.append("shop_name", D_shopInfo['shop_name'])
+    form.append("shop_score", D_shopInfo['shop_score'])
+    form.append("shop_phoneNum", D_shopInfo['shop_phoneNum'])
+    form.append("shop_des", D_shopInfo['shop_des'])
+    form.append("shop_address", D_shopInfo['shop_address'])
+    form.append("shop_img", D_shopInfo['shop_img'])
+    form.append("shop_menu", JSON.stringify(D_shopInfo['shop_menu']))
+    form.append("shop_description", D_shopInfo['shop_description'])
+    form.append("shop_picture", D_shopInfo['shop_picture'])
+    
+    Fetch_createShopInfo = fetch('/TreeStudioAPIs/OrderSys_ShopInfo_Manager/', {
+        method: 'POST',
+        body: form,
+        mode: 'same-origin',
+        headers: {'X-CSRFToken': csrftoken}
+    }).then(function(response) {
+        return response.json();
+    })
+    return Fetch_createShopInfo
+}
+
+function uploadShopInfo(D_shopInfo){
+    var form = new FormData();
+    form.append("shop_type", D_shopInfo['shop_type'])
+    form.append("shop_name", D_shopInfo['shop_name'])
+    form.append("shop_score", D_shopInfo['shop_score'])
+    form.append("shop_phoneNum", D_shopInfo['shop_phoneNum'])
+    form.append("shop_des", D_shopInfo['shop_des'])
+    form.append("shop_address", D_shopInfo['shop_address'])
+    form.append("shop_img", D_shopInfo['shop_img'])
+    form.append("shop_menu", JSON.stringify(D_shopInfo['shop_menu']))
+    form.append("shop_description", D_shopInfo['shop_description'])
+    form.append("shop_picture", D_shopInfo['shop_picture'])
+    
+    Fetch_createShopInfo = fetch('/TreeStudioAPIs/OrderSys_ShopInfo_Manager/'+D_shopInfo['shop_id']+'/', {
+        method: 'POST',
+        body: form,
+        mode: 'same-origin',
+        headers: {'X-CSRFToken': csrftoken}
+    }).then(function(response) {
+        return response.json();
+    })
+    return Fetch_createShopInfo
+}
+
+// db - 團訂單資訊相關
+function getOrderInfo(S_orderID){
+    fetch_getOrderInfo = fetch('/TreeStudioAPIs/OrderSys_OrderInfo_Manager/'+S_orderID+'/', {
+        method: 'GET'
+    })
+    .then(function(response) {
+        return response.json();
+    })
+    .then(function(myJson) {
+        return myJson['data']
+    });
+    return fetch_getOrderInfo
+}
+
+function createNewOrderInfo(D_orderInfo){
+    var form = new FormData();
+    form.append("order_id", D_orderInfo['order_id'])
+    form.append("owner_name", D_orderInfo['owner_name'])
+    form.append("bank_info", D_orderInfo['bank_info'])
+    form.append("shop_id", D_orderInfo['shop_id'])
+    form.append("order_description", D_orderInfo['order_desc'])
+    form.append("bank_info_qr_code", D_orderInfo['bank_info_qr_code'])
+    
+    Fetch_createNewOrderInfo = fetch('/TreeStudioAPIs/OrderSys_OrderInfo_Manager/', {
+        // method: 'GET'
+        method: 'POST',
+        body: form,
+        mode: 'same-origin',
+        headers: {'X-CSRFToken': csrftoken}
+    }).then(function(response) {
+        return response.json();
+    });
+    return Fetch_createNewOrderInfo
+}
+
+// db連線 - shop cart db
+function uploadShopCartInfo(L_cartDatas, shopperName){
+    shop_cart_id = uuidv4()
+    var form = new FormData();
+    form.append("shop_cart_id",shop_cart_id)
+    form.append("shopper_name",shopperName)
+    form.append("shop_cart_data",JSON.stringify(L_cartDatas))
+
+    fetch_result = fetch('/TreeStudioAPIs/OrderSys_ShopCart_Manager/', {
+        method: 'POST',
+        body: form,
+        mode: 'same-origin',
+        headers: {'X-CSRFToken': csrftoken}
+    }).then(function(response) {
+        return response.json();
+    })
+    return fetch_result
+
+}
+
+function getAllShopCartByOrderID(S_orderID){
+    fetch_getAllShopCartByOrderID = fetch('/TreeStudioAPIs/OrderSys_ShopCart_Manager/order_id/'+S_orderID+'/', {
+        method: 'GET'
+    }).then(function(response) {
+        return response.json();
+    })
+    .then(function(myJson) {
+        return myJson['data']
+    });
+    return fetch_getAllShopCartByOrderID
+}
+
+function delAllShopCartByShopCartID(S_shopCart_id){
+    console.log(S_shopCart_id)
+    fetch_result = fetch('/TreeStudioAPIs/OrderSys_ShopCart_Manager/shop_cart_id/'+S_shopCart_id+'/', {
+        method: 'DELETE',
+        mode: 'same-origin',
+        headers: {'X-CSRFToken': csrftoken},
+    }).then(function(response) {
+        return response.json();
+    })
+    return fetch_result
+}
+
+function delShopCartByShopCartIDAndItemIndex(S_shopCart_id, I_itemIndex){
+    console.log(S_shopCart_id, I_itemIndex)
+    fetch_result = fetch('/TreeStudioAPIs/OrderSys_ShopCart_Manager/shop_cart_id/'+S_shopCart_id+'/'+I_itemIndex+'/', {
+        method: 'DELETE',
+        mode: 'same-origin',
+        headers: {'X-CSRFToken': csrftoken},
+    }).then(function(response) {
+        return response.json();
+    })
+    return fetch_result
+}
+
+function getPicAndReturnBase64String(e, vue_posi, vue_name){
+    if (e.target.files[0].size/1024/1024 > 15){
+        v_console.error("上傳的圖案大於15MB了!取消上傳!")
+        return null
+    }
+
+    this.convertFile(e.target.files[0])
+    .then(data => {
+        //console.log(data) // 把編碼後的字串輸出到console
+        console.log(data.length)
+        if (data.length > 2000000){
+            v_console.error("上傳的圖案編碼後長度太長，請換過一張")
+            return null
+        }
+
+        Vue.set(vue_posi,vue_name, {
+            'file_name': e.target.files[0].name,
+            'data': data,
+        })
+    })
+    .catch(err => console.log(err))
+}
+
+function getPicAndReturnBase64String_Sim(e, vue_posi, vue_name){
+    if (e.target.files[0].size/1024/1024 > 15){
+        v_console.error("上傳的圖案大於15MB了!取消上傳!")
+        return null
+    }
+
+    Promise_convertFile =  convertFile(e.target.files[0])
+    .then(data => {
+        //console.log(data) // 把編碼後的字串輸出到console
+        console.log(data.length)
+        if (data.length > 2000000){
+            v_console.error("上傳的圖案編碼後長度太長，請換過一張")
+            return null
+        }
+
+        Vue.set(vue_posi,vue_name, data)
+    })
+    .catch(err => console.log(err))
+
+    return Promise_convertFile
+}
+
+function convertFile(file) {
+    console.log(file)
+    return new Promise((resolve,reject)=>{
+        let reader = new FileReader()
+        reader.onload = () => { resolve(reader.result) }
+        reader.onerror = () => { reject(reader.error) }
+        reader.readAsDataURL(file)
+    })
+}
