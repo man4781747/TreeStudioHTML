@@ -41,6 +41,8 @@
     --sub-font-size: .8rem;
     --main-title-font-size: 1.8rem;
 
+    --form-card-margin-bottom: 1.2rem;
+
     --table-border: #dee2e6;
 
     --loading-window-gray: rgba(0,0,0,0.3);    
@@ -224,7 +226,7 @@ body{
     font-size: var(--window-title-font-size);
     font-weight: bold;
     transition: all .5s;
-    padding: 0. 0.25rem;
+    padding: 0 0.25rem;
     border-radius: 0.25rem;
     margin-right: .25rem;
     cursor: pointer;
@@ -310,7 +312,7 @@ body{
     /* background-color: var(--html-background-color); */
     border: 1px #d0d0d0 solid;
     border-radius: 4px;
-    padding: 0.25rem;
+    padding: 1rem;
 }
 
 .todo-group-title {
@@ -692,6 +694,10 @@ body{
 
 /* Form 表單系列 */
 
+.form-card-main {
+    margin-bottom: var(--form-card-margin-bottom);
+}
+
 .form-inputlabel-list {
     display: grid;
     /* grid-template-columns: repeat(3, 1fr); */
@@ -844,7 +850,7 @@ body{
 .top-window-alert-body-wraning-message {
     color: var(--danger);
     font-weight: bolder;
-    margin-bottom: 0.25rem;
+    margin-bottom: 1.2rem;
     font-size: var(--big-title-font-size);
 }
 
@@ -1134,3 +1140,4 @@ body{
     display: inline-block;
     margin: 0.25rem;
 }
+

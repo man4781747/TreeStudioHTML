@@ -12,7 +12,7 @@ import datetime
 # 非API區塊
 
 def deleteShopInfoByShopID(shop_id):
-    # 刪除商店資訊，必須連對應的團訂單一起刪除(留者也沒意義)
+    # 刪除商店資訊，必須連對應的團訂單一起"標記為"刪除
     ShopsInfo = OrderSys_ShopsInfo.objects.get(shop_id=shop_id)
     L_All_OrderInfo_By_ShopID = OrderSys_OrderInfo.objects.filter(shop_id=shop_id)
     print(L_All_OrderInfo_By_ShopID)
@@ -20,20 +20,26 @@ def deleteShopInfoByShopID(shop_id):
         deleteOrderInfoByOrderID(OrderInfo.to_dict()['order_id'])
 
     print('Del shop: {}'.format(shop_id))
-    ShopsInfo.delete()
+    # ShopsInfo.delete()
+    ShopsInfo.is_delete = True
+    ShopsInfo.save()
 
 def deleteOrderInfoByOrderID(order_id):
-    # 刪除團單，必須連購物車單一起刪除
+    # 刪除團單，必須連購物車單一起"標記為"刪除
     OrderInfo = OrderSys_OrderInfo.objects.get(order_id=order_id)
     deleteAllShopCartByOrderID(order_id)
     print('Del order: {}'.format(order_id))
-    OrderInfo.delete()
+    # OrderInfo.delete()
+    OrderInfo.is_delete = True
+    OrderInfo.save()
 
 def deleteAllShopCartByOrderID(order_id):
     L_All_ShopCart_By_OrderID = OrderSys_ShopCartInfo.objects.filter(order_id=order_id)
     for ShopCart in L_All_ShopCart_By_OrderID:
         print('Del shop cart: {}'.format(ShopCart.to_dict()['shop_cart_id']))
-        ShopCart.delete()
+        # ShopCart.delete()
+        ShopCart.is_delete = True
+        ShopCart.save()
 
 
 # API區塊
@@ -266,7 +272,9 @@ def OrderSys_OrderInfo_Manager_GetAlive(request):
 def OrderSys_OrderInfo_Manager_GetTodayOrder(request):
     try:
         if request.method == 'GET':
-            orderListData = OrderSys_OrderInfo.objects.filter(created__range=[datetime.datetime.now().date(),datetime.datetime(3000,1,1)])
+            orderListData = OrderSys_OrderInfo.objects.filter(
+                created__range=[datetime.datetime.now().date(),datetime.datetime(3000,1,1)]
+                ).filter(is_delete=False)
             orderList = {}
             for orderData in orderListData:
                 D_orderInfo = {}
@@ -377,7 +385,7 @@ def Get_Today_OrderInfo(request):
                     datetime.date.today(),
                     datetime.date.today() + datetime.timedelta(days=1)
                 ]
-            ).order_by('-created').values(
+            ).filter(is_delete=False).order_by('-created').values(
                     'order_id',
                     'id',
                     'alive',
@@ -405,7 +413,7 @@ def Get_Today_OrderInfo(request):
                     datetime.date(1990,1,1),
                     datetime.date.today()
                 ]
-            ).filter(alive=True).order_by('-created').values(
+            ).filter(is_delete=False).filter(alive=True).order_by('-created').values(
                     'order_id',
                     'id',
                     'alive',
@@ -433,6 +441,8 @@ def Get_Today_OrderInfo(request):
     except Exception as e:
         return JsonResponse({'result': 'fail', 'data': {'message': str(e)}})
 
+# def Close_Order_By_Order_Id(request, order_id,):
+
 
 @csrf_protect
 def OrderSys_ShopCart_Manager(request, shop_cart_id=None, id=None, order_id=None, item_index=None):
@@ -451,7 +461,15 @@ def OrderSys_ShopCart_Manager(request, shop_cart_id=None, id=None, order_id=None
                         return JsonResponse({'result': 'success', 'data': {'message': '更新成功'}})
                     return JsonResponse({'result': 'fail', 'data': {'message': '缺少參數 pay'}})
             else:
+                # 檢查訂單是否已結單
                 L_shopCartList = json.loads(request.POST.dict()['shop_cart_data'])
+                order_id = L_shopCartList[0]['order_id']
+                orderInfo = OrderSys_OrderInfo.objects.get(order_id=order_id).to_dict()
+                if orderInfo['alive'] == False:
+                    return JsonResponse({'result': 'fail', 'data': {'message': '訂單已結單，不可再新增訂單'}})
+                elif orderInfo['is_delete'] == True:
+                    return JsonResponse({'result': 'fail', 'data': {'message': '訂單已被刪除，不可再新增訂單'}})
+
                 S_shop_cart_id = request.POST.dict()['shop_cart_id']
                 S_shopper_name = request.POST.dict()['shopper_name']
                 for item_index,shopCartItem in enumerate(L_shopCartList):

@@ -17,6 +17,7 @@ urlpatterns = [
 
     path(r'OrderSys_OrderInfo_Manager_GetAlive/', views.OrderSys_OrderInfo_Manager_GetAlive),
     path(r'OrderSys_OrderInfo_Manager_GetTodayOrder/', views.OrderSys_OrderInfo_Manager_GetTodayOrder),
+    path(r'OrderSys_OrderInfo_Manager/order_id/<order_id>/', views.OrderSys_OrderInfo_Manager),
     path(r'OrderSys_OrderInfo_Manager/<order_id>/', views.OrderSys_OrderInfo_Manager),
     path(r'OrderSys_OrderInfo_Manager/delete_By_ID/<id>/', views.OrderSys_OrderInfo_Manager),
     path(r'OrderSys_OrderInfo_Manager/', views.OrderSys_OrderInfo_Manager),

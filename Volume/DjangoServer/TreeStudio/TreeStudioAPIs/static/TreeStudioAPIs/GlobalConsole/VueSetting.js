@@ -4,10 +4,6 @@ v_console_div.id = "v-console-window"
 var v_console_item_div = document.createElement("v-console-main-item")
 v_console_item_div.setAttribute('v-bind:d_consolelist', 'D_consoleList')
 v_console_item_div.setAttribute('v-bind:delete_console', 'deleteConsole')
-// v_console_item_div.addEventListener('delete_console', function(S_id){
-//     console.log(S_id)
-//     v_console.deleteConsole(S_id)
-// })
 
 v_console_div.appendChild(v_console_item_div)
 document.body.appendChild(v_console_div)

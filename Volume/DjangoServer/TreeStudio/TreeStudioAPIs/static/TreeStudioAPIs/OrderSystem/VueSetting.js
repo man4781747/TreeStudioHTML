@@ -1,33 +1,34 @@
 Vue.component('shop-info-table', {
     template: `
 <div>
-<div style=''>
-<div class='input-group-main-title'>店家資訊
+<div class="form-card-main">
+<div class='input-group-main-title' :style="'color:'+titleFontColor+';'">店家資訊
     <div class='input-group-main-sub-title'></div>
 </div>
 <div class='form-inputlabel-list'>
-    <div class='form-ctrl-inputlabel-big'>
+    <div class='form-ctrl-inputlabel-big' style="grid-column-end: 2;grid-row-start: 1;grid-row-end: 4;">
         <div class='input-titles'>
             <div class='input-main-title'>店家圖片</div>
         </div>
-        <div style="position: absolute;right: 0;top: 0;">
+        <div style="position: absolute;right: 0;top: 0;" v-if="false">
             <label>縮圖顯示</label><input type='checkbox' v-model="edit_shopImgShort">
         </div>
         <div style='border: 1px #d0d0d0 solid;
         border-radius: 4px;position: relative;overflow: hidden;
         min-height: var(--shop-pic-height);'
         >
-            <div style="position: absolute;
+            <div v-if="false" style="position: absolute;
                 height: 100%;
                 width: 100%;z-index: 2;"
                 :style="edit_shopImgShort?'background: rgba(0,0,0,.5);':''"
             ></div>
             <img v-if="shop_info_chosed.shop_picture" :src="shop_info_chosed.shop_picture" 
-                style="height: unset;width: 100%;"
+                style="height: unset;width: 100%;" @click="pic_pop_window.openWindow(shop_info_chosed.shop_picture)"
                 :style="edit_shopImgShort?'position: absolute;transform: translateY(calc(-50% + 60px) );':''"
             />
             <img v-else 
                 style="height: unset;width: 100%;"
+                @click="pic_pop_window.openWindow('https://cn-geo1.uber.com/image-proc/resize/eats/format=webp/width=550/height=440/quality=70/srcb64=aHR0cHM6Ly9kMXJhbHNvZ25qbmczNy5jbG91ZGZyb250Lm5ldC8yMzdjYzQ4Mi0xZmJiLTQ2NmQtYjZmOS02MWZhMzQ5OTMzODIuanBlZw==')"
                 :style="edit_shopImgShort?'position: absolute;transform: translateY(calc(-50% + 60px) );':''"
                 src="https://cn-geo1.uber.com/image-proc/resize/eats/format=webp/width=550/height=440/quality=70/srcb64=aHR0cHM6Ly9kMXJhbHNvZ25qbmczNy5jbG91ZGZyb250Lm5ldC8yMzdjYzQ4Mi0xZmJiLTQ2NmQtYjZmOS02MWZhMzQ5OTMzODIuanBlZw==">
         </div>
@@ -87,8 +88,8 @@ Vue.component('shop-info-table', {
     </div>    
 </div>
 </div>
-<div style=''>
-<div class='input-group-main-title'
+<div class="form-card-main">
+<div class='input-group-main-title' :style="'color:'+titleFontColor+';'"
 >店家菜單
     <div class='input-group-main-sub-title'></div>
 </div>
@@ -108,15 +109,24 @@ Vue.component('shop-info-table', {
         edit_shopImgShort: true,
       }
     },
-    props: ['shop_info_chosed'],
+    props: ['shop_info_chosed', 'title_font_color'],
+
+    computed: {
+        titleFontColor(){
+            if (this.title_font_color != undefined){
+                return this.title_font_color
+            }
+            return "var(--info)"
+        },
+    },
 })
 
 Vue.component('order-info-table', {
     template: `
 <div>
-<div style='margin-bottom: .5rem;'>
-    <div class='input-group-main-title'>團長資訊
-        <div class='input-group-main-sub-title'></div>
+<div class="form-card-main">
+    <div class='input-group-main-title' :style="'color:'+titleFontColor+';'">團長資訊
+        <div class='input-group-main-sub-title' ></div>
     </div>
     <div class='form-inputlabel-list'>
         <div class='form-ctrl-inputlabel'>
@@ -153,7 +163,9 @@ Vue.component('order-info-table', {
                 <div class='input-sub-title'></div>
             </div>
             <input v-if="order_info.bank_info_qr_code==''" class='form-ctrl-input' placeholder="" disabled>
-            <img v-else :src="order_info.bank_info_qr_code" style="height: unset;"/>
+            <img v-else :src="order_info.bank_info_qr_code" style="height: unset;"
+                @click="pic_pop_window.openWindow(order_info.bank_info_qr_code)"
+            />
         </div>
         <div class='form-ctrl-inputlabel'>
             <div class='input-titles'>
@@ -172,7 +184,15 @@ Vue.component('order-info-table', {
         count: 0
       }
     },
-    props: ['order_info'],
+    props: ['order_info', 'title_font_color'],
+    computed: {
+        titleFontColor(){
+            if (this.title_font_color != undefined){
+                return this.title_font_color
+            }
+            return "var(--info)"
+        },
+    },
 })
 
 Vue.component('shop-cart-info-table', {
@@ -253,7 +273,7 @@ Vue.component('shop-cart-info-table-shorter', {
         <th>數量</th>
         <th>總額</th>
         <th>備註</th>
-        <th>點菜人</th>
+        <th>訂購者</th>
     </tr>
 </thead>
 <tbody>
@@ -294,7 +314,6 @@ Vue.component('shop-menu-mamager', {
                     <div class="edit-entry-label">{{group.name==""?"請輸入分類名稱":group.name}}</div>
                 </div>
             </div>
-            <hr style="margin: 0;margin-bottom: 0.25rem;">
             <div class='user-order-window-item-list-group-items'>
                 <div class='user-order-window-item-list-group-item'
                     v-for="(item, item_index) of group.items"
@@ -308,7 +327,7 @@ Vue.component('shop-menu-mamager', {
 
                         <div class='menu-item-price' :class="if_allow_edit">
                             <input class="edit-entry-input" type="number" v-model="item.price" @change="onlyPositiveInt(item,'price')">
-                            <span class='edit-entry-label'>{{item.price}}</span>
+                            <span class='edit-entry-label'>$ {{item.price}}</span>
                         </div>
 
                         <div class='menu-item-desc' :class="if_allow_edit">
@@ -402,6 +421,7 @@ Vue.component('five-star-score', {
         <i 
             v-for="i of [1,2,3,4,5]"
             class="far fa-star"
+            style="color: #eee;"
             @click="edit_able?setScore(i):''"
         ></i>
         <div
@@ -429,7 +449,7 @@ Vue.component('five-star-score', {
 
 Vue.component('message-board-textarea', {
     template:` 
-<div style='margin-bottom: .5rem;'>
+<div class="form-card-main">
     <div class='input-group-main-title' style="justify-content: space-between;">
         我有話要說
     </div>
@@ -640,7 +660,7 @@ Vue.component('shop-info-title-window', {
 
 Vue.component('new-message-table', {
     template: `
-<div style='margin-bottom: .5rem;'>
+<div class="form-card-main">
         <div class='input-group-main-title'>
             最新評價
             <i class="far fa-list-alt ts-btn btn-open"
@@ -696,7 +716,7 @@ Vue.component('new-message-table', {
 Vue.component('all-message-table', {
     template: `
 <div>
-<div style='margin-bottom: .5rem;'>
+<div class="form-card-main">
     <div class='input-group-main-title'>留言討論區
         <i class="fas fa-clipboard-list ts-btn btn-open"
             @click="$emit('close_all_massage', shop_id)"
@@ -981,7 +1001,7 @@ Vue.component('all-message-table', {
 
 Vue.component('message-detail-textarea', {
     template:` 
-<div style='margin-bottom: .5rem;'>
+<div class="form-card-main">
     <div class='input-group-main-title' style="justify-content: space-between;">
         留言內容
         <i class="fas fa-reply ts-btn btn-open"
@@ -2204,6 +2224,12 @@ var Vue_OrderSystem_OrderList = new Vue({
         // 購物車刪除確認視窗
         delCheckWindowOpen : false,
         delCheckInfo : {},
+        // 團訂單刪除確認視窗
+        delOrderCheckWindowOpen: false,
+        delOrderCheckInfo : {},
+        // 結單確認視窗
+        closeOrderCheckWindowOpen: false,
+        closeOrderCheckInfo : {},
 
 
         // 點菜視窗
@@ -2222,6 +2248,45 @@ var Vue_OrderSystem_OrderList = new Vue({
         window_chose: 'today_list_window',
         todayOrderList : [],
 
+        // 歷史訂單相關
+        orderList_startDate: new Date().addDays(-7).format("Y-MM-dd"),
+        orderList_endDate: new Date().format("Y-MM-dd"),
+        historyOrderList : {},
+
+        historyOrderListPageChose : 0,
+        historyOrderListPageListChose : 0,
+        historyOrderListPageMaxNum: 30,
+        historyOrderListFilterStr: '',
+        historyOrderListSortBy : '',
+        historyOrderListSortValue: -1,
+
+
+        historyOrderListTitleFilter: {
+            shop_name : {
+                'filter_str': '',
+                'open': false,
+                'show_name': '店家名稱',
+            },
+            owner_name : {
+                'filter_str': '',
+                'open': false,
+                'show_name': '團長',
+            },
+            shop_type : {
+                'filter_str': '',
+                'open': false,
+                'show_name': '店家種類',
+            },
+            close_time : {
+                'filter_str': '',
+                'open': false,
+                'show_name': '結單時間',
+            },
+        },
+
+        // 付款確認視窗
+        payShopCartCheckWindowOpen: false,
+        payShopCartCheckWindowData: {},
 
         // 點菜跳出視窗相關
         addOrderWindowOpen: false,
@@ -2256,12 +2321,12 @@ var Vue_OrderSystem_OrderList = new Vue({
         caledAllShopCart(){
             D_caledAllShopCartData = {}
             for (D_shopCartData of this.allShopCartData){
-                if ((this.only_not_pay_checkbox==false) | (D_shopCartData.pay==false)){
+                // if ((this.only_not_pay_checkbox==false) | (D_shopCartData.pay==false)){
                     if (D_caledAllShopCartData[D_shopCartData.shop_cart_id] == undefined){
                         D_caledAllShopCartData[D_shopCartData.shop_cart_id] = []
                     }
                     D_caledAllShopCartData[D_shopCartData.shop_cart_id].push(D_shopCartData)
-                }
+                // }
             }
             return D_caledAllShopCartData
         },
@@ -2298,19 +2363,120 @@ var Vue_OrderSystem_OrderList = new Vue({
 
             return D_allList
         },
+
+        // 歷史訂單表格用
+		historyOrderListTableData(){
+            var afterSortList = []
+            if (this.historyOrderListSortBy != ""){
+                var sortByList = []
+                for (let order_id of Object.keys(this.historyOrderList)){
+                    let itemInfo = this.historyOrderList[order_id]
+                    sortByList.push([itemInfo[this.historyOrderListSortBy],itemInfo])
+                }
+                
+                if (this.historyOrderListSortBy == 'xxxx'){
+                    sortByList.sort(function(a, b) {
+                        return a - b;
+                    });
+                } else {
+                    sortByList.sort()
+                }
+
+                if (this.historyOrderListSortValue == -1){
+                    sortByList.reverse()
+                }
+                for (let itemInfo_after of sortByList){
+                    afterSortList.push(itemInfo_after[1])
+                }
+            } else {
+                for (let order_id of Object.keys(this.historyOrderList)){
+                    afterSortList.push(this.historyOrderList[order_id])
+                }
+            }
+
+            var afterTitleFilterList = afterSortList
+            for (let S_titleChose of Object.keys(this.historyOrderListTitleFilter)){
+                if (this.historyOrderListTitleFilter[S_titleChose].filter_str.trim()==""){
+                    continue
+                }
+                else {
+                    afterTitleFilterList_chose = []
+                    for (let itemInfo of afterTitleFilterList){
+                        if (itemInfo[S_titleChose].indexOf(this.historyOrderListTitleFilter[S_titleChose].filter_str.trim())!= -1){
+                            afterTitleFilterList_chose.push(itemInfo)
+                        }
+                    }
+                    afterTitleFilterList = afterTitleFilterList_chose
+                }
+            }
+
+            var afterFilterList = []
+            if (this.historyOrderListFilterStr.trim()==""){
+                afterFilterList = afterTitleFilterList
+            } else {
+                for (let itemInfo of afterTitleFilterList){
+                    for (key of Object.keys(this.historyOrderListTitleFilter)){
+                        if ((''+itemInfo[key]).indexOf(this.historyOrderListFilterStr.trim())!= -1){
+                            afterFilterList.push(itemInfo)
+                            break
+                        }
+                    }
+                }
+            }
+            var tableData = [[]]
+            for (let itemIndex in afterFilterList){
+                let I_page = Math.floor(itemIndex/this.historyOrderListPageMaxNum)
+                if (tableData[I_page] == undefined){
+                    tableData[I_page] = []
+                }
+                tableData[I_page].push(afterFilterList[itemIndex])
+            }
+            if (this.historyOrderListPageChose >=  tableData.length){
+                this.historyOrderListPageChose = tableData.length - 1
+            }
+            return tableData
+        },
+
+        historyOrderListPageList(){
+            var pageListList = [[]]
+            for (let pageIndex in this.historyOrderListTableData){
+                let I_listInex = Math.floor(pageIndex/5)
+                if (pageListList[I_listInex] == undefined){
+                    pageListList[I_listInex] = []
+                }
+                pageListList[I_listInex].push(pageIndex)
+            }
+
+            if (this.historyOrderListPageListChose >=  pageListList.length){
+                this.historyOrderListPageListChose = pageListList.length - 1
+            }
+
+            return pageListList
+        },
+
+        historyOrderListTableRawNum(){
+            let totalCount = 0
+            for (L_pageList of this.historyOrderListTableData){
+                totalCount = totalCount + L_pageList.length
+            }
+            return totalCount
+        },
+
+        historyOrderListTablePageNum(){
+            let totalCount = 0
+            for (L_pageList of this.historyOrderListPageList){
+                totalCount = totalCount + L_pageList.length
+            }
+            return totalCount
+        },
     },
 
     methods:{
-        openHistoryListWindow(){
-            v_console.log('test')
-        },
-
         calcShopOrderWindowSize(){
             this.$nextTick(() => {
                 Vue_OrderSystem_OrderList.shop_order_resize_window = true
             })
         },
-
 
         calcShopcartWindowSize(reopen){
             this.$nextTick(() => {
@@ -2321,6 +2487,9 @@ var Vue_OrderSystem_OrderList = new Vue({
         openTodayListWindow(){
             this.window_chose = 'today_list_window'
             this.updateTodayOrderList()
+            this.$nextTick(() => {
+                jumpToDOM("#order-list-window")
+            })
         },
 
         updateTodayOrderList(){
@@ -2367,6 +2536,34 @@ var Vue_OrderSystem_OrderList = new Vue({
             this.addOrderWindowData.order_id = D_data.order_id
             this.addOrderWindowOpen = true
         },
+        // 歷史訂單相關
+        openHistoryListWindow(){
+            this.window_chose = 'history_list_window'
+            this.uploadHistoryOrderListInfo()
+            this.$nextTick(() => {
+                jumpToDOM("#order-list-window")
+            })
+        },
+
+        uploadHistoryOrderListInfo(){
+			fetch('/TreeStudioAPIs/Get_OrderInfo_By_Time_Range/'+this.orderList_startDate+"to"+this.orderList_endDate+"/", {
+                method: 'GET'
+			}).then(function(response) {
+				return response.json();
+			})
+			.then(function(myJson) {
+                v_console.success("未關閉訂單更新完成")
+                Vue_OrderSystem_OrderList.historyOrderList = myJson['data']
+			}); 
+        },
+        historyOrderListInfoSortByBtmChose(sortByStr){
+            if (this.historyOrderListSortBy == sortByStr){
+                this.historyOrderListSortValue = this.historyOrderListSortValue * -1
+            } else {
+                this.historyOrderListSortValue = 1
+            }
+            this.historyOrderListSortBy = sortByStr
+        },
 
         // 購物車相關
         addNewOrderToShoppingCart(D_orderInfo){
@@ -2404,13 +2601,17 @@ var Vue_OrderSystem_OrderList = new Vue({
  
         clikcUploadShopCartBtn(L_cartData, shopperName){
             var order_id = L_cartData[0].order_id
-            uploadShopCartInfo(L_cartData, shopperName)
-            .then(function(myJson) {
-                Vue.delete(Vue_OrderSystem_OrderList.shoppingCar, order_id)
-                Vue_OrderSystem_OrderList.updateAllShopCartList(order_id)
-                Vue_OrderSystem_OrderList.$nextTick(() => {
-                    Vue_OrderSystem_OrderList.shop_cart_resize_window = true
-                })
+            createNewShopCartInfo(L_cartData, shopperName)
+            .then(function(result) {
+                if (result['result'] == 'success'){
+                    Vue.delete(Vue_OrderSystem_OrderList.shoppingCar, order_id)
+                    Vue_OrderSystem_OrderList.updateAllShopCartList(order_id)
+                    Vue_OrderSystem_OrderList.$nextTick(() => {
+                        Vue_OrderSystem_OrderList.shop_cart_resize_window = true
+                    })
+                } else {
+                    v_console.error()
+                }
             });
         },
 
@@ -2445,6 +2646,54 @@ var Vue_OrderSystem_OrderList = new Vue({
                 Vue_OrderSystem_OrderList.delCheckWindowOpen = false
                 Vue_OrderSystem_OrderList.updateAllShopCartList(
                     Vue_OrderSystem_OrderList.allShopCart_OrderID
+                )
+            })
+        },
+
+        // 刪除訂單確認視窗
+        clickDelOrderByOrderIDBtn(order_id){
+            delOrderByOrderID(order_id)
+            .then(function(data) {
+                Vue_OrderSystem_OrderList.delOrderCheckWindowOpen = false
+                Vue_OrderSystem_OrderList.uploadHistoryOrderListInfo()
+                Vue_OrderSystem_OrderList.updateTodayOrderList()
+                Vue_OrderSystem_OrderList.shop_order_window_open = false
+            })
+        },
+
+        // 團訂單結單
+        clickColseOrderBtn(){
+            if (Object.keys(this.caledAllShopCart).length==0){
+                v_console.warning("團訂單內還沒有任何人下單喔，無法結單!")
+                return null
+            }
+            this.closeOrderCheckWindowOpen = true
+        },
+
+        clickCloseOrderBtn(order_id){
+            closeOrderInfo(order_id)
+            .then(function(data) {
+                Vue_OrderSystem_OrderList.closeOrderCheckWindowOpen = false
+                Vue_OrderSystem_OrderList.uploadHistoryOrderListInfo()
+                Vue_OrderSystem_OrderList.updateTodayOrderList()
+                Vue_OrderSystem_OrderList.openOrderWindow(order_id)
+            })
+        },
+
+        // 付款相關
+        clickCloseShopCartItemBtn(D_shopCartItemData){
+            console.log(D_shopCartItemData)
+            this.payShopCartCheckWindowOpen = true
+            this.payShopCartCheckWindowData = D_shopCartItemData
+        },
+
+        closeShopCartItem(shop_cart_id, item_index){
+            payShopCart(shop_cart_id, item_index)
+            .then(function(data) {
+                Vue_OrderSystem_OrderList.payShopCartCheckWindowOpen = false
+                Vue_OrderSystem_OrderList.updateAllShopCartList(
+                    Vue_OrderSystem_OrderList.payShopCartCheckWindowData.order_id
+
                 )
             })
         },
@@ -2746,6 +2995,7 @@ var Vue_OrderSystem_OrderSetting = new Vue({
         openStepPage(step){
             this.newOrderStep = step
             this.calcOpenOrderWindowSize()
+            jumpToDOM("#open-new-order-window")
         },
 
         updateShopInfo(ship_id){
@@ -2801,6 +3051,7 @@ var Vue_OrderSystem_OrderSetting = new Vue({
         openAddShopStepPage(step){
             this.addShopStep = step
             this.calcAddShopWindowSize()
+            jumpToDOM("#create-new-shop-window")
         },
 
         init_add_shop_info(){
@@ -2865,6 +3116,7 @@ var Vue_OrderSystem_OrderSetting = new Vue({
         openEditShopStepPage(step){
             this.editShopStep = step
             this.calcEditShopWindowSize()
+            jumpToDOM("#edit-shop-window")
         },
 
         clickUploadShopPictureBtn(event, edit_shop_info, key_name){
@@ -2998,8 +3250,18 @@ function createNewOrderInfo(D_orderInfo){
     return Fetch_createNewOrderInfo
 }
 
+function closeOrderInfo(order_id){
+    Fetch_closeOrderInfo = fetch(
+        '/TreeStudioAPIs/OrderSys_OrderInfo_Manager_Switch_By_Order_Id/'+order_id+'/0/', {
+        method: 'GET'
+    }).then(function(response) {
+        return response.json();
+    });
+    return Fetch_closeOrderInfo
+}
+
 // db連線 - shop cart db
-function uploadShopCartInfo(L_cartDatas, shopperName){
+function createNewShopCartInfo(L_cartDatas, shopperName){
     shop_cart_id = uuidv4()
     var form = new FormData();
     form.append("shop_cart_id",shop_cart_id)
@@ -3015,7 +3277,21 @@ function uploadShopCartInfo(L_cartDatas, shopperName){
         return response.json();
     })
     return fetch_result
+}
 
+function payShopCart(shop_cart_id, item_index){
+    var form = new FormData();
+    form.append("pay",true)
+
+    fetch_result = fetch('/TreeStudioAPIs/OrderSys_ShopCart_Manager/shop_cart_id/'+shop_cart_id+"/"+item_index+"/", {
+        method: 'POST',
+        body: form,
+        mode: 'same-origin',
+        headers: {'X-CSRFToken': csrftoken}
+    }).then(function(response) {
+        return response.json();
+    })
+    return fetch_result
 }
 
 function getAllShopCartByOrderID(S_orderID){
@@ -3033,6 +3309,18 @@ function getAllShopCartByOrderID(S_orderID){
 function delAllShopCartByShopCartID(S_shopCart_id){
     console.log(S_shopCart_id)
     fetch_result = fetch('/TreeStudioAPIs/OrderSys_ShopCart_Manager/shop_cart_id/'+S_shopCart_id+'/', {
+        method: 'DELETE',
+        mode: 'same-origin',
+        headers: {'X-CSRFToken': csrftoken},
+    }).then(function(response) {
+        return response.json();
+    })
+    return fetch_result
+}
+
+function delOrderByOrderID(order_id){
+    console.log(order_id)
+    fetch_result = fetch('/TreeStudioAPIs/OrderSys_OrderInfo_Manager/order_id/'+order_id+'/', {
         method: 'DELETE',
         mode: 'same-origin',
         headers: {'X-CSRFToken': csrftoken},
