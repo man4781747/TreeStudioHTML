@@ -15,11 +15,11 @@ var Vue_mainToolBox =  new Vue({
                 'Type': 'Page',
                 'icon': 'fas fa-bullhorn',
             },            
-            'OrderSystem': {
-                'Name': '訂餐系統',
-                'Type': 'Page',
-                'icon': 'fas fa-utensils',
-            },        
+            // 'OrderSystem': {
+            //     'Name': '訂餐系統',
+            //     'Type': 'Page',
+            //     'icon': 'fas fa-utensils',
+            // },        
             'OrderSystem_List': {
                 'Name': '訂餐系統',
                 'Type': 'List', 

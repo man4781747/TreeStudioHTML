@@ -282,6 +282,7 @@ body{
     white-space: nowrap;
     display: flex;
     align-items: center;
+    height: 1.5rem;
 }
 
 .input-sub-title {
@@ -1110,6 +1111,7 @@ body{
     justify-content: space-between;
     margin: 0 30px;
     position: relative;
+    margin-bottom: 1.2rem;
 }
 
 .step-item {
@@ -1118,6 +1120,7 @@ body{
     background-color: var(--white);
     padding: 0.75rem;
     z-index: 2;
+    cursor: pointer;
 }
 
 .step-number {

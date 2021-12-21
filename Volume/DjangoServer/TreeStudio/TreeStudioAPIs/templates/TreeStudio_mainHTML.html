@@ -1369,7 +1369,7 @@
                                             />
                                             <div 
                                                 v-else
-                                                class="add-item-btn" style="height: var(--shop-pic-height);"
+                                                class="add-item-btn" style="height: -webkit-fill-available;"
                                             >+ 加入圖片</div>
 
                                         </div>
@@ -2365,7 +2365,7 @@
                                 </div>
                             </div>
                             
-                            <div class="form-card-main" v-show="newOrderStep == 'writeOrderInfo'">
+                            <div v-show="newOrderStep == 'writeOrderInfo'">
                                 <div class='input-group-main-title' style="color:var(--success);">團長資訊
                                     <div class='input-group-main-sub-title'></div>
                                 </div>
@@ -2554,7 +2554,7 @@
                                                 </div>
                                                 <div style='border: 1px #d0d0d0 solid;
                                                     border-radius: 4px;position: relative;overflow: hidden;;
-                                                    min-height: var(--shop-pic-height);'
+                                                    min-height: var(--shop-pic-height);height: 10rem;'
                                                     @click="$refs['upload_shop_img_'+add_shop_info.shop_id].click()"
                                                 >   
                                                     <div 
@@ -2564,7 +2564,7 @@
                                                     </div>
                                                     <div 
                                                         v-else
-                                                        class="add-item-btn" style="height: var(--shop-pic-height);"
+                                                        class="add-item-btn" style="height: -webkit-fill-available;"
                                                     >+ 加入圖片</div>
         
                                                 </div>
@@ -2766,10 +2766,10 @@
                                         </template>
                                         <td>
                                             <div class='ts-table-active-list'>
-                                                <div class='ts-btn btn-info' @click="openShopInfoWindow(data.shop_id)"
+                                                <!-- <div class='ts-btn btn-info' @click="openShopInfoWindow(data.shop_id)"
                                                 >
                                                     <i class="fas fa-info table-smail-btn"></i>
-                                                </div>
+                                                </div> -->
                                                 <div class='ts-btn btn-open' @click="clickOpenOrderBtn(data.shop_id)"
                                                 >
                                                     <i class="fas fa-store table-smail-btn"></i>
@@ -2872,17 +2872,17 @@
                                             </div>
                                             <div style='border: 1px #d0d0d0 solid;
                                                 border-radius: 4px;position: relative;overflow: hidden;;
-                                                min-height: var(--shop-pic-height);'
+                                                min-height: var(--shop-pic-height);height: 10rem;'
                                                 @click="$refs['upload_shop_img_'+edit_shop_info.shop_id].click()"
                                             >   
                                                 <div 
                                                     v-if="edit_shop_info.shop_picture"
-                                                    style="display: flex;justify-content: center;width: 100%;background-color: rgba(0,0,0,10%);">
-                                                    <img :src="edit_shop_info.shop_picture" height="200"/>
+                                                    style="display: flex;justify-content: center;width: 100%;height: 100%;align-items: center;background-color: rgba(0,0,0,10%);">
+                                                    <img :src="edit_shop_info.shop_picture" style="max-width: 100%;max-height: 100%;"/>
                                                 </div>
                                                 <div 
                                                     v-else
-                                                    class="add-item-btn" style="height: var(--shop-pic-height);"
+                                                    class="add-item-btn" style="height: -webkit-fill-available;"
                                                 >+ 加入圖片</div>
     
                                             </div>

@@ -219,14 +219,14 @@ def OrderSys_OrderInfo_Manager(request, order_id=None, id=None):
 
         elif request.method == 'GET':
             if id != None:
-                instance = OrderSys_OrderInfo.objects.get(id=id)
-                instance.delete()
+                instance = OrderSys_OrderInfo.objects.filter(is_delete=False).get(id=id)
+                # instance.delete()
                 return JsonResponse({'result': 'success', 'data':{}})
             if order_id != None:
                 data=OrderSys_OrderInfo.objects.get(order_id=order_id)
                 return JsonResponse({'result': 'success', 'data':data.to_dict()})
             else:
-                data=OrderSys_OrderInfo.objects.order_by('-created').values(
+                data=OrderSys_OrderInfo.objects.filter(is_delete=False).order_by('-created').values(
                     'id',
                     'created',
                     'order_id',
@@ -344,7 +344,7 @@ def Get_OrderInfo_By_Time_Range(request, time_range=None):
                     start,
                     end
                 ]
-            ).order_by('-created').values(
+            ).filter(is_delete=False).order_by('-created').values(
                     'id',
                     'created',
                     'alive',

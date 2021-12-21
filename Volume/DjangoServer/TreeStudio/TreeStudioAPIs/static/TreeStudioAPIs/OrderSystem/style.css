@@ -109,6 +109,7 @@
 
 
 .user-order-window-title-shop-name {
+    font-weight: bolder;
     font-size: var(--big-title-font-size);
 }
 

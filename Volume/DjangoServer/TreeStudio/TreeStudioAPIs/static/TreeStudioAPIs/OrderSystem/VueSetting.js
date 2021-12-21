@@ -13,23 +13,16 @@ Vue.component('shop-info-table', {
         <div style="position: absolute;right: 0;top: 0;" v-if="false">
             <label>縮圖顯示</label><input type='checkbox' v-model="edit_shopImgShort">
         </div>
-        <div style='border: 1px #d0d0d0 solid;
-        border-radius: 4px;position: relative;overflow: hidden;
-        min-height: var(--shop-pic-height);'
+        <div style='border: 1px #d0d0d0 solid;height: 10rem;
+        border-radius: 4px;position: relative;overflow: hidden;display: flex;
+        justify-content: center;align-items: center;background-color: rgba(0,0,0,.3);'
         >
-            <div v-if="false" style="position: absolute;
-                height: 100%;
-                width: 100%;z-index: 2;"
-                :style="edit_shopImgShort?'background: rgba(0,0,0,.5);':''"
-            ></div>
             <img v-if="shop_info_chosed.shop_picture" :src="shop_info_chosed.shop_picture" 
-                style="height: unset;width: 100%;" @click="pic_pop_window.openWindow(shop_info_chosed.shop_picture)"
-                :style="edit_shopImgShort?'position: absolute;transform: translateY(calc(-50% + 60px) );':''"
+                style="max-width: 100%;max-height: 100%;" @click="pic_pop_window.openWindow(shop_info_chosed.shop_picture)"
             />
             <img v-else 
-                style="height: unset;width: 100%;"
+                style="max-width: 100%;max-height: 100%;"
                 @click="pic_pop_window.openWindow('https://cn-geo1.uber.com/image-proc/resize/eats/format=webp/width=550/height=440/quality=70/srcb64=aHR0cHM6Ly9kMXJhbHNvZ25qbmczNy5jbG91ZGZyb250Lm5ldC8yMzdjYzQ4Mi0xZmJiLTQ2NmQtYjZmOS02MWZhMzQ5OTMzODIuanBlZw==')"
-                :style="edit_shopImgShort?'position: absolute;transform: translateY(calc(-50% + 60px) );':''"
                 src="https://cn-geo1.uber.com/image-proc/resize/eats/format=webp/width=550/height=440/quality=70/srcb64=aHR0cHM6Ly9kMXJhbHNvZ25qbmczNy5jbG91ZGZyb250Lm5ldC8yMzdjYzQ4Mi0xZmJiLTQ2NmQtYjZmOS02MWZhMzQ5OTMzODIuanBlZw==">
         </div>
 
@@ -617,7 +610,7 @@ Vue.component('message-board-textarea', {
 
 Vue.component('shop-info-title-window', {
     template: `
-<div class="user-order-window-title-area" style="margin-bottom: 0.5rem;">
+<div class="user-order-window-title-area" style="margin-bottom: 1.2rem;">
     <div class="user-order-window-title-image">
         <img v-if="shop_info.shop_picture" :src="shop_info.shop_picture" 
         style="width: 100%;"/>
@@ -637,6 +630,15 @@ Vue.component('shop-info-title-window', {
             </div>
             <div class="user-order-window-title-shop-description">
                 {{shop_info.shop_description}}
+            </div>
+        </div>
+
+        <div style="position: absolute;bottom:0;padding: 0.5rem;right:0;text-align: end;">
+            <div class="user-order-window-title-shop-name">
+                {{shop_info.shop_phoneNum}}
+            </div>
+            <div class="user-order-window-title-shop-description">
+                {{shop_info.shop_address}}
             </div>
         </div>
     </div>
