@@ -557,6 +557,9 @@ def OrderSys_ShopCart_Manager(request, shop_cart_id=None, id=None, order_id=None
     except Exception as e:
         return JsonResponse({'result': 'fail', 'data': {'message': str(e)}})
 
+
+
+
 def Get_All_ShopCart_By_OrderID(request, order_id):
     try:
         if request.method == 'GET':
