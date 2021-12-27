@@ -1051,13 +1051,13 @@
                                     <p>確認要{{statusChangeWindowInfo.status=='enable'?'關閉':'打開'}}此項目?</p>
                                     <i class='fas fa-times' @click='statusChangeWindowOpen=false'></i>
                                 </div>
-                                <div v-if="statusChangeWindowInfo.port=='8961'" class='top-window-alert-body'>
+                                <div v-if="statusChangeWindowInfo.port=='9001'" class='top-window-alert-body'>
                                     專案名稱: 數據經營部-共用
                                 </div>
-                                <div v-else-if="statusChangeWindowInfo.port=='8901'" class='top-window-alert-body'>
+                                <div v-else-if="statusChangeWindowInfo.port=='9201'" class='top-window-alert-body'>
                                     專案名稱: 客戶智能科-共用
                                 </div>
-                                <div v-else-if="statusChangeWindowInfo.port=='8931'" class='top-window-alert-body'>
+                                <div v-else-if="statusChangeWindowInfo.port=='9401'" class='top-window-alert-body'>
                                     專案名稱: 商業智能科-共用
                                 </div>
                                 <div v-else class='top-window-alert-body'>
@@ -1123,7 +1123,7 @@
                                         </thead>
                                         <tbody class='n2_1_gray'>
                                             <template v-for="(projectJupyterInfoList, index) of customerJupyterInfos">
-                                                <tr v-for="(customerJupyterInfo, index) of projectJupyterInfoList" v-if="['8901','8931','8961'].indexOf(customerJupyterInfo.port)!=-1">
+                                                <tr v-for="(customerJupyterInfo, index) of projectJupyterInfoList" v-if="['9001','9201','9401'].indexOf(customerJupyterInfo.port)!=-1">
                                                     <td v-if="customerJupyterInfo.user_depart=='9h000'">數據經營部-共用</td>
                                                     <td v-else-if="customerJupyterInfo.user_depart=='9h001'">客戶智能科-共用</td>
                                                     <td v-else-if="customerJupyterInfo.user_depart=='9h002'">商業智能科-共用</td>
@@ -1362,7 +1362,7 @@
                                         </thead>
                                         <tbody class='n2_1_gray'>
                                             <template v-for="(projectJupyterInfoList, index) of customerJupyterInfos">
-                                                <tr v-for="(customerJupyterInfo, index) of projectJupyterInfoList" v-if="['8901','8931','8961','8981','8983','8985'].indexOf(customerJupyterInfo.port)==-1">
+                                                <tr v-for="(customerJupyterInfo, index) of projectJupyterInfoList" v-if="['9001','9201','9401','8981','8983','8985'].indexOf(customerJupyterInfo.port)==-1">
                                                     <td>{{customerJupyterInfo.project_name}}</td>
                                                     <td>{{customerJupyterInfo.user_name}}</td>
                                                     <td v-if="customerJupyterInfo.user_depart=='9h000'">數據經營部</td>

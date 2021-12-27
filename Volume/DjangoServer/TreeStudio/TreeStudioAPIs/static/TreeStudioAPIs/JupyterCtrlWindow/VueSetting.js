@@ -197,9 +197,9 @@ var Vue_JupyterCtrlWindow =  new Vue({
 
             // 個項目最後一個port是開給AIRJOB專用的
             D_portStart = {
-                '9h000': [8961, 8966, 8971, 8976, 8981],
-                '9h001': [8901, 8906, 8911, 8916, 8921, 8926, 8983],
-                '9h002': [8931, 8936, 8941, 8946, 8951, 8956, 8985],
+                '9h000': [9001, 9021, 9041, 9061, 9081, 9101, 9121, 9141, 9161, 9181],
+                '9h001': [9201, 9221, 9241, 9261, 9281, 9301, 9321, 9341, 9361, 9381],
+                '9h002': [9401, 9421, 9441, 9461, 9481, 9501, 9521, 9541, 9561, 9581],
             }
 
 
@@ -360,7 +360,7 @@ var Vue_JupyterCtrlWindow =  new Vue({
                 this.max_executors = 4
                 this.spark_ui = false
             }
-            else if (S_port_ == "8901"){
+            else if (S_port_ == "9201"){
                 v_console.log("這個Port為客戶智能科(預設)專用")
                 this.portNum = S_port_
                 this.tokenStr = 'i9h001'
@@ -376,7 +376,7 @@ var Vue_JupyterCtrlWindow =  new Vue({
                 this.max_executors = 4
                 this.spark_ui = true
             }
-            else if (S_port_ == "8931"){
+            else if (S_port_ == "9401"){
                 v_console.log("這個Port商業智能科(預設)專用")
                 this.portNum = S_port_
                 this.tokenStr = 'i9h002'
@@ -392,7 +392,7 @@ var Vue_JupyterCtrlWindow =  new Vue({
                 this.max_executors = 4
                 this.spark_ui = true
             }
-            else if (S_port_ == "8961"){
+            else if (S_port_ == "9001"){
                 v_console.log("這個Port數據經營部(預設)專用")
                 this.portNum = S_port_
                 this.tokenStr = 'i9h000'
